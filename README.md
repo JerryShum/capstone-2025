@@ -1,3 +1,8 @@
+# Capstone-2025 Team 13
+
+OntarioTech University Capstone Project 2025
+Tales for Tots
+
 # bhvr 🦫
 
 ![cover](https://cdn.stevedylan.dev/ipfs/bafybeievx27ar5qfqyqyud7kemnb5n2p4rzt2matogi6qttwkpxonqhra4)
@@ -263,8 +268,3 @@ import { ApiResponse } from 'shared/types';
 - [Hono Documentation](https://hono.dev/docs)
 - [Turbo Documentation](https://turbo.build/docs)
 - [TypeScript Documentation](https://www.typescriptlang.org/docs/)
-
-# Capstone-2025 Team 13
-
-OntarioTech University Capstone Project 2025
-Tales for Tots
