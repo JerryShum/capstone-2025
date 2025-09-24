@@ -5,8 +5,6 @@ Tales for Tots
 
 # bhvr 🦫
 
-![cover](https://cdn.stevedylan.dev/ipfs/bafybeievx27ar5qfqyqyud7kemnb5n2p4rzt2matogi6qttwkpxonqhra4)
-
 A full-stack TypeScript monorepo starter with shared types, using Bun, Hono, Vite, and React.
 
 ## Why bhvr?
