@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as BhvrRouteImport } from './routes/bhvr'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as CreateIndexRouteImport } from './routes/create/index'
@@ -25,6 +26,11 @@ const SignupRoute = SignupRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BhvrRoute = BhvrRouteImport.update({
+  id: '/bhvr',
+  path: '/bhvr',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -55,6 +61,7 @@ const DashboardVideosVideoIDRoute = DashboardVideosVideoIDRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bhvr': typeof BhvrRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/create': typeof CreateIndexRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bhvr': typeof BhvrRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/create': typeof CreateIndexRoute
@@ -74,6 +82,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bhvr': typeof BhvrRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/create/': typeof CreateIndexRoute
@@ -85,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/bhvr'
     | '/login'
     | '/signup'
     | '/create'
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/bhvr'
     | '/login'
     | '/signup'
     | '/create'
@@ -103,6 +114,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/bhvr'
     | '/login'
     | '/signup'
     | '/create/'
@@ -113,6 +125,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BhvrRoute: typeof BhvrRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
   CreateIndexRoute: typeof CreateIndexRoute
@@ -135,6 +148,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bhvr': {
+      id: '/bhvr'
+      path: '/bhvr'
+      fullPath: '/bhvr'
+      preLoaderRoute: typeof BhvrRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -177,6 +197,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BhvrRoute: BhvrRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
   CreateIndexRoute: CreateIndexRoute,
