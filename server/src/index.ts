@@ -1,23 +1,26 @@
-import { Hono } from 'hono'
-import { cors } from 'hono/cors'
-import type { ApiResponse } from 'shared/dist'
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+import { serveStatic } from 'hono/bun';
+import type { ApiResponse } from 'shared/dist';
 
-const app = new Hono()
+const app = new Hono();
 
-app.use(cors())
+app.use(cors());
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+app.get('/api/hello', async (c) => {
+   const data: ApiResponse = {
+      message: 'Hello BHVR!',
+      success: true,
+   };
 
-app.get('/hello', async (c) => {
+   return c.json(data, { status: 200 });
+});
 
-  const data: ApiResponse = {
-    message: "Hello BHVR!",
-    success: true
-  }
+// Serve static files for everything else
+app.use('*', serveStatic({ root: './static' }));
 
-  return c.json(data, { status: 200 })
-})
+app.get('*', async (c, next) => {
+   return serveStatic({ root: './static', path: 'index.html' })(c, next);
+});
 
-export default app
+export default app;
