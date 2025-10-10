@@ -1,14 +1,14 @@
 import { Link } from "@tanstack/react-router";
-import { Mountain } from "lucide-react";
+import { Book } from "lucide-react";
 import { Button } from "../ui/button";
 
 export default function Navbar() {
   return (
     <header className="bg-background flex h-16 items-center border-b px-4 lg:px-6">
       {/* Left Side: Logo/Icon */}
-      <Link to="/" className="flex items-center justify-center">
-        <Mountain className="h-6 w-6" />
-        <span className="sr-only">Acme Inc</span>
+      <Link to="/" className="flex items-start justify-center gap-2">
+        <Book className="h-6 w-6" />
+        <span className="text-2xl">TalesForTots</span>
       </Link>
 
       {/* Right Side: Navigation Links and Action Buttons */}
