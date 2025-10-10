@@ -5,8 +5,10 @@ import Navbar from "../components/custom/navbar";
 export const Route = createRootRoute({
   component: () => (
     <>
-      <Navbar />
-      <Outlet />
+      <div className="flex min-h-screen flex-col">
+        <Navbar />
+        <Outlet />
+      </div>
       <TanStackRouterDevtools />
     </>
   ),
