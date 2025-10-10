@@ -35,8 +35,12 @@ export default function Navbar() {
         {/* Separator (optional) */}
         <div className="bg-border mx-2 h-6 w-px"></div>
 
-        <Button variant="ghost">Login</Button>
-        <Button>Sign Up</Button>
+        <Button variant="ghost">
+          <Link to="/login">Log In</Link>
+        </Button>
+        <Button>
+          <Link to="/signup">Sign Up</Link>
+        </Button>
       </nav>
     </header>
   );
