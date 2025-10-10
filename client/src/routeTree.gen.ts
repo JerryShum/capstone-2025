@@ -9,38 +9,134 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as CreateIndexRouteImport } from './routes/create/index'
+import { Route as DashboardVideosIndexRouteImport } from './routes/dashboard/videos/index'
+import { Route as DashboardVideosVideoIDRouteImport } from './routes/dashboard/videos/$videoID'
 
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/dashboard/',
+  path: '/dashboard/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreateIndexRoute = CreateIndexRouteImport.update({
+  id: '/create/',
+  path: '/create/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardVideosIndexRoute = DashboardVideosIndexRouteImport.update({
+  id: '/dashboard/videos/',
+  path: '/dashboard/videos/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardVideosVideoIDRoute = DashboardVideosVideoIDRouteImport.update({
+  id: '/dashboard/videos/$videoID',
+  path: '/dashboard/videos/$videoID',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/create': typeof CreateIndexRoute
+  '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/videos/$videoID': typeof DashboardVideosVideoIDRoute
+  '/dashboard/videos': typeof DashboardVideosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/create': typeof CreateIndexRoute
+  '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/videos/$videoID': typeof DashboardVideosVideoIDRoute
+  '/dashboard/videos': typeof DashboardVideosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/create/': typeof CreateIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/videos/$videoID': typeof DashboardVideosVideoIDRoute
+  '/dashboard/videos/': typeof DashboardVideosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/create'
+    | '/dashboard'
+    | '/dashboard/videos/$videoID'
+    | '/dashboard/videos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/create'
+    | '/dashboard'
+    | '/dashboard/videos/$videoID'
+    | '/dashboard/videos'
+  id:
+    | '__root__'
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/create/'
+    | '/dashboard/'
+    | '/dashboard/videos/$videoID'
+    | '/dashboard/videos/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LoginRoute: typeof LoginRoute
+  SignupRoute: typeof SignupRoute
+  CreateIndexRoute: typeof CreateIndexRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardVideosVideoIDRoute: typeof DashboardVideosVideoIDRoute
+  DashboardVideosIndexRoute: typeof DashboardVideosIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +144,45 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create/': {
+      id: '/create/'
+      path: '/create'
+      fullPath: '/create'
+      preLoaderRoute: typeof CreateIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/videos/': {
+      id: '/dashboard/videos/'
+      path: '/dashboard/videos'
+      fullPath: '/dashboard/videos'
+      preLoaderRoute: typeof DashboardVideosIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/videos/$videoID': {
+      id: '/dashboard/videos/$videoID'
+      path: '/dashboard/videos/$videoID'
+      fullPath: '/dashboard/videos/$videoID'
+      preLoaderRoute: typeof DashboardVideosVideoIDRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LoginRoute: LoginRoute,
+  SignupRoute: SignupRoute,
+  CreateIndexRoute: CreateIndexRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+  DashboardVideosVideoIDRoute: DashboardVideosVideoIDRoute,
+  DashboardVideosIndexRoute: DashboardVideosIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
