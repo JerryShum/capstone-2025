@@ -15,16 +15,17 @@ app.use(cors());
 //! Used to log all requests to the terminal
 app.use('*', logger());
 
-app.get('/hello', async (c) => {
-   const data: ApiResponse = {
-      message: 'Hello BHVR!',
-      success: true,
-   };
+const apiroutes = app
+   .basePath('/api')
+   .get('/hello', async (c) => {
+      const data: ApiResponse = {
+         message: '',
+         success: true,
+      };
 
-   return c.json(data, { status: 200 });
-});
-
-const apiroutes = app.basePath('/api').route('/videos', videosRoute);
+      return c.json(data, { status: 200 });
+   })
+   .route('/videos', videosRoute);
 
 //! Serve static files when the user accesses an "unknown route"
 //@ if someone types in a URL that doesnt exist, we can serve up the react page meant for hadnling the errors, (instead of a bad looking server 404 page)
