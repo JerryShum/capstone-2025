@@ -2,6 +2,15 @@ import { Hono } from 'hono';
 import z from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { id } from 'zod/locales';
+import { GoogleGenAI } from '@google/genai';
+
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+if (!GEMINI_API_KEY) {
+   throw new Error('GEMINI_API_KEY is not set in the environment variables.');
+}
+
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 const videosPromptSchema = z.object({
    id: z.number().int().positive().min(1),
@@ -53,5 +62,12 @@ export const videosRoute = new Hono()
       const promptOBJ = await c.req.valid('json');
       //! Replace with DB later
       testVideoPrompts.push({ ...promptOBJ, id: testVideoPrompts.length + 1 });
-      return c.json({ testVideoPrompts });
+
+      //! PROMPT GEMINI API
+      const response = await ai.models.generateContent({
+         model: 'gemini-2.5-flash',
+         contents: JSON.stringify(promptOBJ),
+      });
+
+      return c.json({ response: response.text });
    });

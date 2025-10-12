@@ -12,9 +12,7 @@ export const Route = createFileRoute("/create/test")({
 });
 
 function RouteComponent() {
-  const [promptOutput, setPromptOutput] = useState<
-    { id: number; subject: string; prompt: string }[] | null
-  >(null);
+  const [promptOutput, setPromptOutput] = useState<string>("");
 
   const formOpts = formOptions({
     defaultValues: {
@@ -35,7 +33,7 @@ function RouteComponent() {
       }
 
       const data = await res.json();
-      setPromptOutput(data.testVideoPrompts);
+      setPromptOutput(data.response ?? "");
 
       console.log(data);
     },
@@ -107,19 +105,7 @@ function RouteComponent() {
         />
       </form>
 
-      <div>
-        {promptOutput &&
-          promptOutput.map((item) => (
-            <div key={item.id} className="my-2 rounded border p-2">
-              <div>
-                <strong>Subject:</strong> {item.subject}
-              </div>
-              <div>
-                <strong>Prompt:</strong> {item.prompt}
-              </div>
-            </div>
-          ))}
-      </div>
+      <div>{promptOutput}</div>
     </div>
   );
 }
