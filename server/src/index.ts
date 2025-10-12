@@ -19,7 +19,7 @@ const apiroutes = app
    .basePath('/api')
    .get('/hello', async (c) => {
       const data: ApiResponse = {
-         message: '',
+         message: 'hello',
          success: true,
       };
 
@@ -37,4 +37,4 @@ app.get('*', async (c, next) => {
 
 export default app;
 
-export type apiroutes = typeof apiroutes;
+export type ApiRoutes = typeof apiroutes;

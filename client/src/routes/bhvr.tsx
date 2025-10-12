@@ -5,6 +5,8 @@ import type { ApiResponse } from "shared";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 
+import { api } from "@/lib/api";
+
 export const Route = createFileRoute("/bhvr")({
   component: Index,
 });
@@ -16,15 +18,10 @@ function Index() {
     mutationFn: async () => {
       try {
         console.log("calling api");
-        const req = await fetch("/api/hello");
-        console.log(req);
-        // Check if the response is OK before trying to parse JSON
-        if (!req.ok) {
-          throw new Error(`HTTP error! status: ${req.status}`);
-        }
-        const res: ApiResponse = await req.json();
-        console.log(res);
-        setData(res);
+        const res = await api.hello.$get();
+        const data = await res.json();
+
+        setData(data);
       } catch (error) {
         console.log(error);
       }
