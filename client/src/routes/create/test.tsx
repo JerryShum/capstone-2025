@@ -105,7 +105,11 @@ function RouteComponent() {
         />
       </form>
 
-      <div>{promptOutput}</div>
+      {promptOutput && (
+        <div className="mt-4 w-full max-w-lg rounded-lg border bg-muted p-4">
+          <p className="whitespace-pre-wrap">{promptOutput}</p>
+        </div>
+      )}
     </div>
   );
 }
