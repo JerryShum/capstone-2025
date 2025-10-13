@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { stream } from 'hono/streaming';
 import z from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { id } from 'zod/locales';
@@ -59,15 +60,28 @@ export const videosRoute = new Hono()
       return c.json({ message: `Video ${id}` });
    })
    .post('/create', zValidator('json', createVideoPromptSchema), async (c) => {
-      const promptOBJ = await c.req.valid('json');
-      //! Replace with DB later
-      testVideoPrompts.push({ ...promptOBJ, id: testVideoPrompts.length + 1 });
+      try {
+         const promptOBJ = await c.req.valid('json');
+         //! Replace with DB later
+         testVideoPrompts.push({ ...promptOBJ, id: testVideoPrompts.length + 1 });
 
-      //! PROMPT GEMINI API
-      const response = await ai.models.generateContent({
-         model: 'gemini-2.5-flash',
-         contents: JSON.stringify(promptOBJ),
-      });
+         //! PROMPT GEMINI API
+         const result = await ai.models.generateContentStream({
+            model: 'gemini-2.5-flash',
+            contents: [{ role: 'user', parts: [{ text: promptOBJ.prompt }] }],
+         });
 
-      return c.json({ response: response.text });
+         return stream(c, async (stream) => {
+            for await (const chunk of result) {
+               const chunkText = chunk.text;
+               if (chunkText) {
+                  await stream.write(chunkText);
+               }
+            }
+         });
+      } catch (error) {
+         console.error('Error generating story:', error);
+         c.status(500);
+         return c.json({ success: false, message: 'Failed to generate story.' });
+      }
    });

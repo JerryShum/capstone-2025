@@ -20,6 +20,12 @@ export default function Navbar() {
           Create
         </Link>
         <Link
+          to="/generate"
+          className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
+        >
+          Generate
+        </Link>
+        <Link
           to="/dashboard"
           className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
         >
