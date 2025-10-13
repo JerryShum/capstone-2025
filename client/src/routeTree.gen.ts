@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as GenerateImageRouteImport } from './routes/generate-image'
 import { Route as GenerateRouteImport } from './routes/generate'
 import { Route as BhvrRouteImport } from './routes/bhvr'
 import { Route as AboutRouteImport } from './routes/about'
@@ -29,6 +30,11 @@ const SignupRoute = SignupRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GenerateImageRoute = GenerateImageRouteImport.update({
+  id: '/generate-image',
+  path: '/generate-image',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GenerateRoute = GenerateRouteImport.update({
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/bhvr': typeof BhvrRoute
   '/generate': typeof GenerateRoute
+  '/generate-image': typeof GenerateImageRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/create/test': typeof CreateTestRoute
@@ -95,6 +102,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/bhvr': typeof BhvrRoute
   '/generate': typeof GenerateRoute
+  '/generate-image': typeof GenerateImageRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/create/test': typeof CreateTestRoute
@@ -109,6 +117,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/bhvr': typeof BhvrRoute
   '/generate': typeof GenerateRoute
+  '/generate-image': typeof GenerateImageRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/create/test': typeof CreateTestRoute
@@ -124,6 +133,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/bhvr'
     | '/generate'
+    | '/generate-image'
     | '/login'
     | '/signup'
     | '/create/test'
@@ -137,6 +147,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/bhvr'
     | '/generate'
+    | '/generate-image'
     | '/login'
     | '/signup'
     | '/create/test'
@@ -150,6 +161,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/bhvr'
     | '/generate'
+    | '/generate-image'
     | '/login'
     | '/signup'
     | '/create/test'
@@ -164,6 +176,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   BhvrRoute: typeof BhvrRoute
   GenerateRoute: typeof GenerateRoute
+  GenerateImageRoute: typeof GenerateImageRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
   CreateTestRoute: typeof CreateTestRoute
@@ -187,6 +200,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/generate-image': {
+      id: '/generate-image'
+      path: '/generate-image'
+      fullPath: '/generate-image'
+      preLoaderRoute: typeof GenerateImageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/generate': {
@@ -260,6 +280,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   BhvrRoute: BhvrRoute,
   GenerateRoute: GenerateRoute,
+  GenerateImageRoute: GenerateImageRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
   CreateTestRoute: CreateTestRoute,

@@ -4,6 +4,7 @@ import { serveStatic } from 'hono/bun';
 import type { ApiResponse } from 'shared/dist';
 import { logger } from 'hono/logger';
 import { videosRoute } from './routes/videosRoute';
+import { imageGenerationRoute } from './routes/imageGenerationRoute';
 import { stream } from 'hono/streaming';
 import { GoogleGenAI } from '@google/genai';
 
@@ -73,7 +74,8 @@ Please begin the story now.
          return c.json({ success: false, message: 'Failed to generate story.' });
       }
    })
-   .route('/videos', videosRoute);
+   .route('/videos', videosRoute)
+   .route('/generate-image', imageGenerationRoute);
 
 app.use('*', serveStatic({ root: './static' }));
 app.get('*', async (c, next) => {

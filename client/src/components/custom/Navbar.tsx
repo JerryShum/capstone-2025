@@ -26,6 +26,12 @@ export default function Navbar() {
           Generate
         </Link>
         <Link
+          to="/generate-image"
+          className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
+        >
+          Generate Image
+        </Link>
+        <Link
           to="/dashboard"
           className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
         >
