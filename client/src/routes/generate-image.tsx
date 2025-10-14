@@ -39,6 +39,8 @@ function GenerateImage() {
 
       if (data.success) {
         setImageData(data.imageData);
+      } else if (data.warning) {
+        alert(`Warning: ${data.warning}`);
       } else {
         throw new Error(data.message || 'Failed to generate image.');
       }

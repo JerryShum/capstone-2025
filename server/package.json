@@ -12,7 +12,8 @@
     "@hono/zod-validator": "^0.7.4",
     "hono": "^4.7.11",
     "shared": "workspace:*",
-    "zod": "^4.1.12"
+    "zod": "^4.1.12",
+    "@google/genai": "^1.0.0"
   },
   "devDependencies": {
     "@types/bun": "latest"
