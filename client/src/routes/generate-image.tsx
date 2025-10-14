@@ -50,6 +50,17 @@ function GenerateImage() {
     }
   };
 
+  const handleDownload = () => {
+    if (imageData) {
+      const link = document.createElement('a');
+      link.href = `data:image/png;base64,${imageData}`;
+      link.download = `generated-image-${Date.now()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
   return (
     <div className="p-2">
       <Card className="w-full max-w-2xl mx-auto">
@@ -75,8 +86,9 @@ function GenerateImage() {
           
           {imageData && (
             <Card className="mt-4 bg-muted/40">
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Your Generated Image</CardTitle>
+                <Button onClick={handleDownload}>Download</Button>
               </CardHeader>
               <CardContent>
                 <img src={`data:image/png;base64,${imageData}`} alt="Generated" className="w-full h-auto" />
