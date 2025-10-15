@@ -1,13 +1,14 @@
 import { Link } from "@tanstack/react-router";
-import { Book } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { Button } from "../ui/button";
+import star from "/star.svg";
 
 export default function Navbar() {
   return (
     <header className="bg-background flex h-16 items-center border-b px-4 lg:px-6">
       {/* Left Side: Logo/Icon */}
       <Link to="/" className="flex items-start justify-center gap-2">
-        <Book className="h-6 w-6" />
+        <img src={star} className="h-[24px] w-[24px]" />
         <span className="font-serif text-2xl">StoryWeaver</span>
       </Link>
 
