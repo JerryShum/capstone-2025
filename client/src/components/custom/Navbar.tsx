@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
-//import { Sparkles } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 //import star from "/star.svg";
 //import { Book } from "lucide-react";
 
@@ -10,10 +9,10 @@ export default function Navbar() {
       {/* Left Side: Logo/Icon */}
       <div className="flex items-center gap-6">
         <Link to="/" className="flex items-center gap-2">
-          <div className="h-6 w-6"/> 
+          <div className="h-6 w-6" />
           <span className="text-2xl font-bold">StoryWeaver</span>
         </Link>
-      {/* rearranging the buttons*/}
+        {/* rearranging the buttons*/}
         <nav className="flex items-center gap-4 sm:gap-6">
           <Link
             to="/create"
@@ -34,7 +33,6 @@ export default function Navbar() {
             About
           </Link>
         </nav>
-        
       </div>
 
       {/* Right Side: Navigation Links and Action Buttons */}
