@@ -23,18 +23,41 @@ import {
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { formOptions, useForm } from "@tanstack/react-form";
 
-// React
-import { useState } from "react";
-
 //Custom
 import { api } from "@/lib/api";
+import { useMutation } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/create/")({
   component: RouteComponent,
 });
 
+const createScriptMutation = {
+  mutationKey: ["videos", "create"],
+  mutationFn: async (data: any) => {
+    const res = await api.videos.create.$post({ json: data });
+
+    if (!res.ok) {
+      throw new Error("something went wrong when submitting this form");
+    }
+
+    return res.json();
+  },
+};
+
 function RouteComponent() {
-  const [promptOutput, setPromptOutput] = useState<string>("");
+  //! Using useMutation for submitting the form
+  const createScript = useMutation({
+    mutationFn: createScriptMutation.mutationFn,
+    onSuccess: (data) => {
+      console.log("Prompt successfully sent:", data);
+
+      //@ Use navigate to navigate to the generated script page...
+    },
+    onError: (error) => {
+      // Handle the error
+      console.error("Failed to create video:", error);
+    },
+  });
 
   const formOpts = formOptions({
     defaultValues: {
@@ -50,25 +73,20 @@ function RouteComponent() {
     ...formOpts,
 
     onSubmit: async ({ value }) => {
-      await new Promise((r) => setTimeout(r, 3000));
-
-      const res = await api.videos.create.$post({ json: value });
-      if (!res.ok) {
-        throw new Error("something went wrong when submitting this form");
-      }
-
-      const data = await res.json();
-      setPromptOutput(data.response ?? "");
-
-      console.log(data.response);
+      console.log(value);
+      await new Promise((r) => setTimeout(r, 2000));
+      await createScript.mutateAsync(value);
     },
   });
 
   return (
     <div className="flex flex-col items-center justify-center px-40 py-20">
-      <h1 className="text-3xl font-semibold">
+      <h1 className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-4xl font-semibold text-transparent">
         Let's Weave Your Story Together!
       </h1>
+      <p className="text-muted-foreground text-lg">
+        Fill out the form below to generate a captivating story for your video.
+      </p>
       <form
         className="mt-10 w-full max-w-lg rounded-lg border p-4"
         onSubmit={(e) => {
@@ -265,10 +283,9 @@ function RouteComponent() {
           />
         </FieldGroup>
       </form>
-
-      {promptOutput && (
+      {createScript.isSuccess && createScript.data?.response && (
         <div className="bg-muted mt-4 w-full max-w-lg rounded-lg border p-4">
-          <p className="whitespace-pre-wrap">{promptOutput}</p>
+          <p className="whitespace-pre-wrap">{createScript.data.response}</p>
         </div>
       )}
     </div>
