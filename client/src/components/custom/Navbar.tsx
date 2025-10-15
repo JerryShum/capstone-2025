@@ -8,7 +8,7 @@ export default function Navbar() {
       {/* Left Side: Logo/Icon */}
       <Link to="/" className="flex items-start justify-center gap-2">
         <Book className="h-6 w-6" />
-        <span className="text-2xl">TalesForTots</span>
+        <span className="font-serif text-2xl">StoryWeaver</span>
       </Link>
 
       {/* Right Side: Navigation Links and Action Buttons */}
