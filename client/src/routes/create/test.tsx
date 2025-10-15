@@ -50,17 +50,17 @@ function RouteComponent() {
     ...formOpts,
 
     onSubmit: async ({ value }) => {
-      // await new Promise((r) => setTimeout(r, 3000));
+      await new Promise((r) => setTimeout(r, 3000));
 
-      // const res = await api.videos.create.$post({ json: value });
-      // if (!res.ok) {
-      //   throw new Error("something went wrong when submitting this form");
-      // }
+      const res = await api.videos.create.$post({ json: value });
+      if (!res.ok) {
+        throw new Error("something went wrong when submitting this form");
+      }
 
-      // const data = await res.json();
-      // setPromptOutput(data.response ?? "");
+      const data = await res.json();
+      setPromptOutput(data.response ?? "");
 
-      console.log(value);
+      console.log(data.response);
     },
   });
 

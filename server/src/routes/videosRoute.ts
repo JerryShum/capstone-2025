@@ -14,8 +14,11 @@ const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 const videosPromptSchema = z.object({
    id: z.number().int().positive().min(1),
-   subject: z.string().min(3).max(100),
-   prompt: z.string().min(10),
+   title: z.string().min(3).max(100),
+   overview: z.string().min(10),
+   agegroup: z.string(),
+   genre: z.string(),
+   artstyle: z.string(),
 });
 
 type videoPrompt = z.infer<typeof videosPromptSchema>;
@@ -26,27 +29,47 @@ const createVideoPromptSchema = videosPromptSchema.omit({ id: true });
 const testVideoPrompts: videoPrompt[] = [
    {
       id: 1,
-      subject: 'Mathematics',
-      prompt:
-         'Explain the concept of definite integrals and their applications in physics.',
+      title: 'Science',
+      overview: 'Explain the water cycle to a 5th grader.',
+      agegroup: 'Kids',
+      genre: 'Educational',
+      artstyle: 'Cartoon',
    },
    {
       id: 2,
-      subject: 'History',
-      prompt:
-         'Discuss the causes and consequences of the Industrial Revolution in Europe.',
+      title: 'Mathematics',
+      overview:
+         'Explain the concept of definite integrals and their applications in physics.',
+      agegroup: 'Adults',
+      genre: 'Educational',
+      artstyle: 'Realistic',
    },
    {
       id: 3,
-      subject: 'Computer Science',
-      prompt:
-         'Describe the working principle of a blockchain and its security features.',
+      title: 'History',
+      overview:
+         'Discuss the causes and consequences of the Industrial Revolution in Europe.',
+      agegroup: 'Teens',
+      genre: 'Documentary',
+      artstyle: 'Vintage',
    },
    {
       id: 4,
-      subject: 'Literature',
-      prompt:
+      title: 'Computer Science',
+      overview:
+         'Describe the working principle of a blockchain and its security features.',
+      agegroup: 'Adults',
+      genre: 'Educational',
+      artstyle: 'Modern',
+   },
+   {
+      id: 5,
+      title: 'Literature',
+      overview:
          "Analyze the themes of love and loss in Shakespeare's Romeo and Juliet.",
+      agegroup: 'Teens',
+      genre: 'Drama',
+      artstyle: 'Classic',
    },
 ];
 
