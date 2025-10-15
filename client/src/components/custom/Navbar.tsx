@@ -9,7 +9,7 @@ export default function Navbar() {
       {/* Left Side: Logo/Icon */}
       <Link to="/" className="flex items-start justify-center gap-2">
         <img src={star} className="h-[24px] w-[24px]" />
-        <span className="font-serif text-2xl">StoryWeaver</span>
+        <span className="text-2xl">StoryWeaver</span>
       </Link>
 
       {/* Right Side: Navigation Links and Action Buttons */}
