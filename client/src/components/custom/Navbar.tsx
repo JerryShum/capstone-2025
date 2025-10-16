@@ -11,7 +11,7 @@ export default function Navbar() {
       <div className="flex items-center gap-6">
         <Link to="/" className="flex items-center gap-2">
           <div className="h-6 w-6"/> 
-          <span className="text-2xl font-bold">TalesForTots</span>
+          <span className="text-2xl font-bold">StoryWeaver</span>
         </Link>
       {/* rearranging the buttons*/}
         <nav className="flex items-center gap-4 sm:gap-6">
