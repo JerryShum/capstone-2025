@@ -108,7 +108,10 @@ function RouteComponent() {
         {createScript.isSuccess &&
         createScript.data?.response &&
         !createScript.isPending ? (
-          <ScrollArea className="w-full rounded-md px-4 whitespace-pre-wrap">
+          <ScrollArea
+            className="w-full rounded-md px-4 whitespace-pre-wrap"
+            data-lenis-prevent
+          >
             {createScript.data.response}
           </ScrollArea>
         ) : (
@@ -309,7 +312,11 @@ function RouteComponent() {
               <form.Subscribe
                 selector={(state) => [state.canSubmit, state.isSubmitting]}
                 children={([canSubmit, isSubmitting]) => (
-                  <Button type="submit" disabled={!canSubmit}>
+                  <Button
+                    type="submit"
+                    disabled={!canSubmit}
+                    className="min-w-[80px]"
+                  >
                     {isSubmitting ? "..." : "Submit"}
                   </Button>
                 )}
