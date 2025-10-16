@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { Book } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { Button } from "../ui/button";
+import star from "/star.svg";
 
 export default function Navbar() {
   return (
