@@ -3,6 +3,9 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Image, Loader } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -19,16 +22,15 @@ import {
   FieldContent,
 } from "@/components/ui/field";
 
-// Router
+// tanstack
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { formOptions, useForm } from "@tanstack/react-form";
-
-//Custom
-import { api } from "@/lib/api";
 import { useMutation } from "@tanstack/react-query";
-import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Image, Loader } from "lucide-react";
+
+//Other
+import { z } from "@/zod";
+import { api } from "@/lib/api";
+import { sendScriptSchema } from "@shared/schemas/sendScriptSchema";
 
 export const Route = createFileRoute("/create/")({
   component: RouteComponent,
@@ -80,6 +82,7 @@ function RouteComponent() {
       await new Promise((r) => setTimeout(r, 2000));
       await createScript.mutateAsync(value);
     },
+    validators: {},
   });
 
   return (
