@@ -4,6 +4,9 @@ import { zValidator } from '@hono/zod-validator';
 import { id } from 'zod/locales';
 import { GoogleGenAI } from '@google/genai';
 
+//! Importing type from shared
+import { sendScriptSchema } from '@shared/schemas/sendScriptSchema';
+
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 if (!GEMINI_API_KEY) {
@@ -12,21 +15,14 @@ if (!GEMINI_API_KEY) {
 
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
-const videosPromptSchema = z.object({
-   id: z.number().int().positive().min(1),
-   title: z.string().min(3).max(100),
-   overview: z.string().min(10),
-   agegroup: z.string(),
-   genre: z.string(),
-   artstyle: z.string(),
-});
+//! ZOD TYPING --> infer the type from the schema
+type scriptPrompt = z.infer<typeof sendScriptSchema>;
 
-type videoPrompt = z.infer<typeof videosPromptSchema>;
+//@ the wanted structure of data that someone POSTS:
+const postScriptSchema = sendScriptSchema.omit({ id: true });
 
-//wanted structure of data when someone POSTS:
-const createVideoPromptSchema = videosPromptSchema.omit({ id: true });
-
-const testVideoPrompts: videoPrompt[] = [
+//@ Temporary database
+const testVideoPrompts: scriptPrompt[] = [
    {
       id: 1,
       title: 'Science',
@@ -81,8 +77,13 @@ export const videosRoute = new Hono()
       const { id } = c.req.param();
       return c.json({ message: `Video ${id}` });
    })
-   .post('/create', zValidator('json', createVideoPromptSchema), async (c) => {
+   .post('/create', zValidator('json', postScriptSchema), async (c) => {
+      //@ when someone sends a post request to our backend, their submitted JSON goes through the validator first
+      // it checks whether their JSON matches the schema that we specified above.
+
+      //@ if it passed, then we get the json obj using .valid
       const promptOBJ = await c.req.valid('json');
+
       //! Replace with DB later
       testVideoPrompts.push({ ...promptOBJ, id: testVideoPrompts.length + 1 });
 
