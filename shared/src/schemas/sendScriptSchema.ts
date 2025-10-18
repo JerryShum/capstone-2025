@@ -9,9 +9,15 @@ export const sendScriptSchema = z.object({
    overview: z.string().min(10, {
       message: 'The overview/script must be atleast 3 characters.',
    }),
-   agegroup: z.string().min(1, { message: 'Please select an age group.' }),
-   genre: z.string().min(1, { message: 'Please select a genre.' }),
-   artstyle: z.string().min(1, { message: 'Please select an art style.' }),
+   agegroup: z.enum(['toddlers', 'preschool', 'young-children']),
+   genre: z.enum(['adventure', 'fantasy', 'comedy', 'fairy-tale']),
+   artstyle: z.enum([
+      'cartoon',
+      'watercolor',
+      'pixel-art',
+      '3d-render',
+      'line-art',
+   ]),
 });
 
 //@ the wanted structure of data that someone POSTS:

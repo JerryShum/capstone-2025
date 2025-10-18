@@ -82,8 +82,34 @@ export const videosRoute = new Hono()
       //@ if it passed, then we get the json obj using .valid
       const promptOBJ = await c.req.valid('json');
 
+      //! Building a prompt based on the user's inputs
+
+      /*
+         agegroup: z.enum(['toddlers', 'preschool', 'young-children']),
+         genre: z.enum(['adventure', 'fantasy', 'comedy', 'fairy-tale']),
+         artstyle: z.enum([
+            'cartoon',
+            'watercolor',
+            'pixel-art',
+            '3d-render',
+            'line-art',
+         ]),
+      */
+
+      //@ define a new JSON obj to send to gemini
+      const sendPrompt = {
+         ...promptOBJ,
+      };
+      console.log(promptOBJ);
+
       //! Replace with DB later
       testVideoPrompts.push({ ...promptOBJ, id: testVideoPrompts.length + 1 });
+
+      //            │  title: "Barry the chicken",
+      //            │  overview: "Barry the chicken",
+      //            │  agegroup: "toddlers",
+      //            │  genre: "adventure",
+      //            │  artstyle: "cartoon",
 
       //! PROMPT GEMINI API
       const response = await ai.models.generateContent({
