@@ -97,7 +97,7 @@ export const videosRoute = new Hono()
          contents: promptToSend,
          config: {
             systemInstruction:
-               'You are a creative assistant for a storybook generation app. Your task is to take some paramters related to a story (Title, Overview, Agegroup, Genre, Art Style) and generate two things: 1. A short story segment appropriate for a young child. 2. A detailed, descriptive prompt that can be used to generate a beautiful illustration for that story segment in an AI image generator. Provide the output in a valid JSON object with the following keys: "story_segment" and "image_prompt"',
+               'You are a creative assistant for a storybook generation app. Your task is to take some paramters related to a story (Title, Overview, Agegroup, Genre, Art Style) and generate an appropriate script for the storybook.',
          },
       });
 
@@ -116,5 +116,5 @@ export const videosRoute = new Hono()
       }
       console.log(parsedResponse);
 
-      return c.json({ response: response.text });
+      return c.json({ response: parsedResponse });
    });
