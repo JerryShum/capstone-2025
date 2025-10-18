@@ -6,6 +6,7 @@ import { GoogleGenAI } from '@google/genai';
 
 //! Importing type from shared
 import { sendScriptSchema } from '@shared/schemas/sendScriptSchema';
+import { postScriptSchema } from '@shared/schemas/sendScriptSchema';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
@@ -17,9 +18,6 @@ const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 //! ZOD TYPING --> infer the type from the schema
 type scriptPrompt = z.infer<typeof sendScriptSchema>;
-
-//@ the wanted structure of data that someone POSTS:
-const postScriptSchema = sendScriptSchema.omit({ id: true });
 
 //@ Temporary database
 const testVideoPrompts: scriptPrompt[] = [

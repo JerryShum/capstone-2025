@@ -28,9 +28,9 @@ import { formOptions, useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 
 //Other
-import { z } from "@/zod";
+
 import { api } from "@/lib/api";
-import { sendScriptSchema } from "@shared/schemas/sendScriptSchema";
+import { postScriptSchema } from "@shared/schemas/sendScriptSchema";
 
 export const Route = createFileRoute("/create/")({
   component: RouteComponent,
@@ -82,7 +82,9 @@ function RouteComponent() {
       await new Promise((r) => setTimeout(r, 2000));
       await createScript.mutateAsync(value);
     },
-    validators: {},
+    validators: {
+      onChange: postScriptSchema,
+    },
   });
 
   return (
@@ -104,7 +106,7 @@ function RouteComponent() {
           ) : (
             <p>Generated image goes here...</p>
           )}
-          {createScript.isPending && <Loader />}
+          {createScript.isPending && <Loader className="mt-4" />}
         </div>
 
         {/* Scroll area for script */}
@@ -120,7 +122,7 @@ function RouteComponent() {
         ) : (
           <div className="text-muted-foreground flex w-full flex-col items-center justify-center">
             <p>Generated script goes here...</p>
-            {createScript.isPending && <Loader />}
+            {createScript.isPending && <Loader className="mt-4" />}
           </div>
         )}
       </Card>
@@ -149,7 +151,7 @@ function RouteComponent() {
                     required
                   />
                   {!field.state.meta.isValid && (
-                    <em role="alert">{field.state.meta.errors.join(", ")}</em>
+                    <FieldError errors={field.state.meta.errors} />
                   )}
                 </Field>
               )}
@@ -172,7 +174,7 @@ function RouteComponent() {
                   />
 
                   {!field.state.meta.isValid && (
-                    <em role="alert">{field.state.meta.errors.join(", ")}</em>
+                    <FieldError errors={field.state.meta.errors} />
                   )}
                 </Field>
               )}
