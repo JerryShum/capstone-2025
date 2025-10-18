@@ -8,6 +8,9 @@ import { GoogleGenAI } from '@google/genai';
 import { sendScriptSchema } from '@shared/schemas/sendScriptSchema';
 import { postScriptSchema } from '@shared/schemas/sendScriptSchema';
 
+//! Importing prompt builder functions
+import { buildScriptPrompt } from '@server/functions/buildScriptPrompt';
+
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 if (!GEMINI_API_KEY) {
@@ -24,46 +27,46 @@ const testVideoPrompts: scriptPrompt[] = [
    {
       id: 1,
       title: 'Science',
-      overview: 'Explain the water cycle to a 5th grader.',
-      agegroup: 'Kids',
-      genre: 'Educational',
-      artstyle: 'Cartoon',
+      overview: 'A fun adventure explaining the water cycle.',
+      agegroup: 'young-children',
+      genre: 'adventure',
+      artstyle: 'cartoon',
    },
    {
       id: 2,
       title: 'Mathematics',
       overview:
-         'Explain the concept of definite integrals and their applications in physics.',
-      agegroup: 'Adults',
-      genre: 'Educational',
-      artstyle: 'Realistic',
+         'A comedic take on the concept of definite integrals and their applications in physics.',
+      agegroup: 'preschool',
+      genre: 'comedy',
+      artstyle: 'watercolor',
    },
    {
       id: 3,
       title: 'History',
       overview:
-         'Discuss the causes and consequences of the Industrial Revolution in Europe.',
-      agegroup: 'Teens',
-      genre: 'Documentary',
-      artstyle: 'Vintage',
+         'A fairy-tale journey through the Industrial Revolution in Europe.',
+      agegroup: 'toddlers',
+      genre: 'fairy-tale',
+      artstyle: 'pixel-art',
    },
    {
       id: 4,
       title: 'Computer Science',
       overview:
-         'Describe the working principle of a blockchain and its security features.',
-      agegroup: 'Adults',
-      genre: 'Educational',
-      artstyle: 'Modern',
+         'An adventurous explanation of how blockchain works and its security features.',
+      agegroup: 'young-children',
+      genre: 'adventure',
+      artstyle: '3d-render',
    },
    {
       id: 5,
       title: 'Literature',
       overview:
-         "Analyze the themes of love and loss in Shakespeare's Romeo and Juliet.",
-      agegroup: 'Teens',
-      genre: 'Drama',
-      artstyle: 'Classic',
+         "A fantasy retelling of Shakespeare's Romeo and Juliet, focusing on themes of love and loss.",
+      agegroup: 'preschool',
+      genre: 'fantasy',
+      artstyle: 'line-art',
    },
 ];
 
@@ -82,40 +85,36 @@ export const videosRoute = new Hono()
       //@ if it passed, then we get the json obj using .valid
       const promptOBJ = await c.req.valid('json');
 
-      //! Building a prompt based on the user's inputs
-
-      /*
-         agegroup: z.enum(['toddlers', 'preschool', 'young-children']),
-         genre: z.enum(['adventure', 'fantasy', 'comedy', 'fairy-tale']),
-         artstyle: z.enum([
-            'cartoon',
-            'watercolor',
-            'pixel-art',
-            '3d-render',
-            'line-art',
-         ]),
-      */
-
-      //@ define a new JSON obj to send to gemini
-      const sendPrompt = {
-         ...promptOBJ,
-      };
-      console.log(promptOBJ);
-
-      //! Replace with DB later
+      //! Replace with DB later --> storing the user input into the DB
       testVideoPrompts.push({ ...promptOBJ, id: testVideoPrompts.length + 1 });
 
-      //            │  title: "Barry the chicken",
-      //            │  overview: "Barry the chicken",
-      //            │  agegroup: "toddlers",
-      //            │  genre: "adventure",
-      //            │  artstyle: "cartoon",
+      //! Building a prompt based on the user's inputs
+      const promptToSend = buildScriptPrompt(promptOBJ);
 
       //! PROMPT GEMINI API
       const response = await ai.models.generateContent({
          model: 'gemini-2.5-flash',
-         contents: JSON.stringify(promptOBJ),
+         contents: promptToSend,
+         config: {
+            systemInstruction:
+               'You are a creative assistant for a storybook generation app. Your task is to take some paramters related to a story (Title, Overview, Agegroup, Genre, Art Style) and generate two things: 1. A short story segment appropriate for a young child. 2. A detailed, descriptive prompt that can be used to generate a beautiful illustration for that story segment in an AI image generator. Provide the output in a valid JSON object with the following keys: "story_segment" and "image_prompt"',
+         },
       });
+
+      // Safely parse response.text which may be undefined and guard against invalid JSON
+      let parsedResponse: unknown = null;
+      if (typeof response.text === 'string') {
+         try {
+            parsedResponse = JSON.parse(response.text);
+         } catch (err) {
+            console.warn('Failed to parse response.text as JSON:', err);
+            // fall back to the raw text if it's not valid JSON
+            parsedResponse = response.text;
+         }
+      } else {
+         console.warn('response.text is undefined');
+      }
+      console.log(parsedResponse);
 
       return c.json({ response: response.text });
    });
