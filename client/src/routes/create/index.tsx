@@ -97,7 +97,7 @@ function RouteComponent() {
         Fill out the form below to generate a captivating story for your video.
       </p>
 
-      <Card className="bg-card mt-10 flex h-96 w-3/4 flex-row gap-4 rounded-lg p-4">
+      <Card className="bg-card mt-4 flex h-96 w-3/4 flex-row gap-4 rounded-lg p-4">
         <div className="bg-muted flex w-full flex-col items-center justify-center rounded-lg text-center">
           {/* Area for image */}
 
@@ -142,8 +142,17 @@ function RouteComponent() {
           </div>
         )}
       </Card>
+
+      {
+        //! Only show the convert to video button if we succeed in creating script and image
+        createScript.isSuccess &&
+          createScript.data?.script &&
+          !createScript.isPending && (
+            <Button className="mt-4">Convert to Video</Button>
+          )
+      }
       <form
-        className="mt-10 w-3/4"
+        className="mt-4 w-3/4"
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
