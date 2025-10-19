@@ -31,6 +31,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import { api } from "@/lib/api";
 import { postScriptSchema } from "@shared/schemas/sendScriptSchema";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/create/")({
   component: RouteComponent,
@@ -108,9 +109,9 @@ function RouteComponent() {
               className="h-full w-full rounded-lg object-contain"
             />
           ) : (
-            <p>Generated image goes here...</p>
+            !createScript.isPending && <p>Generated image goes here...</p>
           )}
-          {createScript.isPending && <Loader className="mt-4" />}
+          {createScript.isPending && <Skeleton className="h-[90%] w-[90%]" />}
         </div>
 
         {/* Scroll area for script */}
@@ -124,9 +125,20 @@ function RouteComponent() {
             {createScript.data.script}
           </ScrollArea>
         ) : (
+          //! Load skeleton while waiting for script
           <div className="text-muted-foreground flex w-full flex-col items-center justify-center">
-            <p>Generated script goes here...</p>
-            {createScript.isPending && <Loader className="mt-4" />}
+            {createScript.isPending && (
+              <div className="w-full space-y-2">
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+              </div>
+            )}
           </div>
         )}
       </Card>
