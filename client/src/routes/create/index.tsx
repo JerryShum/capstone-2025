@@ -102,7 +102,11 @@ function RouteComponent() {
 
           {/* If success --> put in image, else put in the p */}
           {createScript.isSuccess && !createScript.isPending ? (
-            <Image />
+            <img
+              src={`data:image/png;base64,${createScript.data.imageBase64}`}
+              alt="Generated storybook art"
+              className="h-full w-full rounded-lg object-contain"
+            />
           ) : (
             <p>Generated image goes here...</p>
           )}
@@ -111,13 +115,13 @@ function RouteComponent() {
 
         {/* Scroll area for script */}
         {createScript.isSuccess &&
-        createScript.data?.response &&
+        createScript.data?.script &&
         !createScript.isPending ? (
           <ScrollArea
             className="w-full rounded-md px-4 whitespace-pre-wrap"
             data-lenis-prevent
           >
-            {createScript.data.response}
+            {createScript.data.script}
           </ScrollArea>
         ) : (
           <div className="text-muted-foreground flex w-full flex-col items-center justify-center">
