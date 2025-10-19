@@ -20,9 +20,6 @@ if (!GEMINI_API_KEY) {
 
 const genAI = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
-//! Configuring models for use
-const textModel = genAI.models.getgener;
-
 //! ZOD TYPING --> infer the type from the schema
 type scriptPrompt = z.infer<typeof sendScriptSchema>;
 
@@ -135,9 +132,12 @@ export const videosRoute = new Hono()
          throw new Error('Error when sending request to generate image.');
       }
 
-      const imagePart = imageResult.candidates[0].content?.parts.find(
-         (part) => part.inlineData
-      );
+      const candidate = imageResult.candidates[0];
+      if (!candidate || !candidate.content || !candidate.content.parts) {
+         throw new Error('Image generation failed, no image data returned.');
+      }
+
+      const imagePart = candidate.content.parts.find((part) => part.inlineData);
 
       if (!imagePart || !imagePart.inlineData) {
          throw new Error('Image generation failed, no image data returned.');
