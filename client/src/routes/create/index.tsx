@@ -28,10 +28,12 @@ import { formOptions, useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 
 //Other
-
 import { api } from "@/lib/api";
 import { postScriptSchema } from "@shared/schemas/sendScriptSchema";
 import { Skeleton } from "@/components/ui/skeleton";
+
+// story states
+import { useStoryStore } from "@/stores/storyStore";
 
 export const Route = createFileRoute("/create/")({
   component: RouteComponent,
@@ -51,6 +53,9 @@ const createScriptMutation = {
 };
 
 function RouteComponent() {
+  const navigate = useNavigate();
+  const setStory = useStoryStore((state) => state.setStory); // Get the setter function
+
   //! Using useMutation for submitting the form
   const createScript = useMutation({
     mutationFn: createScriptMutation.mutationFn,
@@ -58,6 +63,13 @@ function RouteComponent() {
       console.log("Prompt successfully sent:", data);
 
       //@ Use navigate to navigate to the generated script page...
+      // Ensure data.script and data.imageBase64 are not null/undefined before setting the story
+      if (data.script && data.imageBase64) {
+        setStory({ script: data.script, imageBase64: data.imageBase64 });
+        navigate({
+          to: "/create/video",
+        });
+      }
     },
     onError: (error) => {
       // Handle the error
