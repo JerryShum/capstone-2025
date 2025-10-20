@@ -66,9 +66,6 @@ function RouteComponent() {
       // Ensure data.script and data.imageBase64 are not null/undefined before setting the story
       if (data.script && data.imageBase64) {
         setStory({ script: data.script, imageBase64: data.imageBase64 });
-        navigate({
-          to: "/create/video",
-        });
       }
     },
     onError: (error) => {
@@ -160,7 +157,17 @@ function RouteComponent() {
         createScript.isSuccess &&
           createScript.data?.script &&
           !createScript.isPending && (
-            <Button className="mt-4">Convert to Video</Button>
+            <Button
+              className="mt-4"
+              onClick={() => {
+                //@ navigate to /create/video
+                navigate({
+                  to: "/create/video",
+                });
+              }}
+            >
+              Convert to Video
+            </Button>
           )
       }
       <form
