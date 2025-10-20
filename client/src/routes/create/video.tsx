@@ -11,7 +11,7 @@ export const Route = createFileRoute("/create/video")({
 });
 
 function RouteComponent() {
-  const { script, imageBase64 } = useStoryStore();
+  const { script, video_prompt, imageBase64 } = useStoryStore();
   const navigate = useNavigate();
 
   if (!script || !imageBase64) {
@@ -57,6 +57,7 @@ function RouteComponent() {
         <Button className="mt-4" onClick={() => console.log("Generate Video")}>
           Generate Video
         </Button>
+        <p>{video_prompt}</p>
       </div>
     );
   }

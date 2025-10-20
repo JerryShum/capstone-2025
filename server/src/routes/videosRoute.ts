@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import z from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { id } from 'zod/locales';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, Type } from '@google/genai';
 
 //! Importing type from shared
 import { sendScriptSchema } from '@shared/schemas/sendScriptSchema';
@@ -22,6 +22,16 @@ const genAI = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 //! ZOD TYPING --> infer the type from the schema
 type scriptPrompt = z.infer<typeof sendScriptSchema>;
+
+//@ Define gemini text output schema
+const geminiOutputSchema = z.object({
+   script: z.string().describe('The full script for the storybook.'),
+   video_prompt: z
+      .array(z.string())
+      .describe('An array of descriptive prompts for generating scene images.'),
+});
+
+type geminiTextOutput = z.infer<typeof geminiOutputSchema>;
 
 //@ Temporary database
 const testVideoPrompts: scriptPrompt[] = [
@@ -101,6 +111,25 @@ export const videosRoute = new Hono()
          config: {
             systemInstruction:
                'You are a creative assistant for a storybook generation app. Your task is to take some paramters related to a story (Title, Overview, Agegroup, Genre, Art Style) and generate an appropriate script for the storybook.',
+            responseMimeType: 'application/json',
+            responseSchema: {
+               type: Type.OBJECT,
+               properties: {
+                  script: {
+                     type: Type.STRING,
+                     description: 'The full script for the storybook.',
+                  },
+                  video_prompt: {
+                     type: Type.ARRAY,
+                     items: {
+                        type: Type.STRING,
+                     },
+                     description:
+                        'An array of strings, where each string is a detailed prompt for generating a scene image/video.',
+                  },
+               },
+               required: ['script', 'video_prompt'],
+            },
          },
       });
 
@@ -120,8 +149,15 @@ export const videosRoute = new Hono()
       ]);
 
       //! Handle the script result:
-      const scriptResponse = scriptResult.text;
-      console.log(scriptResponse);
+      const scriptResponse = scriptResult;
+
+      if (!scriptResponse || !scriptResponse.text) {
+         throw new Error('Script generation returned no text.');
+      }
+      console.log(scriptResponse.text);
+      const scriptRawJSON = JSON.parse(scriptResponse.text);
+      const structuredScriptJSON: geminiTextOutput =
+         geminiOutputSchema.parse(scriptRawJSON);
 
       //! Handle the image result:
       if (
@@ -145,11 +181,10 @@ export const videosRoute = new Hono()
 
       const imageBase64 = imagePart.inlineData.data;
 
-      /// FIX 4: Return a structured JSON object to the client
       return c.json({
          message: 'Content generated successfully!',
-         script: scriptResponse,
-         // By sending the Base64 string, the frontend can render the image immediately
+         script: structuredScriptJSON.script,
+         video_prompt: structuredScriptJSON.video_prompt,
          imageBase64: imageBase64,
       });
    });

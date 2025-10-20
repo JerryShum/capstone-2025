@@ -64,8 +64,12 @@ function RouteComponent() {
 
       //@ Use navigate to navigate to the generated script page...
       // Ensure data.script and data.imageBase64 are not null/undefined before setting the story
-      if (data.script && data.imageBase64) {
-        setStory({ script: data.script, imageBase64: data.imageBase64 });
+      if (data.script && data.imageBase64 && data.video_prompt) {
+        setStory({
+          script: data.script,
+          video_prompt: data.video_prompt,
+          imageBase64: data.imageBase64,
+        });
       }
     },
     onError: (error) => {
