@@ -37,7 +37,6 @@ function RouteComponent() {
         <p className="text-muted-foreground text-lg">
           Review your story and generate your video.
         </p>
-
         <Card className="bg-card mt-4 flex h-96 w-3/4 flex-row gap-4 rounded-lg p-4">
           <div className="bg-muted flex w-full flex-col items-center justify-center rounded-lg text-center">
             <img
@@ -47,17 +46,41 @@ function RouteComponent() {
             />
           </div>
 
-          <ScrollArea
-            className="w-full rounded-md px-4 whitespace-pre-wrap"
-            data-lenis-prevent
-          >
-            {script}
+          <ScrollArea className="w-full rounded-md px-4" data-lenis-prevent>
+            <p className="whitespace-pre-wrap">{script}</p>
           </ScrollArea>
         </Card>
-        <Button className="mt-4" onClick={() => console.log("Generate Video")}>
+        <Button
+          className="text-md mt-4"
+          onClick={() => console.log("Generate Video")}
+          size={"lg"}
+        >
           Generate Video
         </Button>
-        <p>{video_prompt}</p>
+
+        <Card className="bg-card mt-4 flex h-1/2 w-3/4 flex-col rounded-lg p-4">
+          <div className="flex flex-row items-center justify-between">
+            <h2 className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-xl font-bold text-transparent">
+              Video Prompts:
+            </h2>
+            <Button variant={"outline"} className="mb-2" disabled>
+              Edit Prompts
+            </Button>
+          </div>
+          <ScrollArea
+            className="min-h-0 w-full flex-1 rounded-md pr-4 whitespace-pre-wrap"
+            data-lenis-prevent="true"
+          >
+            {video_prompt?.map((prompt, index) => (
+              <div className="mb-4 flex flex-col gap-2">
+                <h3 className="text-secondary-foreground text-lg font-semibold">
+                  Page {index + 1}:
+                </h3>
+                <p className="text-muted-foreground">{prompt}</p>
+              </div>
+            ))}
+          </ScrollArea>
+        </Card>
       </div>
     );
   }
