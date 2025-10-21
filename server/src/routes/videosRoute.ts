@@ -110,14 +110,22 @@ export const videosRoute = new Hono()
          contents: scriptPromptToSend,
          config: {
             systemInstruction:
-               'You are a creative assistant for a storybook generation app. Your task is to take some paramters related to a story (Title, Overview, Agegroup, Genre, Art Style) and generate an appropriate script for the storybook.',
+               'You are a creative assistant for your storybook generation app. Your task is to generate a script and a corresponding list of visual prompts. ' +
+               'You MUST follow these rules: ' +
+               '1. For the `script` field: Generate a SINGLE string. ' +
+               '   - Each page MUST start with a Markdown heading (e.g., `## Page 1`). ' +
+               '   - After the page text, you MUST insert two newline characters (`\\n\\n`) to create a blank line before the next page heading. ' +
+               '   - Example format: `## Page 1\\n[Text for page 1]\\n\\n## Page 2\\n[Text for page 2]`' +
+               '2. For the `video_prompt` field: Generate an array of strings. Each string must be a visual prompt corresponding to the page in the script. ' +
+               '3. The number of prompts in the `video_prompt` array MUST exactly match the number of pages in the `script` string.',
             responseMimeType: 'application/json',
             responseSchema: {
                type: Type.OBJECT,
                properties: {
                   script: {
                      type: Type.STRING,
-                     description: 'The full script for the storybook.',
+                     description:
+                        'The full script for the storybook, formatted as a single string with Markdown headings (e.g., "## Page 1") and newlines separating each page.',
                   },
                   video_prompt: {
                      type: Type.ARRAY,
@@ -125,7 +133,7 @@ export const videosRoute = new Hono()
                         type: Type.STRING,
                      },
                      description:
-                        'An array of strings, where each string is a detailed prompt for generating a scene image/video.',
+                        'An array of strings, where each string is a detailed prompt for generating a scene image/video. Each item corresponds to a page in the script.',
                   },
                },
                required: ['script', 'video_prompt'],
