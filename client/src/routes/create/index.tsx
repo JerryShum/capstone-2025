@@ -42,7 +42,7 @@ export const Route = createFileRoute("/create/")({
 const createScriptMutation = {
   mutationKey: ["videos", "create"],
   mutationFn: async (data: any) => {
-    const res = await api.videos.create.$post({ json: data });
+    const res = await api.create.script.$post({ json: data });
 
     if (!res.ok) {
       throw new Error("something went wrong when submitting this form");

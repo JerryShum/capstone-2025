@@ -81,15 +81,10 @@ const testVideoPrompts: scriptPrompt[] = [
    },
 ];
 
-export const videosRoute = new Hono()
-   .get('/', (c) => {
-      return c.json({ message: 'Videos Route' });
-   })
-   .get('/:id', (c) => {
-      const { id } = c.req.param();
-      return c.json({ message: `Video ${id}` });
-   })
-   .post('/create', zValidator('json', postScriptSchema), async (c) => {
+export const createScriptImageRoute = new Hono().post(
+   '/script',
+   zValidator('json', postScriptSchema),
+   async (c) => {
       //@ when someone sends a post request to our backend, their submitted JSON goes through the validator first
       // it checks whether their JSON matches the schema that we specified above.
 
@@ -201,4 +196,5 @@ export const videosRoute = new Hono()
          video_prompt: structuredScriptJSON.video_prompt,
          imageBase64: imageBase64,
       });
-   });
+   }
+);
