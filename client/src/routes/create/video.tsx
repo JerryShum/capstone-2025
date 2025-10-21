@@ -53,13 +53,6 @@ function RouteComponent() {
             {script}
           </ScrollArea>
         </Card>
-        <Button
-          className="text-md mt-4"
-          onClick={() => console.log("Generate Video")}
-          size={"lg"}
-        >
-          Generate Video
-        </Button>
 
         <Card className="bg-card mt-4 h-[500px] w-3/4 rounded-lg p-4">
           <div className="flex flex-row justify-between">
@@ -87,6 +80,13 @@ function RouteComponent() {
             </ul>
           </ScrollArea>
         </Card>
+        <Button
+          className="text-md mt-4"
+          onClick={() => console.log("Generate Video")}
+          size={"lg"}
+        >
+          Generate Video
+        </Button>
       </div>
     );
   }
