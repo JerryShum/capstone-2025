@@ -46,8 +46,11 @@ function RouteComponent() {
             />
           </div>
 
-          <ScrollArea className="w-full rounded-md px-4" data-lenis-prevent>
-            <p className="whitespace-pre-wrap">{script}</p>
+          <ScrollArea
+            className="w-full rounded-md px-4 whitespace-pre-wrap"
+            data-lenis-prevent
+          >
+            {script}
           </ScrollArea>
         </Card>
         <Button
@@ -58,27 +61,30 @@ function RouteComponent() {
           Generate Video
         </Button>
 
-        <Card className="bg-card mt-4 flex h-1/2 w-3/4 flex-col rounded-lg p-4">
-          <div className="flex flex-row items-center justify-between">
-            <h2 className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-xl font-bold text-transparent">
-              Video Prompts:
-            </h2>
-            <Button variant={"outline"} className="mb-2" disabled>
+        <Card className="bg-card mt-4 h-[500px] w-3/4 rounded-lg p-4">
+          <div className="flex flex-row justify-between">
+            <h3 className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-xl font-extrabold text-transparent">
+              Detailed Prompts for Each Scene:
+            </h3>
+            <Button variant={"outline"} disabled>
               Edit Prompts
             </Button>
           </div>
           <ScrollArea
-            className="min-h-0 w-full flex-1 rounded-md pr-4 whitespace-pre-wrap"
-            data-lenis-prevent="true"
+            className="min-h-0 w-full flex-1 rounded-lg pr-4 whitespace-pre-wrap"
+            data-lenis-prevent
           >
-            {video_prompt?.map((prompt, index) => (
-              <div className="mb-4 flex flex-col gap-2">
-                <h3 className="text-secondary-foreground text-lg font-semibold">
-                  Page {index + 1}:
-                </h3>
-                <p className="text-muted-foreground">{prompt}</p>
-              </div>
-            ))}
+            <ul className="list-disc pl-5">
+              {video_prompt &&
+                video_prompt.map((prompt, index) => (
+                  <li key={index} className="text-muted-foreground mb-2">
+                    <p className="text-secondary-foreground text-lg font-bold">
+                      Scene {index}:
+                    </p>{" "}
+                    {prompt}
+                  </li>
+                ))}
+            </ul>
           </ScrollArea>
         </Card>
       </div>
