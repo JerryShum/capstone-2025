@@ -113,10 +113,16 @@ export const videosRoute = new Hono()
                'You are a creative assistant for your storybook generation app. Your task is to generate a script and a corresponding list of visual prompts. ' +
                'You MUST follow these rules: ' +
                '1. For the `script` field: Generate a SINGLE string. ' +
-               '   - Each page MUST start with a Markdown heading (e.g., `## Page 1`). ' +
-               '   - After the page text, you MUST insert two newline characters (`\\n\\n`) to create a blank line before the next page heading. ' +
-               '   - Example format: `## Page 1\\n[Text for page 1]\\n\\n## Page 2\\n[Text for page 2]`' +
-               '2. For the `video_prompt` field: Generate an array of strings. Each string must be a visual prompt corresponding to the page in the script. ' +
+               '- Each page MUST start with a Markdown heading (e.g., `## Page 1`). ' +
+               '- After the page text, you MUST insert two newline characters (`\\n\\n`) to create a blank line before the next page heading. ' +
+               '- Example format: `## Page 1\\n[Text for page 1]\\n\\n## Page 2\\n[Text for page 2]`' +
+               '2. For the `video_prompt` field: Generate an array of strings. Each string MUST be a *highly detailed visual prompt* for an AI image generator, corresponding to the page. ' +
+               '- Each prompt MUST specify: ' +
+               'a. **Style:** (e.g., "Children\'s book illustration", "whimsical cartoon style", "soft watercolor", "toddler-friendly"). ' +
+               'b. **Composition:** (e.g., "wide establishing shot", "close-up", "low-angle shot", "eye-level", "medium shot"). ' +
+               'c. **Subject & Action:** (e.g., "Farmer Jon smiling at the camera", "a sad chick sitting alone", "hands cradling a chick"). ' +
+               'd. **Setting:** (e.g., "in front of a red barn", "on the grass", "inside a cozy farmhouse"). ' +
+               'e. **Lighting & Color:** (e.g., "bright sunny day", "warm golden hour light", "vibrant and cheerful color palette", "soft shadows"). ' +
                '3. The number of prompts in the `video_prompt` array MUST exactly match the number of pages in the `script` string.',
             responseMimeType: 'application/json',
             responseSchema: {
