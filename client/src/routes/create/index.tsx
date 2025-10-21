@@ -54,9 +54,13 @@ const createScriptMutation = {
 
 function RouteComponent() {
   const navigate = useNavigate();
-  const setStory = useStoryStore((state) => state.setStory); // Get the setter function
+  //@ get the setter function from the store
+  const setStory = useStoryStore((state) => state.setStory);
 
-  //! Using useMutation for submitting the form
+  //@ get the script and image from the store aswell
+  const { script, imageBase64 } = useStoryStore();
+
+  //! Using useMutation for submitting the form --> what to do with the returned data
   const createScript = useMutation({
     mutationFn: createScriptMutation.mutationFn,
     onSuccess: (data) => {
@@ -117,7 +121,7 @@ function RouteComponent() {
           {/* If success --> put in image, else put in the p */}
           {createScript.isSuccess && !createScript.isPending ? (
             <img
-              src={`data:image/png;base64,${createScript.data.imageBase64}`}
+              src={`data:image/png;base64,${imageBase64}`}
               alt="Generated storybook art"
               className="h-full w-full rounded-lg object-contain"
             />
@@ -131,11 +135,8 @@ function RouteComponent() {
         {createScript.isSuccess &&
         createScript.data?.script &&
         !createScript.isPending ? (
-          <ScrollArea
-            className="w-full rounded-md px-4 whitespace-pre-wrap"
-            data-lenis-prevent
-          >
-            {createScript.data.script}
+          <ScrollArea className="w-full rounded-md px-4" data-lenis-prevent>
+            <p className="whitespace-pre-wrap">{script}</p>
           </ScrollArea>
         ) : (
           //! Load skeleton while waiting for script
@@ -162,7 +163,8 @@ function RouteComponent() {
           createScript.data?.script &&
           !createScript.isPending && (
             <Button
-              className="mt-4"
+              className="text-md mt-4"
+              size={"lg"}
               onClick={() => {
                 //@ navigate to /create/video
                 navigate({
