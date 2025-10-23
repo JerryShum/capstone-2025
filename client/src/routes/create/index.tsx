@@ -40,7 +40,7 @@ export const Route = createFileRoute("/create/")({
 });
 
 const createScriptMutation = {
-  mutationKey: ["videos", "create"],
+  mutationKey: ["script", "create"],
   mutationFn: async (data: any) => {
     const res = await api.create.script.$post({ json: data });
 
