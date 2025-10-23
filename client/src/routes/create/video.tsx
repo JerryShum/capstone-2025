@@ -6,15 +6,17 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNavigate } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { api } from "@/lib/api";
+import { useMutation } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/create/video")({
   component: RouteComponent,
 });
 
+//! Mutation function to be used in useMutation
 const createVideoMutation = {
   mutationKey: ["video", "create"],
-  mutationFn: async (data: any) => {
-    const res = await api.create.video.$post({ json: data });
+  mutationFn: async () => {
+    const res = await api.create.test.$get();
 
     if (!res.ok) {
       throw new Error("something went wrong when submitting this form");
@@ -28,7 +30,21 @@ function RouteComponent() {
   const { script, video_prompt, imageBase64 } = useStoryStore();
   const navigate = useNavigate();
 
-  if (!script || !imageBase64) {
+  //! Using useMutation for when user pressed the button --> this gets triggered
+  const createVideo = useMutation({
+    mutationFn: createVideoMutation.mutationFn,
+    onSuccess: (data) => {
+      console.log("Message received from server:", data);
+
+      //! Handle the response that was given by the server
+    },
+    onError: (error) => {
+      // Handle the error
+      console.error("Failed to create video:", error);
+    },
+  });
+
+  if (!!script || !!imageBase64) {
     return (
       <div className="flex flex-col items-center justify-center px-40 py-10">
         <h1 className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-4xl font-extrabold text-transparent">
@@ -93,7 +109,7 @@ function RouteComponent() {
                   <li key={index} className="text-muted-foreground mb-2">
                     <p className="text-secondary-foreground text-lg font-bold">
                       Scene {index + 1}:
-                    </p>{" "}
+                    </p>
                     {prompt}
                   </li>
                 ))}
@@ -102,7 +118,7 @@ function RouteComponent() {
         </Card>
         <Button
           className="text-md mt-4"
-          onClick={() => console.log("Generate Video")}
+          onClick={() => createVideo.mutateAsync()}
           size={"lg"}
         >
           Generate Video
