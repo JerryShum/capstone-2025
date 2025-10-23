@@ -5,10 +5,24 @@ import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNavigate } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
+import { api } from "@/lib/api";
 
 export const Route = createFileRoute("/create/video")({
   component: RouteComponent,
 });
+
+const createVideoMutation = {
+  mutationKey: ["video", "create"],
+  mutationFn: async (data: any) => {
+    const res = await api.create.video.$post({ json: data });
+
+    if (!res.ok) {
+      throw new Error("something went wrong when submitting this form");
+    }
+
+    return res.json();
+  },
+};
 
 function RouteComponent() {
   const { script, video_prompt, imageBase64 } = useStoryStore();
@@ -31,7 +45,13 @@ function RouteComponent() {
   } else {
     return (
       <div className="flex flex-col items-center justify-center px-40 py-10">
-        <h1 className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-4xl font-extrabold text-transparent">
+        <div className="bg-accent text-accent-foreground w-full rounded-md p-3 shadow-md">
+          <p className="text-center text-sm font-medium">
+            💥 Heads up! Video generation is currently in beta. We will only be
+            able to generate the first scene of the story at the moment.
+          </p>
+        </div>
+        <h1 className="mt-4 bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-4xl font-extrabold text-transparent">
           Your Story Awaits!
         </h1>
         <p className="text-muted-foreground text-lg">
@@ -72,7 +92,7 @@ function RouteComponent() {
                 video_prompt.map((prompt, index) => (
                   <li key={index} className="text-muted-foreground mb-2">
                     <p className="text-secondary-foreground text-lg font-bold">
-                      Scene {index}:
+                      Scene {index + 1}:
                     </p>{" "}
                     {prompt}
                   </li>
