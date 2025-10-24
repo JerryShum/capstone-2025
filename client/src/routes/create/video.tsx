@@ -7,32 +7,31 @@ import { useNavigate } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { api } from "@/lib/api";
 import { useMutation } from "@tanstack/react-query";
+import type { postVideoSchemaType } from "@shared/schemas/sendVideoSchema";
 
+import video from "@server/downloads/veo3_with_image_input.mp4";
 export const Route = createFileRoute("/create/video")({
   component: RouteComponent,
 });
-
-//! Mutation function to be used in useMutation
-const createVideoMutation = {
-  mutationKey: ["video", "create"],
-  mutationFn: async () => {
-    const res = await api.create.test.$get();
-
-    if (!res.ok) {
-      throw new Error("something went wrong when submitting this form");
-    }
-
-    return res.json();
-  },
-};
 
 function RouteComponent() {
   const { script, video_prompt, imageBase64 } = useStoryStore();
   const navigate = useNavigate();
 
+  console.log(script, video_prompt, imageBase64);
+
   //! Using useMutation for when user pressed the button --> this gets triggered
   const createVideo = useMutation({
-    mutationFn: createVideoMutation.mutationFn,
+    mutationKey: ["video", "create"],
+    mutationFn: async (data: postVideoSchemaType) => {
+      const res = await api.create.video.$post({ json: data });
+
+      if (!res.ok) {
+        throw new Error("something went wrong when submitting this form");
+      }
+
+      return res.json();
+    },
     onSuccess: (data) => {
       console.log("Message received from server:", data);
 
@@ -44,7 +43,7 @@ function RouteComponent() {
     },
   });
 
-  if (!!script || !!imageBase64) {
+  if (!script || !imageBase64 || !video_prompt) {
     return (
       <div className="flex flex-col items-center justify-center px-40 py-10">
         <h1 className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-4xl font-extrabold text-transparent">
@@ -56,6 +55,10 @@ function RouteComponent() {
         <Button className="mt-4" onClick={() => navigate({ to: "/create" })}>
           Go to Create Story
         </Button>
+
+        <video controls>
+          <source src="veo3_with_image_input.mp4" type="video/mp4" />
+        </video>
       </div>
     );
   } else {
@@ -118,7 +121,13 @@ function RouteComponent() {
         </Card>
         <Button
           className="text-md mt-4"
-          onClick={() => createVideo.mutateAsync()}
+          onClick={() =>
+            createVideo.mutateAsync({
+              script: script ?? "",
+              imageBase64: imageBase64 ?? "",
+              prompt: video_prompt[0] ?? " ",
+            })
+          }
           size={"lg"}
         >
           Generate Video

@@ -43,27 +43,19 @@ export const createVideoRoute = new Hono()
       const referenceImage: VideoGenerationReferenceImage = {
          image: {
             imageBytes: postOBJ.imageBase64,
+            mimeType: 'image/png',
          },
          referenceType: VideoGenerationReferenceType.ASSET,
       };
 
       let operation = await genAI.models.generateVideos({
-         model: 'veo-3.1-generate-preview',
+         model: 'veo-3.1-fast-generate-preview',
          prompt: postOBJ.prompt,
          config: {
-            referenceImages: [referenceImage],
             durationSeconds: 4,
+            generateAudio: true,
          },
       });
-
-      // Poll the operation status until the video is ready.
-      while (!operation.done) {
-         console.log('Waiting for video generation to complete...');
-         await new Promise((resolve) => setTimeout(resolve, 10000));
-         operation = await genAI.operations.getVideosOperation({
-            operation: operation,
-         });
-      }
 
       // Poll the operation status until the video is ready.
       while (!operation.done) {
@@ -77,12 +69,11 @@ export const createVideoRoute = new Hono()
       // Download the video.
       genAI.files.download({
          file: operation.response.generatedVideos[0].video,
-         downloadPath: '../../../downloads/veo3_with_image_input.mp4',
+         downloadPath: '/src/downloads/veo3_with_image_input.mp4',
       });
 
       return c.json({
          message: 'Video generated successfully!',
-         videoUri: generatedVideo.uri,
       });
    })
    .get('/test', async (c) => {
