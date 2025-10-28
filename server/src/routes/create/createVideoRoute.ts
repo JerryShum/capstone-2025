@@ -6,6 +6,7 @@ import {
    GenerateVideosOperation,
 } from '@google/genai';
 import type { VideoGenerationReferenceImage } from '@google/genai';
+import { z } from 'zod';
 
 //! Shared
 import {
@@ -85,54 +86,68 @@ export const createVideoRoute = new Hono()
       // get the "ticket number / operation number" from the URL (that the client will send)
       const operationName = c.req.param('name');
 
-      const operationBuild = {
-         name: operationName,
-      } as GenerateVideosOperation;
+      const operationBuild = new GenerateVideosOperation();
+      operationBuild.name = operationName;
 
-      // use the operationName --> get the operation object from google
-      let operation = await genAI.operations.getVideosOperation({
+      const operation = await genAI.operations.getVideosOperation({
          operation: operationBuild,
       });
 
-      //@ check if the operation is "done" (video is done generating)
+      //@ 1. PROCESSING
       if (!operation.done) {
-         return c.json({ status: 'PROCESSING' });
+         return c.json({
+            status: 'PROCESSING',
+            videoURL: undefined,
+            error: undefined,
+            message: undefined, // <-- Add this
+         });
       }
 
-      //@ check if there was an error that occurred
+      //@ 2. FAILED (DURING OPERATION)
       if (operation.error) {
          console.error('Video generation failed:', operation.error.message);
-         return c.json(
-            { status: 'FAILED', error: operation.error.message },
-            500
-         );
+         return c.json({
+            status: 'FAILED',
+            videoURL: undefined,
+            error: operation.error.message || 'Unknown error',
+            message: undefined, // <-- Add this
+         });
       }
 
-      //@ operation should be ready here:
-      console.log('job is done --> upload to GCS');
-
+      //@ operation should be ready here
       const generatedVideos = operation.response?.generatedVideos;
+
+      //@ 3. FAILED (NO VIDEOS)
       if (!generatedVideos || generatedVideos.length === 0) {
-         console.error('No generated videos found in operation response.');
-         return c.json(
-            { status: 'FAILED', error: 'No generated videos found' },
-            500
-         );
+         return c.json({
+            status: 'FAILED',
+            videoURL: undefined,
+            error: 'no generated video found in operation response',
+            message: undefined, // <-- Add this
+         });
       }
 
       const video = generatedVideos[0]?.video;
+
+      //@ 4. FAILED (NO VIDEO OBJECT)
       if (!video) {
-         console.error('No video object found in the first generated video.');
-         return c.json({ status: 'FAILED', error: 'Video data missing' }, 500);
+         return c.json({
+            status: 'FAILED',
+            videoURL: undefined,
+            error: 'Video data missing in response',
+            message: undefined, // <-- Add this
+         });
       }
 
       const videoURL = await storeAndShowVideo(video, bucket, genAI);
 
+      //@ 5. SUCCESS
       return c.json(
          {
             status: 'SUCCESS',
-            message: 'video has been successfully generated.',
             videoURL: videoURL,
+            error: undefined, // <-- Add this
+            message: 'video has been successfully generated.',
          },
          200
       );
