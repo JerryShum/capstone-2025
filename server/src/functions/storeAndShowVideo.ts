@@ -7,24 +7,18 @@ import * as fs from 'fs';
 
 import { GoogleGenAI } from '@google/genai';
 
-//! Setting up google ai
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-
-if (!GEMINI_API_KEY) {
-   throw new Error('GEMINI_API_KEY is not set in the environment variables.');
-}
-
-const genAI = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
-
 export async function storeAndShowVideo(
    videoFile: Video,
-   bucket: Bucket
+   bucket: Bucket,
+   genAI: GoogleGenAI
 ): Promise<string> {
    //@ create a unique filename using uuidv4 function
    const uniqueFileName = `${uuidv4()}.mp4`;
+   console.log('FILENAME:' + uniqueFileName);
 
    //@ define a temp file path --> \appdata\local\temp\<filename>
    const tempLocalPath = path.join(os.tmpdir(), uniqueFileName);
+   console.log(tempLocalPath);
 
    //@ download the video and store it in the temp directory
    await genAI.files.download({
