@@ -66,7 +66,7 @@ function RouteComponent() {
           textAlign: "center",
         }}
       >
-        <h2>Your video is ready! 🥳</h2>
+        <h2>Your video is ready!</h2>
         <p style={{ marginBottom: "1.5rem" }}>
           Your video has been generated and saved.
         </p>
