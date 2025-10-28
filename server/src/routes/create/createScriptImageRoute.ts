@@ -113,7 +113,7 @@ export const createScriptImageRoute = new Hono().post(
                '- Example format: `## Page 1\\n[Text for page 1]\\n\\n## Page 2\\n[Text for page 2]`' +
                '2. For the `video_prompt` field: Generate an array of strings. Each string MUST be a *highly detailed visual prompt* for an AI image generator, corresponding to the page. ' +
                '- Each prompt MUST specify: ' +
-               'a. **Style:** (e.g., "Children\'s book illustration", "whimsical cartoon style", "soft watercolor", "toddler-friendly"). ' +
+               'a. **Style:** (e.g., "Children\'s book illustration", "whimsical cartoon style", "soft watercolor", "toddler-friendly", "pixel"). This must match the user selected artstyle. ' +
                'b. **Composition:** (e.g., "wide establishing shot", "close-up", "low-angle shot", "eye-level", "medium shot"). ' +
                'c. **Subject & Action:** (e.g., "Farmer Jon smiling at the camera", "a sad chick sitting alone", "hands cradling a chick"). ' +
                'd. **Setting:** (e.g., "in front of a red barn", "on the grass", "inside a cozy farmhouse"). ' +

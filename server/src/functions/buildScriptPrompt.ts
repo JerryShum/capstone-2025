@@ -8,6 +8,7 @@ export function buildScriptPrompt({
    overview,
    agegroup,
    genre,
+   artstyle,
 }: postScriptPrompt): string {
    const ageGroupStoryMap = {
       toddlers:
@@ -40,7 +41,9 @@ export function buildScriptPrompt({
 
    The story is meant for ${agePrompt}.
 
-   The genre of the story should be ${genrePrompt}. `;
+   The genre of the story should be ${genrePrompt}. 
+   
+   The artstyle for the video should be: ${artstyle}`;
 
    return detailedPrompt;
 }
