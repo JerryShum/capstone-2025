@@ -59,23 +59,18 @@ function RouteComponent() {
 
   if (data?.status === "SUCCESS") {
     return (
-      <div
-        style={{
-          maxWidth: "600px",
-          margin: "2rem auto",
-          textAlign: "center",
-        }}
-      >
-        <h2>Your video is ready! 🥳</h2>
-        <p style={{ marginBottom: "1.5rem" }}>
-          Your video has been generated and saved.
+      <div className="mx-auto mt-20 flex flex-col items-center">
+        <h1 className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-4xl font-extrabold text-transparent">
+          Video Generated!
+        </h1>
+        <p className="text-muted-foreground">
+          Your video has been successfully generated and saved!{" "}
         </p>
-
         <video
           src={data.videoURL}
           controls
           autoPlay
-          className="w-full rounded-lg"
+          className="mt-10 max-h-3/4 w-full rounded-lg"
         />
       </div>
     );
