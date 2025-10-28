@@ -59,7 +59,7 @@ function RouteComponent() {
     },
   });
 
-  if (!!script || !!imageBase64 || !!video_prompt) {
+  if (!script || !imageBase64 || !video_prompt) {
     return (
       <div className="flex flex-col items-center justify-center px-40 py-10">
         <h1 className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-4xl font-extrabold text-transparent">
@@ -119,8 +119,8 @@ function RouteComponent() {
             data-lenis-prevent
           >
             <div className="list-disc px-5">
-              {fakeVideoPrompts &&
-                fakeVideoPrompts.map((prompt, index) => (
+              {video_prompt &&
+                video_prompt.map((prompt, index) => (
                   <div
                     key={index}
                     className="text-muted-foreground mb-4 flex items-start gap-4 border-b pb-4"
@@ -139,7 +139,7 @@ function RouteComponent() {
                           prompt: video_prompt[index] ?? " ",
                         })
                       }
-                      variant={"outline"}
+                      variant={"secondary"}
                     >
                       <ArrowRight />
                     </Button>

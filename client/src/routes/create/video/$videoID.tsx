@@ -1,15 +1,93 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Spinner } from "@/components/ui/spinner";
+import { Button } from "@/components/ui/button";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import { api } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/create/video/$videoID")({
   component: RouteComponent,
 });
 
+async function checkVideoStatus(operationName: string) {
+  const response = await api.create.video.status[":name{.+}"].$get({
+    param: { name: operationName },
+  });
+
+  if (!response.ok) {
+    throw new Error("Server error");
+  }
+
+  const data = await response.json();
+  return data;
+}
+
 function RouteComponent() {
   const { videoID } = Route.useParams();
 
+  const videoOperationName = `models/veo-3.1-fast-generate-preview/operations/${videoID}`;
+
+  const { data } = useQuery({
+    queryKey: ["videoStatus", videoOperationName],
+
+    queryFn: () => checkVideoStatus(videoOperationName),
+
+    refetchInterval: (query) => {
+      const status = query.state.data?.status;
+      if (status === "COMPLETE" || status === "FAILED") {
+        return false; // Stop polling
+      }
+      return 20000; // Poll every 5 seconds
+    },
+  });
+
+  if (data?.status === "COMPLETE") {
+    return (
+      <div
+        style={{
+          maxWidth: "600px",
+          margin: "2rem auto",
+          textAlign: "center",
+        }}
+      >
+        <h2>Your video is ready! 🥳</h2>
+        <p style={{ marginBottom: "1.5rem" }}>
+          Your video has been generated and saved.
+        </p>
+
+        <video
+          src={data.videoURL}
+          controls
+          autoPlay
+          className="w-full rounded-lg"
+        />
+      </div>
+    );
+  }
+
+  // This is your "loading / waiting" screen
   return (
     <div className="flex flex-col items-center justify-center px-40 py-10">
-      video id! {videoID}
+      <Empty className="w-full">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <Spinner />
+          </EmptyMedia>
+          <EmptyTitle>Generating your video...</EmptyTitle>
+          <EmptyDescription>
+            Please wait while we generate your video! The video should be done
+            generating in less than a minute.
+          </EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent></EmptyContent>
+      </Empty>
     </div>
   );
 }
