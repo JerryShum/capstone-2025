@@ -36,19 +36,28 @@ function RouteComponent() {
 
   const { data } = useQuery({
     queryKey: ["videoStatus", videoOperationName],
-
     queryFn: () => checkVideoStatus(videoOperationName),
 
+    // FIX: The argument is the full `query` object, not just `data`.
     refetchInterval: (query) => {
+      // Access your API data from `query.state.data`
       const status = query.state.data?.status;
-      if (status === "COMPLETE" || status === "FAILED") {
+
+      if (status === "SUCCESS" || status === "FAILED") {
+        console.log(`Polling complete. Status: ${status}`);
         return false; // Stop polling
       }
-      return 20000; // Poll every 5 seconds
+
+      console.log(`Polling... Status: ${status || "PENDING"}`);
+      return 10000; // Poll every 10 seconds (your comment says 3, but code is 10)
     },
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
   });
 
-  if (data?.status === "COMPLETE") {
+  if (data?.status === "SUCCESS") {
     return (
       <div
         style={{

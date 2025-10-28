@@ -140,6 +140,7 @@ export const createVideoRoute = new Hono()
       }
 
       const videoURL = await storeAndShowVideo(video, bucket, genAI);
+      console.log('VIDEO IN SERVER ROUTE:' + videoURL);
 
       //@ 5. SUCCESS
       return c.json(
