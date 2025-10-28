@@ -18,10 +18,6 @@ import {
 //! Imports for GCS
 import { Storage } from '@google-cloud/storage'; // The GCS toolbox
 import { v4 as uuidv4 } from 'uuid'; // The unique name generator
-import * as path from 'path'; // Node.js tool for file paths
-import * as os from 'os'; // Node.js tool for finding the temp directory
-import * as fs from 'fs';
-import { types } from 'util';
 import { storeAndShowVideo } from '@server/functions/storeAndShowVideo';
 
 //! GCS bucket name and credentials
@@ -73,9 +69,13 @@ export const createVideoRoute = new Hono()
          model: 'veo-3.1-fast-generate-preview',
          prompt: postOBJ.prompt,
          config: {
-            durationSeconds: 6,
+            durationSeconds: 4,
          },
       });
+
+      if (!operation) {
+         console.error('Something went wrong when sending the api request');
+      }
 
       return c.json({
          operationName: operation.name,
@@ -126,7 +126,7 @@ export const createVideoRoute = new Hono()
          return c.json({ status: 'FAILED', error: 'Video data missing' }, 500);
       }
 
-      const videoURL = await storeAndShowVideo(video, bucket);
+      const videoURL = await storeAndShowVideo(video, bucket, genAI);
 
       return c.json(
          {
