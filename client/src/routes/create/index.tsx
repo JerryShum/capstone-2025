@@ -28,19 +28,21 @@ import { formOptions, useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 
 //Other
-
 import { api } from "@/lib/api";
 import { postScriptSchema } from "@shared/schemas/sendScriptSchema";
 import { Skeleton } from "@/components/ui/skeleton";
+
+// story states
+import { useStoryStore } from "@/stores/storyStore";
 
 export const Route = createFileRoute("/create/")({
   component: RouteComponent,
 });
 
 const createScriptMutation = {
-  mutationKey: ["videos", "create"],
+  mutationKey: ["script", "create"],
   mutationFn: async (data: any) => {
-    const res = await api.videos.create.$post({ json: data });
+    const res = await api.create.script.$post({ json: data });
 
     if (!res.ok) {
       throw new Error("something went wrong when submitting this form");
@@ -51,13 +53,28 @@ const createScriptMutation = {
 };
 
 function RouteComponent() {
-  //! Using useMutation for submitting the form
+  const navigate = useNavigate();
+  //@ get the setter function from the store
+  const setStory = useStoryStore((state) => state.setStory);
+
+  //@ get the script and image from the store aswell
+  const { script, imageBase64 } = useStoryStore();
+
+  //! Using useMutation for submitting the form --> what to do with the returned data
   const createScript = useMutation({
     mutationFn: createScriptMutation.mutationFn,
     onSuccess: (data) => {
       console.log("Prompt successfully sent:", data);
 
       //@ Use navigate to navigate to the generated script page...
+      // Ensure data.script and data.imageBase64 are not null/undefined before setting the story
+      if (data.script && data.imageBase64 && data.video_prompt) {
+        setStory({
+          script: data.script,
+          video_prompt: data.video_prompt,
+          imageBase64: data.imageBase64,
+        });
+      }
     },
     onError: (error) => {
       // Handle the error
@@ -97,14 +114,14 @@ function RouteComponent() {
         Fill out the form below to generate a captivating story for your video.
       </p>
 
-      <Card className="bg-card mt-10 flex h-96 w-3/4 flex-row gap-4 rounded-lg p-4">
+      <Card className="bg-card mt-4 flex h-96 w-3/4 flex-row gap-4 rounded-lg p-4">
         <div className="bg-muted flex w-full flex-col items-center justify-center rounded-lg text-center">
           {/* Area for image */}
 
           {/* If success --> put in image, else put in the p */}
           {createScript.isSuccess && !createScript.isPending ? (
             <img
-              src={`data:image/png;base64,${createScript.data.imageBase64}`}
+              src={`data:image/png;base64,${imageBase64}`}
               alt="Generated storybook art"
               className="h-full w-full rounded-lg object-contain"
             />
@@ -118,11 +135,8 @@ function RouteComponent() {
         {createScript.isSuccess &&
         createScript.data?.script &&
         !createScript.isPending ? (
-          <ScrollArea
-            className="w-full rounded-md px-4 whitespace-pre-wrap"
-            data-lenis-prevent
-          >
-            {createScript.data.script}
+          <ScrollArea className="w-full rounded-md px-4" data-lenis-prevent>
+            <p className="whitespace-pre-wrap">{script}</p>
           </ScrollArea>
         ) : (
           //! Load skeleton while waiting for script
@@ -142,8 +156,28 @@ function RouteComponent() {
           </div>
         )}
       </Card>
+
+      {
+        //! Only show the convert to video button if we succeed in creating script and image
+        createScript.isSuccess &&
+          createScript.data?.script &&
+          !createScript.isPending && (
+            <Button
+              className="text-md mt-4"
+              size={"lg"}
+              onClick={() => {
+                //@ navigate to /create/video
+                navigate({
+                  to: "/create/video",
+                });
+              }}
+            >
+              Convert to Video
+            </Button>
+          )
+      }
       <form
-        className="mt-10 w-3/4"
+        className="mt-4 w-3/4"
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();

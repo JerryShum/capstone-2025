@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import z from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { id } from 'zod/locales';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, Type } from '@google/genai';
 
 //! Importing type from shared
 import { sendScriptSchema } from '@shared/schemas/sendScriptSchema';
@@ -20,11 +20,18 @@ if (!GEMINI_API_KEY) {
 
 const genAI = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
-//! Configuring models for use
-const textModel = genAI.models.getgener;
-
 //! ZOD TYPING --> infer the type from the schema
 type scriptPrompt = z.infer<typeof sendScriptSchema>;
+
+//@ Define gemini text output schema
+const geminiOutputSchema = z.object({
+   script: z.string().describe('The full script for the storybook.'),
+   video_prompt: z
+      .array(z.string())
+      .describe('An array of descriptive prompts for generating scene images.'),
+});
+
+type geminiTextOutput = z.infer<typeof geminiOutputSchema>;
 
 //@ Temporary database
 const testVideoPrompts: scriptPrompt[] = [
@@ -74,15 +81,10 @@ const testVideoPrompts: scriptPrompt[] = [
    },
 ];
 
-export const videosRoute = new Hono()
-   .get('/', (c) => {
-      return c.json({ message: 'Videos Route' });
-   })
-   .get('/:id', (c) => {
-      const { id } = c.req.param();
-      return c.json({ message: `Video ${id}` });
-   })
-   .post('/create', zValidator('json', postScriptSchema), async (c) => {
+export const createScriptImageRoute = new Hono().post(
+   '/script',
+   zValidator('json', postScriptSchema),
+   async (c) => {
       //@ when someone sends a post request to our backend, their submitted JSON goes through the validator first
       // it checks whether their JSON matches the schema that we specified above.
 
@@ -103,7 +105,40 @@ export const videosRoute = new Hono()
          contents: scriptPromptToSend,
          config: {
             systemInstruction:
-               'You are a creative assistant for a storybook generation app. Your task is to take some paramters related to a story (Title, Overview, Agegroup, Genre, Art Style) and generate an appropriate script for the storybook.',
+               'You are a creative assistant for your storybook generation app. Your task is to generate a script and a corresponding list of visual prompts. ' +
+               'You MUST follow these rules: ' +
+               '1. For the `script` field: Generate a SINGLE string. ' +
+               '- Each page MUST start with a Markdown heading (e.g., `## Page 1`). ' +
+               '- After the page text, you MUST insert two newline characters (`\\n\\n`) to create a blank line before the next page heading. ' +
+               '- Example format: `## Page 1\\n[Text for page 1]\\n\\n## Page 2\\n[Text for page 2]`' +
+               '2. For the `video_prompt` field: Generate an array of strings. Each string MUST be a *highly detailed visual prompt* for an AI image generator, corresponding to the page. ' +
+               '- Each prompt MUST specify: ' +
+               'a. **Style:** (e.g., "Children\'s book illustration", "whimsical cartoon style", "soft watercolor", "toddler-friendly", "pixel"). This must match the user selected artstyle. ' +
+               'b. **Composition:** (e.g., "wide establishing shot", "close-up", "low-angle shot", "eye-level", "medium shot"). ' +
+               'c. **Subject & Action:** (e.g., "Farmer Jon smiling at the camera", "a sad chick sitting alone", "hands cradling a chick"). ' +
+               'd. **Setting:** (e.g., "in front of a red barn", "on the grass", "inside a cozy farmhouse"). ' +
+               'e. **Lighting & Color:** (e.g., "bright sunny day", "warm golden hour light", "vibrant and cheerful color palette", "soft shadows"). ' +
+               '3. The number of prompts in the `video_prompt` array MUST exactly match the number of pages in the `script` string.',
+            responseMimeType: 'application/json',
+            responseSchema: {
+               type: Type.OBJECT,
+               properties: {
+                  script: {
+                     type: Type.STRING,
+                     description:
+                        'The full script for the storybook, formatted as a single string with Markdown headings (e.g., "## Page 1") and newlines separating each page.',
+                  },
+                  video_prompt: {
+                     type: Type.ARRAY,
+                     items: {
+                        type: Type.STRING,
+                     },
+                     description:
+                        'An array of strings, where each string is a detailed prompt for generating a scene image/video. Each item corresponds to a page in the script.',
+                  },
+               },
+               required: ['script', 'video_prompt'],
+            },
          },
       });
 
@@ -123,8 +158,15 @@ export const videosRoute = new Hono()
       ]);
 
       //! Handle the script result:
-      const scriptResponse = scriptResult.text;
-      console.log(scriptResponse);
+      const scriptResponse = scriptResult;
+
+      if (!scriptResponse || !scriptResponse.text) {
+         throw new Error('Script generation returned no text.');
+      }
+      console.log(scriptResponse.text);
+      const scriptRawJSON = JSON.parse(scriptResponse.text);
+      const structuredScriptJSON: geminiTextOutput =
+         geminiOutputSchema.parse(scriptRawJSON);
 
       //! Handle the image result:
       if (
@@ -135,9 +177,12 @@ export const videosRoute = new Hono()
          throw new Error('Error when sending request to generate image.');
       }
 
-      const imagePart = imageResult.candidates[0].content?.parts.find(
-         (part) => part.inlineData
-      );
+      const candidate = imageResult.candidates[0];
+      if (!candidate || !candidate.content || !candidate.content.parts) {
+         throw new Error('Image generation failed, no image data returned.');
+      }
+
+      const imagePart = candidate.content.parts.find((part) => part.inlineData);
 
       if (!imagePart || !imagePart.inlineData) {
          throw new Error('Image generation failed, no image data returned.');
@@ -145,11 +190,11 @@ export const videosRoute = new Hono()
 
       const imageBase64 = imagePart.inlineData.data;
 
-      /// FIX 4: Return a structured JSON object to the client
       return c.json({
          message: 'Content generated successfully!',
-         script: scriptResponse,
-         // By sending the Base64 string, the frontend can render the image immediately
+         script: structuredScriptJSON.script,
+         video_prompt: structuredScriptJSON.video_prompt,
          imageBase64: imageBase64,
       });
-   });
+   }
+);

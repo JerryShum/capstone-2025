@@ -4,7 +4,8 @@ import { serveStatic } from 'hono/bun';
 import type { ApiResponse } from 'shared/dist';
 import { logger } from 'hono/logger';
 
-import { videosRoute } from './routes/videosRoute';
+import { createScriptImageRoute } from './routes/create/createScriptImageRoute';
+import { createVideoRoute } from './routes/create/createVideoRoute';
 
 const app = new Hono();
 
@@ -25,7 +26,8 @@ const apiroutes = app
 
       return c.json(data, { status: 200 });
    })
-   .route('/videos', videosRoute);
+   .route('/create', createScriptImageRoute)
+   .route('/create', createVideoRoute);
 
 //! Serve static files when the user accesses an "unknown route"
 //@ if someone types in a URL that doesnt exist, we can serve up the react page meant for hadnling the errors, (instead of a bad looking server 404 page)
