@@ -7,5 +7,9 @@ export const Route = createFileRoute("/create/video/$videoID")({
 function RouteComponent() {
   const { videoID } = Route.useParams();
 
-  return <div>video id! {videoID}</div>;
+  return (
+    <div className="flex flex-col items-center justify-center px-40 py-10">
+      video id! {videoID}
+    </div>
+  );
 }
