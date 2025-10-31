@@ -18,7 +18,6 @@ import {
 
 //! Imports for GCS
 import { Storage } from '@google-cloud/storage'; // The GCS toolbox
-import { v4 as uuidv4 } from 'uuid'; // The unique name generator
 import { storeAndShowVideo } from '@server/functions/storeAndShowVideo';
 
 //! GCS bucket name and credentials
