@@ -27,5 +27,11 @@ export async function storeAndShowVideo(
    const uniqueFileName = `${uuidv4()}.mp4`;
    console.log('FILENAME:' + uniqueFileName);
 
+   //! Downloading the video from google using the videoFile (name)
+   genAI.files.download({
+      file: videoFile,
+      downloadPath: `./tmp/${uniqueFileName}`,
+   });
+
    return '';
 }
