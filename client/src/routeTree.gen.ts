@@ -57,9 +57,9 @@ const CreateIndexRoute = CreateIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardVideosIndexRoute = DashboardVideosIndexRouteImport.update({
-  id: '/dashboard/videos/',
-  path: '/dashboard/videos/',
-  getParentRoute: () => rootRouteImport,
+  id: '/videos/',
+  path: '/videos/',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const CreateVideoIndexRoute = CreateVideoIndexRouteImport.update({
   id: '/create/video/',
@@ -67,9 +67,9 @@ const CreateVideoIndexRoute = CreateVideoIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardVideosVideoIDRoute = DashboardVideosVideoIDRouteImport.update({
-  id: '/dashboard/videos/$videoID',
-  path: '/dashboard/videos/$videoID',
-  getParentRoute: () => rootRouteImport,
+  id: '/videos/$videoID',
+  path: '/videos/$videoID',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const CreateVideoVideoIDRoute = CreateVideoVideoIDRouteImport.update({
   id: '/create/video/$videoID',
@@ -168,9 +168,7 @@ export interface RootRouteChildren {
   CreateIndexRoute: typeof CreateIndexRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   CreateVideoVideoIDRoute: typeof CreateVideoVideoIDRoute
-  DashboardVideosVideoIDRoute: typeof DashboardVideosVideoIDRoute
   CreateVideoIndexRoute: typeof CreateVideoIndexRoute
-  DashboardVideosIndexRoute: typeof DashboardVideosIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -226,10 +224,10 @@ declare module '@tanstack/react-router' {
     }
     '/dashboard/videos/': {
       id: '/dashboard/videos/'
-      path: '/dashboard/videos'
+      path: '/videos'
       fullPath: '/dashboard/videos'
       preLoaderRoute: typeof DashboardVideosIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/create/video/': {
       id: '/create/video/'
@@ -240,10 +238,10 @@ declare module '@tanstack/react-router' {
     }
     '/dashboard/videos/$videoID': {
       id: '/dashboard/videos/$videoID'
-      path: '/dashboard/videos/$videoID'
+      path: '/videos/$videoID'
       fullPath: '/dashboard/videos/$videoID'
       preLoaderRoute: typeof DashboardVideosVideoIDRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/create/video/$videoID': {
       id: '/create/video/$videoID'
@@ -264,9 +262,7 @@ const rootRouteChildren: RootRouteChildren = {
   CreateIndexRoute: CreateIndexRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   CreateVideoVideoIDRoute: CreateVideoVideoIDRoute,
-  DashboardVideosVideoIDRoute: DashboardVideosVideoIDRoute,
   CreateVideoIndexRoute: CreateVideoIndexRoute,
-  DashboardVideosIndexRoute: DashboardVideosIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
