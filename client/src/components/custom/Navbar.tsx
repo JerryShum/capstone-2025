@@ -1,18 +1,16 @@
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-//import star from "/star.svg";
-//import { Book } from "lucide-react";
+import logo from "/story_weaver_logo_white.svg";
 
 export default function Navbar() {
   return (
     <header className="bg-background flex h-16 items-center border-b px-4 lg:px-6">
-      {/* Left Side: Logo/Icon */}
       <div className="flex items-center gap-6">
         <Link to="/" className="flex items-center gap-2">
-          <div className="h-6 w-6" />
+          <img className="w- h-10" src={logo} />
           <span className="text-2xl font-bold">StoryWeaver</span>
         </Link>
-        {/* rearranging the buttons*/}
+
         <nav className="flex items-center gap-4 sm:gap-6">
           <Link
             to="/create"
