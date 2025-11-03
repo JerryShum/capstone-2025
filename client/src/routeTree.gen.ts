@@ -47,9 +47,9 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
-  id: '/dashboard/',
-  path: '/dashboard/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRouteRoute,
 } as any)
 const CreateIndexRoute = CreateIndexRouteImport.update({
   id: '/create/',
@@ -59,7 +59,7 @@ const CreateIndexRoute = CreateIndexRouteImport.update({
 const DashboardVideosIndexRoute = DashboardVideosIndexRouteImport.update({
   id: '/videos/',
   path: '/videos/',
-  getParentRoute: () => DashboardRoute,
+  getParentRoute: () => DashboardRouteRoute,
 } as any)
 const CreateVideoIndexRoute = CreateVideoIndexRouteImport.update({
   id: '/create/video/',
@@ -69,7 +69,7 @@ const CreateVideoIndexRoute = CreateVideoIndexRouteImport.update({
 const DashboardVideosVideoIDRoute = DashboardVideosVideoIDRouteImport.update({
   id: '/videos/$videoID',
   path: '/videos/$videoID',
-  getParentRoute: () => DashboardRoute,
+  getParentRoute: () => DashboardRouteRoute,
 } as any)
 const CreateVideoVideoIDRoute = CreateVideoVideoIDRouteImport.update({
   id: '/create/video/$videoID',
@@ -84,7 +84,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/create': typeof CreateIndexRoute
-  '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/create/video/$videoID': typeof CreateVideoVideoIDRoute
   '/dashboard/videos/$videoID': typeof DashboardVideosVideoIDRoute
   '/create/video': typeof CreateVideoIndexRoute
@@ -126,7 +126,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/create'
-    | '/dashboard'
+    | '/dashboard/'
     | '/create/video/$videoID'
     | '/dashboard/videos/$videoID'
     | '/create/video'
@@ -166,7 +166,6 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
   CreateIndexRoute: typeof CreateIndexRoute
-  DashboardIndexRoute: typeof DashboardIndexRoute
   CreateVideoVideoIDRoute: typeof CreateVideoVideoIDRoute
   CreateVideoIndexRoute: typeof CreateVideoIndexRoute
 }
@@ -210,10 +209,10 @@ declare module '@tanstack/react-router' {
     }
     '/dashboard/': {
       id: '/dashboard/'
-      path: '/dashboard'
-      fullPath: '/dashboard'
+      path: '/'
+      fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof DashboardRouteRoute
     }
     '/create/': {
       id: '/create/'
@@ -227,7 +226,7 @@ declare module '@tanstack/react-router' {
       path: '/videos'
       fullPath: '/dashboard/videos'
       preLoaderRoute: typeof DashboardVideosIndexRouteImport
-      parentRoute: typeof DashboardRoute
+      parentRoute: typeof DashboardRouteRoute
     }
     '/create/video/': {
       id: '/create/video/'
@@ -241,7 +240,7 @@ declare module '@tanstack/react-router' {
       path: '/videos/$videoID'
       fullPath: '/dashboard/videos/$videoID'
       preLoaderRoute: typeof DashboardVideosVideoIDRouteImport
-      parentRoute: typeof DashboardRoute
+      parentRoute: typeof DashboardRouteRoute
     }
     '/create/video/$videoID': {
       id: '/create/video/$videoID'
@@ -260,7 +259,6 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
   CreateIndexRoute: CreateIndexRoute,
-  DashboardIndexRoute: DashboardIndexRoute,
   CreateVideoVideoIDRoute: CreateVideoVideoIDRoute,
   CreateVideoIndexRoute: CreateVideoIndexRoute,
 }
