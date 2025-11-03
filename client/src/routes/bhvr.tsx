@@ -7,7 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import { api } from "@/lib/api";
 
-export const Route = createFileRoute("/(general)/bhvr")({
+export const Route = createFileRoute("/bhvr")({
   component: Index,
 });
 
