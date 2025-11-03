@@ -1,9 +1,20 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { AppSidebar } from "@/components/app-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_app")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  return <div>DASHBOARD/APP COMPONEONT GOES HERE</div>;
+  return (
+    <div>
+      <SidebarProvider>
+        <AppSidebar />
+        <div className="flex grow p-2">
+          <Outlet />
+        </div>
+      </SidebarProvider>
+    </div>
+  );
 }
