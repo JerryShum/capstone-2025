@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import logo from "/story_weaver_logo_white.svg";
+import logo from "/story_weaver_logo_2_white.svg";
 
 export default function Navbar() {
   return (
