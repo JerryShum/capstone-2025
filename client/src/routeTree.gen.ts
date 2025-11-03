@@ -9,162 +9,174 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SignupRouteImport } from './routes/signup'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as BhvrRouteImport } from './routes/bhvr'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as PublicRouteRouteImport } from './routes/_public/route'
+import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as CreateIndexRouteImport } from './routes/create/index'
-import { Route as DashboardVideosIndexRouteImport } from './routes/dashboard/videos/index'
+import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as PublicSignupRouteImport } from './routes/_public/signup'
+import { Route as PublicLoginRouteImport } from './routes/_public/login'
+import { Route as PublicBhvrRouteImport } from './routes/_public/bhvr'
+import { Route as PublicAboutRouteImport } from './routes/_public/about'
 import { Route as CreateVideoIndexRouteImport } from './routes/create/video/index'
-import { Route as DashboardVideosVideoIDRouteImport } from './routes/dashboard/videos/$videoID'
+import { Route as AppDashboardIndexRouteImport } from './routes/_app/dashboard/index'
 import { Route as CreateVideoVideoIDRouteImport } from './routes/create/video/$videoID'
+import { Route as AppDashboardVideosIndexRouteImport } from './routes/_app/dashboard/videos/index'
+import { Route as AppDashboardVideosVideoIDRouteImport } from './routes/_app/dashboard/videos/$videoID'
 
-const SignupRoute = SignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
+const PublicRouteRoute = PublicRouteRouteImport.update({
+  id: '/_public',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const AppRouteRoute = AppRouteRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
-} as any)
-const BhvrRoute = BhvrRouteImport.update({
-  id: '/bhvr',
-  path: '/bhvr',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardIndexRoute = DashboardIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DashboardRouteRoute,
 } as any)
 const CreateIndexRoute = CreateIndexRouteImport.update({
   id: '/create/',
   path: '/create/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardVideosIndexRoute = DashboardVideosIndexRouteImport.update({
-  id: '/videos/',
-  path: '/videos/',
-  getParentRoute: () => DashboardRouteRoute,
+const PublicIndexRoute = PublicIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
+const PublicSignupRoute = PublicSignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
+const PublicLoginRoute = PublicLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
+const PublicBhvrRoute = PublicBhvrRouteImport.update({
+  id: '/bhvr',
+  path: '/bhvr',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
+const PublicAboutRoute = PublicAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => PublicRouteRoute,
 } as any)
 const CreateVideoIndexRoute = CreateVideoIndexRouteImport.update({
   id: '/create/video/',
   path: '/create/video/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardVideosVideoIDRoute = DashboardVideosVideoIDRouteImport.update({
-  id: '/videos/$videoID',
-  path: '/videos/$videoID',
-  getParentRoute: () => DashboardRouteRoute,
+const AppDashboardIndexRoute = AppDashboardIndexRouteImport.update({
+  id: '/dashboard/',
+  path: '/dashboard/',
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const CreateVideoVideoIDRoute = CreateVideoVideoIDRouteImport.update({
   id: '/create/video/$videoID',
   path: '/create/video/$videoID',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppDashboardVideosIndexRoute = AppDashboardVideosIndexRouteImport.update({
+  id: '/dashboard/videos/',
+  path: '/dashboard/videos/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppDashboardVideosVideoIDRoute =
+  AppDashboardVideosVideoIDRouteImport.update({
+    id: '/dashboard/videos/$videoID',
+    path: '/dashboard/videos/$videoID',
+    getParentRoute: () => AppRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/bhvr': typeof BhvrRoute
-  '/login': typeof LoginRoute
-  '/signup': typeof SignupRoute
+  '/about': typeof PublicAboutRoute
+  '/bhvr': typeof PublicBhvrRoute
+  '/login': typeof PublicLoginRoute
+  '/signup': typeof PublicSignupRoute
+  '/': typeof PublicIndexRoute
   '/create': typeof CreateIndexRoute
-  '/dashboard/': typeof DashboardIndexRoute
   '/create/video/$videoID': typeof CreateVideoVideoIDRoute
-  '/dashboard/videos/$videoID': typeof DashboardVideosVideoIDRoute
+  '/dashboard': typeof AppDashboardIndexRoute
   '/create/video': typeof CreateVideoIndexRoute
-  '/dashboard/videos': typeof DashboardVideosIndexRoute
+  '/dashboard/videos/$videoID': typeof AppDashboardVideosVideoIDRoute
+  '/dashboard/videos': typeof AppDashboardVideosIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/bhvr': typeof BhvrRoute
-  '/login': typeof LoginRoute
-  '/signup': typeof SignupRoute
+  '/about': typeof PublicAboutRoute
+  '/bhvr': typeof PublicBhvrRoute
+  '/login': typeof PublicLoginRoute
+  '/signup': typeof PublicSignupRoute
+  '/': typeof PublicIndexRoute
   '/create': typeof CreateIndexRoute
-  '/dashboard': typeof DashboardIndexRoute
   '/create/video/$videoID': typeof CreateVideoVideoIDRoute
-  '/dashboard/videos/$videoID': typeof DashboardVideosVideoIDRoute
+  '/dashboard': typeof AppDashboardIndexRoute
   '/create/video': typeof CreateVideoIndexRoute
-  '/dashboard/videos': typeof DashboardVideosIndexRoute
+  '/dashboard/videos/$videoID': typeof AppDashboardVideosVideoIDRoute
+  '/dashboard/videos': typeof AppDashboardVideosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/bhvr': typeof BhvrRoute
-  '/login': typeof LoginRoute
-  '/signup': typeof SignupRoute
+  '/_app': typeof AppRouteRouteWithChildren
+  '/_public': typeof PublicRouteRouteWithChildren
+  '/_public/about': typeof PublicAboutRoute
+  '/_public/bhvr': typeof PublicBhvrRoute
+  '/_public/login': typeof PublicLoginRoute
+  '/_public/signup': typeof PublicSignupRoute
+  '/_public/': typeof PublicIndexRoute
   '/create/': typeof CreateIndexRoute
-  '/dashboard/': typeof DashboardIndexRoute
   '/create/video/$videoID': typeof CreateVideoVideoIDRoute
-  '/dashboard/videos/$videoID': typeof DashboardVideosVideoIDRoute
+  '/_app/dashboard/': typeof AppDashboardIndexRoute
   '/create/video/': typeof CreateVideoIndexRoute
-  '/dashboard/videos/': typeof DashboardVideosIndexRoute
+  '/_app/dashboard/videos/$videoID': typeof AppDashboardVideosVideoIDRoute
+  '/_app/dashboard/videos/': typeof AppDashboardVideosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | '/about'
     | '/bhvr'
     | '/login'
     | '/signup'
+    | '/'
     | '/create'
-    | '/dashboard/'
     | '/create/video/$videoID'
-    | '/dashboard/videos/$videoID'
+    | '/dashboard'
     | '/create/video'
+    | '/dashboard/videos/$videoID'
     | '/dashboard/videos'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/about'
     | '/bhvr'
     | '/login'
     | '/signup'
+    | '/'
     | '/create'
-    | '/dashboard'
     | '/create/video/$videoID'
-    | '/dashboard/videos/$videoID'
+    | '/dashboard'
     | '/create/video'
+    | '/dashboard/videos/$videoID'
     | '/dashboard/videos'
   id:
     | '__root__'
-    | '/'
-    | '/about'
-    | '/bhvr'
-    | '/login'
-    | '/signup'
+    | '/_app'
+    | '/_public'
+    | '/_public/about'
+    | '/_public/bhvr'
+    | '/_public/login'
+    | '/_public/signup'
+    | '/_public/'
     | '/create/'
-    | '/dashboard/'
     | '/create/video/$videoID'
-    | '/dashboard/videos/$videoID'
+    | '/_app/dashboard/'
     | '/create/video/'
-    | '/dashboard/videos/'
+    | '/_app/dashboard/videos/$videoID'
+    | '/_app/dashboard/videos/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  BhvrRoute: typeof BhvrRoute
-  LoginRoute: typeof LoginRoute
-  SignupRoute: typeof SignupRoute
+  AppRouteRoute: typeof AppRouteRouteWithChildren
+  PublicRouteRoute: typeof PublicRouteRouteWithChildren
   CreateIndexRoute: typeof CreateIndexRoute
   CreateVideoVideoIDRoute: typeof CreateVideoVideoIDRoute
   CreateVideoIndexRoute: typeof CreateVideoIndexRoute
@@ -172,47 +184,19 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupRouteImport
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PublicRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AppRouteRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/bhvr': {
-      id: '/bhvr'
-      path: '/bhvr'
-      fullPath: '/bhvr'
-      preLoaderRoute: typeof BhvrRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard/': {
-      id: '/dashboard/'
-      path: '/'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof DashboardIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
     }
     '/create/': {
       id: '/create/'
@@ -221,12 +205,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CreateIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard/videos/': {
-      id: '/dashboard/videos/'
-      path: '/videos'
-      fullPath: '/dashboard/videos'
-      preLoaderRoute: typeof DashboardVideosIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
+    '/_public/': {
+      id: '/_public/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
+    '/_public/signup': {
+      id: '/_public/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof PublicSignupRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
+    '/_public/login': {
+      id: '/_public/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof PublicLoginRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
+    '/_public/bhvr': {
+      id: '/_public/bhvr'
+      path: '/bhvr'
+      fullPath: '/bhvr'
+      preLoaderRoute: typeof PublicBhvrRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
+    '/_public/about': {
+      id: '/_public/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof PublicAboutRouteImport
+      parentRoute: typeof PublicRouteRoute
     }
     '/create/video/': {
       id: '/create/video/'
@@ -235,12 +247,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CreateVideoIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard/videos/$videoID': {
-      id: '/dashboard/videos/$videoID'
-      path: '/videos/$videoID'
-      fullPath: '/dashboard/videos/$videoID'
-      preLoaderRoute: typeof DashboardVideosVideoIDRouteImport
-      parentRoute: typeof DashboardRouteRoute
+    '/_app/dashboard/': {
+      id: '/_app/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/create/video/$videoID': {
       id: '/create/video/$videoID'
@@ -249,15 +261,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CreateVideoVideoIDRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/dashboard/videos/': {
+      id: '/_app/dashboard/videos/'
+      path: '/dashboard/videos'
+      fullPath: '/dashboard/videos'
+      preLoaderRoute: typeof AppDashboardVideosIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/dashboard/videos/$videoID': {
+      id: '/_app/dashboard/videos/$videoID'
+      path: '/dashboard/videos/$videoID'
+      fullPath: '/dashboard/videos/$videoID'
+      preLoaderRoute: typeof AppDashboardVideosVideoIDRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
   }
 }
 
+interface AppRouteRouteChildren {
+  AppDashboardIndexRoute: typeof AppDashboardIndexRoute
+  AppDashboardVideosVideoIDRoute: typeof AppDashboardVideosVideoIDRoute
+  AppDashboardVideosIndexRoute: typeof AppDashboardVideosIndexRoute
+}
+
+const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppDashboardIndexRoute: AppDashboardIndexRoute,
+  AppDashboardVideosVideoIDRoute: AppDashboardVideosVideoIDRoute,
+  AppDashboardVideosIndexRoute: AppDashboardVideosIndexRoute,
+}
+
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
+)
+
+interface PublicRouteRouteChildren {
+  PublicAboutRoute: typeof PublicAboutRoute
+  PublicBhvrRoute: typeof PublicBhvrRoute
+  PublicLoginRoute: typeof PublicLoginRoute
+  PublicSignupRoute: typeof PublicSignupRoute
+  PublicIndexRoute: typeof PublicIndexRoute
+}
+
+const PublicRouteRouteChildren: PublicRouteRouteChildren = {
+  PublicAboutRoute: PublicAboutRoute,
+  PublicBhvrRoute: PublicBhvrRoute,
+  PublicLoginRoute: PublicLoginRoute,
+  PublicSignupRoute: PublicSignupRoute,
+  PublicIndexRoute: PublicIndexRoute,
+}
+
+const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
+  PublicRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-  BhvrRoute: BhvrRoute,
-  LoginRoute: LoginRoute,
-  SignupRoute: SignupRoute,
+  AppRouteRoute: AppRouteRouteWithChildren,
+  PublicRouteRoute: PublicRouteRouteWithChildren,
   CreateIndexRoute: CreateIndexRoute,
   CreateVideoVideoIDRoute: CreateVideoVideoIDRoute,
   CreateVideoIndexRoute: CreateVideoIndexRoute,

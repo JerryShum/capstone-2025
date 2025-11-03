@@ -6,7 +6,7 @@ import { Link } from "@tanstack/react-router";
 // Updated icons to be more story-focused
 import { Sparkles, PenTool, Film } from "lucide-react";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_public/")({
   component: Index,
 });
 

@@ -1,6 +1,6 @@
 import { createFileRoute, useParams } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/dashboard/videos/$videoID')({
+export const Route = createFileRoute('/_app/dashboard/videos/$videoID')({
    component: RouteComponent,
 });
 
