@@ -10,7 +10,7 @@ function RouteComponent() {
   return (
     <div>
       <SidebarProvider>
-        <AppSidebar />
+        <AppSidebar data-lenis-prevent />
         <div className="flex grow p-2">
           <Outlet />
         </div>

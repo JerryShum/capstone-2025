@@ -7,7 +7,7 @@ export const Route = createFileRoute("/_app/dashboard/")({
 
 function RouteComponent() {
   return (
-    <div className="bg-muted h-full w-full grow rounded-lg p-2">
+    <div className="bg-sidebar border-accent h-full w-full grow rounded-lg border-2 border-dashed p-2">
       <SidebarTrigger />
       Hello "/dashboard/"!
     </div>
