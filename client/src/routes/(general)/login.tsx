@@ -13,7 +13,7 @@ import { Field, FieldLabel, FieldSeparator } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { AtSign, Cat } from "lucide-react";
 
-export const Route = createFileRoute("/login")({
+export const Route = createFileRoute("/(general)/login")({
   component: RouteComponent,
 });
 
