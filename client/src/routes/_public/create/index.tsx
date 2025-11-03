@@ -35,7 +35,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 // story states
 import { useStoryStore } from "@/stores/storyStore";
 
-export const Route = createFileRoute("/create/")({
+export const Route = createFileRoute("/_public/create/")({
   component: RouteComponent,
 });
 
@@ -113,7 +113,6 @@ function RouteComponent() {
       <p className="text-muted-foreground text-lg">
         Fill out the form below to generate a captivating story for your video.
       </p>
-
       <Card className="bg-card mt-4 flex h-96 w-3/4 flex-row gap-4 rounded-lg p-4">
         <div className="bg-muted flex w-full flex-col items-center justify-center rounded-lg text-center">
           {/* Area for image */}
@@ -140,7 +139,7 @@ function RouteComponent() {
           </ScrollArea>
         ) : (
           //! Load skeleton while waiting for script
-          <div className="text-muted-foreground flex w-full flex-col items-center justify-center">
+          (<div className="text-muted-foreground flex w-full flex-col items-center justify-center">
             {createScript.isPending && (
               <div className="w-full space-y-2">
                 <Skeleton className="h-8 w-full" />
@@ -153,10 +152,9 @@ function RouteComponent() {
                 <Skeleton className="h-8 w-full" />
               </div>
             )}
-          </div>
+          </div>)
         )}
       </Card>
-
       {
         //! Only show the convert to video button if we succeed in creating script and image
         createScript.isSuccess &&
@@ -381,5 +379,5 @@ function RouteComponent() {
         </Card>
       </form>
     </div>
-  );
+  )
 }

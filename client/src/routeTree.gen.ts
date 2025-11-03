@@ -11,16 +11,16 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
-import { Route as CreateIndexRouteImport } from './routes/create/index'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as PublicSignupRouteImport } from './routes/_public/signup'
 import { Route as PublicLoginRouteImport } from './routes/_public/login'
 import { Route as PublicBhvrRouteImport } from './routes/_public/bhvr'
 import { Route as PublicAboutRouteImport } from './routes/_public/about'
-import { Route as CreateVideoIndexRouteImport } from './routes/create/video/index'
+import { Route as PublicCreateIndexRouteImport } from './routes/_public/create/index'
 import { Route as AppDashboardIndexRouteImport } from './routes/_app/dashboard/index'
-import { Route as CreateVideoVideoIDRouteImport } from './routes/create/video/$videoID'
+import { Route as PublicCreateVideoIndexRouteImport } from './routes/_public/create/video/index'
 import { Route as AppDashboardVideosIndexRouteImport } from './routes/_app/dashboard/videos/index'
+import { Route as PublicCreateVideoVideoIDRouteImport } from './routes/_public/create/video/$videoID'
 import { Route as AppDashboardVideosVideoIDRouteImport } from './routes/_app/dashboard/videos/$videoID'
 
 const PublicRouteRoute = PublicRouteRouteImport.update({
@@ -29,11 +29,6 @@ const PublicRouteRoute = PublicRouteRouteImport.update({
 } as any)
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/_app',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CreateIndexRoute = CreateIndexRouteImport.update({
-  id: '/create/',
-  path: '/create/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicIndexRoute = PublicIndexRouteImport.update({
@@ -61,26 +56,32 @@ const PublicAboutRoute = PublicAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => PublicRouteRoute,
 } as any)
-const CreateVideoIndexRoute = CreateVideoIndexRouteImport.update({
-  id: '/create/video/',
-  path: '/create/video/',
-  getParentRoute: () => rootRouteImport,
+const PublicCreateIndexRoute = PublicCreateIndexRouteImport.update({
+  id: '/create/',
+  path: '/create/',
+  getParentRoute: () => PublicRouteRoute,
 } as any)
 const AppDashboardIndexRoute = AppDashboardIndexRouteImport.update({
   id: '/dashboard/',
   path: '/dashboard/',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const CreateVideoVideoIDRoute = CreateVideoVideoIDRouteImport.update({
-  id: '/create/video/$videoID',
-  path: '/create/video/$videoID',
-  getParentRoute: () => rootRouteImport,
+const PublicCreateVideoIndexRoute = PublicCreateVideoIndexRouteImport.update({
+  id: '/create/video/',
+  path: '/create/video/',
+  getParentRoute: () => PublicRouteRoute,
 } as any)
 const AppDashboardVideosIndexRoute = AppDashboardVideosIndexRouteImport.update({
   id: '/dashboard/videos/',
   path: '/dashboard/videos/',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const PublicCreateVideoVideoIDRoute =
+  PublicCreateVideoVideoIDRouteImport.update({
+    id: '/create/video/$videoID',
+    path: '/create/video/$videoID',
+    getParentRoute: () => PublicRouteRoute,
+  } as any)
 const AppDashboardVideosVideoIDRoute =
   AppDashboardVideosVideoIDRouteImport.update({
     id: '/dashboard/videos/$videoID',
@@ -94,12 +95,12 @@ export interface FileRoutesByFullPath {
   '/login': typeof PublicLoginRoute
   '/signup': typeof PublicSignupRoute
   '/': typeof PublicIndexRoute
-  '/create': typeof CreateIndexRoute
-  '/create/video/$videoID': typeof CreateVideoVideoIDRoute
   '/dashboard': typeof AppDashboardIndexRoute
-  '/create/video': typeof CreateVideoIndexRoute
+  '/create': typeof PublicCreateIndexRoute
   '/dashboard/videos/$videoID': typeof AppDashboardVideosVideoIDRoute
+  '/create/video/$videoID': typeof PublicCreateVideoVideoIDRoute
   '/dashboard/videos': typeof AppDashboardVideosIndexRoute
+  '/create/video': typeof PublicCreateVideoIndexRoute
 }
 export interface FileRoutesByTo {
   '/about': typeof PublicAboutRoute
@@ -107,12 +108,12 @@ export interface FileRoutesByTo {
   '/login': typeof PublicLoginRoute
   '/signup': typeof PublicSignupRoute
   '/': typeof PublicIndexRoute
-  '/create': typeof CreateIndexRoute
-  '/create/video/$videoID': typeof CreateVideoVideoIDRoute
   '/dashboard': typeof AppDashboardIndexRoute
-  '/create/video': typeof CreateVideoIndexRoute
+  '/create': typeof PublicCreateIndexRoute
   '/dashboard/videos/$videoID': typeof AppDashboardVideosVideoIDRoute
+  '/create/video/$videoID': typeof PublicCreateVideoVideoIDRoute
   '/dashboard/videos': typeof AppDashboardVideosIndexRoute
+  '/create/video': typeof PublicCreateVideoIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -123,12 +124,12 @@ export interface FileRoutesById {
   '/_public/login': typeof PublicLoginRoute
   '/_public/signup': typeof PublicSignupRoute
   '/_public/': typeof PublicIndexRoute
-  '/create/': typeof CreateIndexRoute
-  '/create/video/$videoID': typeof CreateVideoVideoIDRoute
   '/_app/dashboard/': typeof AppDashboardIndexRoute
-  '/create/video/': typeof CreateVideoIndexRoute
+  '/_public/create/': typeof PublicCreateIndexRoute
   '/_app/dashboard/videos/$videoID': typeof AppDashboardVideosVideoIDRoute
+  '/_public/create/video/$videoID': typeof PublicCreateVideoVideoIDRoute
   '/_app/dashboard/videos/': typeof AppDashboardVideosIndexRoute
+  '/_public/create/video/': typeof PublicCreateVideoIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -138,12 +139,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/'
-    | '/create'
-    | '/create/video/$videoID'
     | '/dashboard'
-    | '/create/video'
+    | '/create'
     | '/dashboard/videos/$videoID'
+    | '/create/video/$videoID'
     | '/dashboard/videos'
+    | '/create/video'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/about'
@@ -151,12 +152,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/'
-    | '/create'
-    | '/create/video/$videoID'
     | '/dashboard'
-    | '/create/video'
+    | '/create'
     | '/dashboard/videos/$videoID'
+    | '/create/video/$videoID'
     | '/dashboard/videos'
+    | '/create/video'
   id:
     | '__root__'
     | '/_app'
@@ -166,20 +167,17 @@ export interface FileRouteTypes {
     | '/_public/login'
     | '/_public/signup'
     | '/_public/'
-    | '/create/'
-    | '/create/video/$videoID'
     | '/_app/dashboard/'
-    | '/create/video/'
+    | '/_public/create/'
     | '/_app/dashboard/videos/$videoID'
+    | '/_public/create/video/$videoID'
     | '/_app/dashboard/videos/'
+    | '/_public/create/video/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AppRouteRoute: typeof AppRouteRouteWithChildren
   PublicRouteRoute: typeof PublicRouteRouteWithChildren
-  CreateIndexRoute: typeof CreateIndexRoute
-  CreateVideoVideoIDRoute: typeof CreateVideoVideoIDRoute
-  CreateVideoIndexRoute: typeof CreateVideoIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -196,13 +194,6 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof AppRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/create/': {
-      id: '/create/'
-      path: '/create'
-      fullPath: '/create'
-      preLoaderRoute: typeof CreateIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_public/': {
@@ -240,12 +231,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicAboutRouteImport
       parentRoute: typeof PublicRouteRoute
     }
-    '/create/video/': {
-      id: '/create/video/'
-      path: '/create/video'
-      fullPath: '/create/video'
-      preLoaderRoute: typeof CreateVideoIndexRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_public/create/': {
+      id: '/_public/create/'
+      path: '/create'
+      fullPath: '/create'
+      preLoaderRoute: typeof PublicCreateIndexRouteImport
+      parentRoute: typeof PublicRouteRoute
     }
     '/_app/dashboard/': {
       id: '/_app/dashboard/'
@@ -254,12 +245,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/create/video/$videoID': {
-      id: '/create/video/$videoID'
-      path: '/create/video/$videoID'
-      fullPath: '/create/video/$videoID'
-      preLoaderRoute: typeof CreateVideoVideoIDRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_public/create/video/': {
+      id: '/_public/create/video/'
+      path: '/create/video'
+      fullPath: '/create/video'
+      preLoaderRoute: typeof PublicCreateVideoIndexRouteImport
+      parentRoute: typeof PublicRouteRoute
     }
     '/_app/dashboard/videos/': {
       id: '/_app/dashboard/videos/'
@@ -267,6 +258,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/videos'
       preLoaderRoute: typeof AppDashboardVideosIndexRouteImport
       parentRoute: typeof AppRouteRoute
+    }
+    '/_public/create/video/$videoID': {
+      id: '/_public/create/video/$videoID'
+      path: '/create/video/$videoID'
+      fullPath: '/create/video/$videoID'
+      preLoaderRoute: typeof PublicCreateVideoVideoIDRouteImport
+      parentRoute: typeof PublicRouteRoute
     }
     '/_app/dashboard/videos/$videoID': {
       id: '/_app/dashboard/videos/$videoID'
@@ -300,6 +298,9 @@ interface PublicRouteRouteChildren {
   PublicLoginRoute: typeof PublicLoginRoute
   PublicSignupRoute: typeof PublicSignupRoute
   PublicIndexRoute: typeof PublicIndexRoute
+  PublicCreateIndexRoute: typeof PublicCreateIndexRoute
+  PublicCreateVideoVideoIDRoute: typeof PublicCreateVideoVideoIDRoute
+  PublicCreateVideoIndexRoute: typeof PublicCreateVideoIndexRoute
 }
 
 const PublicRouteRouteChildren: PublicRouteRouteChildren = {
@@ -308,6 +309,9 @@ const PublicRouteRouteChildren: PublicRouteRouteChildren = {
   PublicLoginRoute: PublicLoginRoute,
   PublicSignupRoute: PublicSignupRoute,
   PublicIndexRoute: PublicIndexRoute,
+  PublicCreateIndexRoute: PublicCreateIndexRoute,
+  PublicCreateVideoVideoIDRoute: PublicCreateVideoVideoIDRoute,
+  PublicCreateVideoIndexRoute: PublicCreateVideoIndexRoute,
 }
 
 const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
@@ -317,9 +321,6 @@ const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   AppRouteRoute: AppRouteRouteWithChildren,
   PublicRouteRoute: PublicRouteRouteWithChildren,
-  CreateIndexRoute: CreateIndexRoute,
-  CreateVideoVideoIDRoute: CreateVideoVideoIDRoute,
-  CreateVideoIndexRoute: CreateVideoIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
