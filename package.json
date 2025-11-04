@@ -40,5 +40,8 @@
    },
    "peerDependencies": {
       "typescript": "^5.7.3"
+   },
+   "dependencies": {
+      "@studio-freight/lenis": "^1.0.42"
    }
 }

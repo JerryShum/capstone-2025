@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Image, Loader } from "lucide-react";
+import GeneratingScreen from "@/components/ui/generatingScreen";
 import {
   Select,
   SelectContent,
@@ -34,6 +35,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 // story states
 import { useStoryStore } from "@/stores/storyStore";
+import { useState } from "react";
 
 export const Route = createFileRoute("/_public/create/")({
   component: RouteComponent,
@@ -59,6 +61,9 @@ function RouteComponent() {
 
   //@ get the script and image from the store aswell
   const { script, imageBase64 } = useStoryStore();
+  
+  // state for showing GeneratingScreen
+  const [isGenerating, setIsGenerating] = useState(false);
 
   //! Using useMutation for submitting the form --> what to do with the returned data
   const createScript = useMutation({
@@ -69,16 +74,18 @@ function RouteComponent() {
       //@ Use navigate to navigate to the generated script page...
       // Ensure data.script and data.imageBase64 are not null/undefined before setting the story
       if (data.script && data.imageBase64 && data.video_prompt) {
-        setStory({
-          script: data.script,
-          video_prompt: data.video_prompt,
-          imageBase64: data.imageBase64,
-        });
-      }
+      setStory({
+        script: data.script,
+        video_prompt: data.video_prompt,
+        imageBase64: data.imageBase64,
+      }); 
+    }
+      setIsGenerating(false);
     },
     onError: (error) => {
       // Handle the error
-      console.error("Failed to create video:", error);
+      console.error("Failed to create video:", error);      
+      setIsGenerating(false);
     },
   });
 
@@ -98,12 +105,36 @@ function RouteComponent() {
     onSubmit: async ({ value }) => {
       console.log(value);
       await new Promise((r) => setTimeout(r, 2000));
+      setIsGenerating(true);
       await createScript.mutateAsync(value);
     },
     validators: {
       onChange: postScriptSchema,
     },
   });
+
+  const steps = [
+    "Analyzing prompt...",
+    "Creating artstyle...",
+    "Reading Script...",
+    "Rendering Video...",
+    "Exporting Video...",
+  ];
+  const currentStep = 2;
+  const percent = 60;
+  const timeLeft = 30;
+
+  // to show GeneratingScreen while waiting for backend
+  if (isGenerating) {
+    return (
+      <GeneratingScreen
+        steps={steps}
+        currentStep={currentStep}
+        percent={percent}
+        timeLeft={timeLeft}
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center px-40 py-10">
@@ -150,7 +181,7 @@ function RouteComponent() {
                 <Skeleton className="h-8 w-full" />
                 <Skeleton className="h-8 w-full" />
                 <Skeleton className="h-8 w-full" />
-              </div>
+          </div>
             )}
           </div>)
         )}
@@ -160,18 +191,18 @@ function RouteComponent() {
         createScript.isSuccess &&
           createScript.data?.script &&
           !createScript.isPending && (
-            <Button
-              className="text-md mt-4"
-              size={"lg"}
-              onClick={() => {
+        <Button
+          className="text-md mt-4"
+          size={"lg"}
+          onClick={() => {
                 //@ navigate to /create/video
-                navigate({
-                  to: "/create/video",
-                });
-              }}
-            >
-              Convert to Video
-            </Button>
+            navigate({
+              to: "/create/video",
+            });
+          }}
+        >
+          Convert to Video
+        </Button>
           )
       }
       <form
