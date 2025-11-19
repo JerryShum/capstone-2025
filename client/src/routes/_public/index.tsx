@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import AIlandscape from "@/assets/AIlandscape.jpg";
-import React from "react";
 import { Link } from "@tanstack/react-router";
 // Updated icons to be more story-focused
 import { Sparkles, PenTool, Film } from "lucide-react";

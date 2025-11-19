@@ -1,8 +1,6 @@
 import type { Bucket } from '@google-cloud/storage';
 import type { Video } from '@google/genai';
 import { v4 as uuidv4 } from 'uuid';
-import * as path from 'path';
-import * as os from 'os';
 import * as fs from 'fs';
 
 import { GoogleGenAI } from '@google/genai';
