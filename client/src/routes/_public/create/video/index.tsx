@@ -10,7 +10,6 @@ import { useMutation } from "@tanstack/react-query";
 import type { postVideoSchemaType } from "@shared/schemas/sendVideoSchema";
 import { ArrowRight } from "lucide-react";
 
-import video from "@server/downloads/veo3_with_image_input.mp4";
 export const Route = createFileRoute("/_public/create/video/")({
   component: RouteComponent,
 });

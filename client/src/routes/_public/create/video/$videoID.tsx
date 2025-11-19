@@ -70,7 +70,7 @@ function RouteComponent() {
           src={data.videoURL}
           controls
           autoPlay
-          className="mt-10 max-h-3/4 w-full rounded-lg"
+          className="mt-10 max-h-3/4 w-1/2 rounded-lg"
         />
       </div>
     );
