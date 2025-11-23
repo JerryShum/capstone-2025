@@ -19,8 +19,8 @@ export const Route = createFileRoute("/_public/login")({
 
 function RouteComponent() {
   return (
-    <div className="flex grow flex-col items-center justify-center">
-      <Card className="w-full max-w-96">
+    <div className="flex h-full flex-col items-center justify-center">
+      <Card className="mb-16 w-full max-w-96">
         <CardHeader className="text-center">
           <CardTitle className="text-primary text-2xl">Welcome Back</CardTitle>
           <CardDescription>
