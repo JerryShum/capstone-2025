@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Image, Loader } from "lucide-react";
+
 import {
   Select,
   SelectContent,
@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/select";
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -26,6 +25,7 @@ import {
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { formOptions, useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
+import { z } from "zod";
 
 //Other
 import { api } from "@/lib/api";
@@ -41,7 +41,7 @@ export const Route = createFileRoute("/_public/create/")({
 
 const createScriptMutation = {
   mutationKey: ["script", "create"],
-  mutationFn: async (data: any) => {
+  mutationFn: async (data: z.infer<typeof postScriptSchema>) => {
     const res = await api.create.script.$post({ json: data });
 
     if (!res.ok) {
@@ -94,14 +94,13 @@ function RouteComponent() {
 
   const form = useForm({
     ...formOpts,
-
+    validators: {
+      onChange: postScriptSchema,
+    },
     onSubmit: async ({ value }) => {
       console.log(value);
       await new Promise((r) => setTimeout(r, 2000));
-      await createScript.mutateAsync(value);
-    },
-    validators: {
-      onChange: postScriptSchema,
+      await createScript.mutateAsync(value as z.infer<typeof postScriptSchema>);
     },
   });
 
@@ -139,7 +138,7 @@ function RouteComponent() {
           </ScrollArea>
         ) : (
           //! Load skeleton while waiting for script
-          (<div className="text-muted-foreground flex w-full flex-col items-center justify-center">
+          <div className="text-muted-foreground flex w-full flex-col items-center justify-center">
             {createScript.isPending && (
               <div className="w-full space-y-2">
                 <Skeleton className="h-8 w-full" />
@@ -152,7 +151,7 @@ function RouteComponent() {
                 <Skeleton className="h-8 w-full" />
               </div>
             )}
-          </div>)
+          </div>
         )}
       </Card>
       {
@@ -379,5 +378,5 @@ function RouteComponent() {
         </Card>
       </form>
     </div>
-  )
+  );
 }

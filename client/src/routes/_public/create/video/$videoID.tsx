@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Spinner } from "@/components/ui/spinner";
-import { Button } from "@/components/ui/button";
 import {
   Empty,
   EmptyContent,
@@ -11,6 +10,13 @@ import {
 } from "@/components/ui/empty";
 import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
+
+type VideoStatusResponse = {
+  status: "PROCESSING" | "SUCCESS" | "FAILED";
+  videoURL?: string;
+  error?: string;
+  message?: string;
+};
 
 export const Route = createFileRoute("/_public/create/video/$videoID")({
   component: RouteComponent,
@@ -26,7 +32,7 @@ async function checkVideoStatus(operationName: string) {
   }
 
   const data = await response.json();
-  return data;
+  return data as VideoStatusResponse;
 }
 
 function RouteComponent() {
