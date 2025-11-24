@@ -7,7 +7,7 @@ export const Route = createRootRoute({
       <div className="flex min-h-screen flex-col">
         <Outlet />
       </div>
-      <TanStackRouterDevtools />
+      {/* <TanStackRouterDevtools /> */}
     </>
   ),
 });
