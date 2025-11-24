@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_app")({
 
 function RouteComponent() {
   return (
-    <div>
+    <div className="flex min-h-screen">
       <SidebarProvider>
         <AppSidebar data-lenis-prevent />
         <div className="flex grow p-2">
