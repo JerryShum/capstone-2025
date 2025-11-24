@@ -59,7 +59,7 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar variant="floating" {...props} className="">
-      <SidebarHeader className="border-b">
+      <SidebarHeader className="h-20 border-b">
         <div className="flex items-center gap-2 p-2">
           <img className="h-10" src={logo} />
           <span className="text-2xl font-bold">StoryWeaver</span>
