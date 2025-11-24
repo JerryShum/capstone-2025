@@ -39,7 +39,7 @@ const data = {
     },
     {
       title: "Getting Started",
-      url: "/dashboard/getting-started",
+      url: "#",
     },
     {
       title: "Projects",
