@@ -18,12 +18,12 @@ export default function Navbar() {
           >
             Create
           </Link>
-          <Link
+          {/* <Link
             to="/about"
             className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
           >
             About
-          </Link>
+          </Link> */}
           <Link
             to="/dashboard"
             className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
