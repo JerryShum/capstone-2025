@@ -7,7 +7,7 @@ export const Route = createFileRoute("/_public")({
 
 function RouteComponent() {
   return (
-    <div className="grid h-screen grid-rows-[auto_1fr]">
+    <div className="grid min-h-screen grid-rows-[auto_1fr]">
       <Navbar />
 
       <Outlet />
