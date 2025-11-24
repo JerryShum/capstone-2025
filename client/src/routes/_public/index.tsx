@@ -95,6 +95,70 @@ function Index() {
           </div>
         </div>
       </div>
+
+      {/* SECTION 3: HOW IT WORKS (Simplified for clarity) */}
+      <div className="mt-24 pt-12 md:mt-32">
+        <h2 className="mb-4 text-center text-4xl font-semibold">
+          How the Magic Happens
+        </h2>
+        <p className="text-muted-foreground mx-auto max-w-2xl text-center text-lg">
+          It's as easy as 1, 2, 3 to create your child's next favorite story.
+        </p>
+
+        <div className="mt-16 grid grid-cols-1 gap-10 md:grid-cols-3">
+          {/* Step 1 */}
+          <div className="flex flex-col items-center gap-4 text-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-green-600">
+              <span className="text-2xl font-bold">1</span>
+            </div>
+            <h3 className="text-2xl font-semibold">Tell Us Your Idea</h3>
+            <p className="text-muted-foreground">
+              Start with a character, a place, or a simple idea. Our AI will
+              help you brainstorm and build the perfect plot.
+            </p>
+          </div>
+
+          {/* Step 2 */}
+          <div className="flex flex-col items-center gap-4 text-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-yellow-100 text-yellow-600">
+              <span className="text-2xl font-bold">2</span>
+            </div>
+            <h3 className="text-2xl font-semibold">Watch It Come Alive</h3>
+            <p className="text-muted-foreground">
+              Our AI generates beautiful illustrations and gentle animations to
+              match your story, making every page a delight.
+            </p>
+          </div>
+
+          {/* Step 3 */}
+          <div className="flex flex-col items-center gap-4 text-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-100 text-red-600">
+              <span className="text-2xl font-bold">3</span>
+            </div>
+            <h3 className="text-2xl font-semibold">Share and Enjoy</h3>
+            <p className="text-muted-foreground">
+              Read your new story together, save it, or even print it out for a
+              special keepsake.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION 4: CALL TO ACTION (Reiterated) */}
+      <div className="mt-24 pt-12 text-center md:mt-32">
+        <h2 className="mb-4 text-4xl font-semibold">Ready for an Adventure?</h2>
+        <p className="text-muted-foreground mx-auto max-w-2xl text-center text-lg">
+          Join thousands of parents and children creating unforgettable stories
+          every day.
+        </p>
+        <div className="mt-8">
+          <Link to="/create">
+            <Button variant="default" size="lg" className="text-lg">
+              Start Your Story Now
+            </Button>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
