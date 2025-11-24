@@ -1,14 +1,9 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import {
-   GoogleGenAI,
-   GenerateVideosOperation,
-} from '@google/genai';
+import { GoogleGenAI, GenerateVideosOperation } from '@google/genai';
 
 //! Shared
-import {
-   postVideoSchema
-} from '@shared/schemas/sendVideoSchema';
+import { postVideoSchema } from '@shared/schemas/sendVideoSchema';
 
 //----------------------------------------------------------------------
 
@@ -57,7 +52,7 @@ export const createVideoRoute = new Hono()
          model: 'veo-3.1-fast-generate-preview',
          prompt: postOBJ.prompt,
          config: {
-            durationSeconds: 4,
+            durationSeconds: 8,
          },
       });
 
