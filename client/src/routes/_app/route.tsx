@@ -1,4 +1,4 @@
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/components/custom/app-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_app")({
 
 function RouteComponent() {
   return (
-    <div>
+    <div className="flex min-h-screen">
       <SidebarProvider>
         <AppSidebar data-lenis-prevent />
         <div className="flex grow p-2">

@@ -1,7 +1,6 @@
 import { Hono } from 'hono';
 import z from 'zod';
 import { zValidator } from '@hono/zod-validator';
-import { id } from 'zod/locales';
 import { GoogleGenAI, Type } from '@google/genai';
 
 //! Importing type from shared

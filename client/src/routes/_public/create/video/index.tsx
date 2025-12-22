@@ -10,7 +10,6 @@ import { useMutation } from "@tanstack/react-query";
 import type { postVideoSchemaType } from "@shared/schemas/sendVideoSchema";
 import { ArrowRight } from "lucide-react";
 
-import video from "@server/downloads/veo3_with_image_input.mp4";
 export const Route = createFileRoute("/_public/create/video/")({
   component: RouteComponent,
 });
@@ -21,17 +20,6 @@ function RouteComponent() {
 
   console.log(script, video_prompt, imageBase64);
 
-  const fakeVideoPrompts = [
-    "A young boy with a red backpack walks through a sun-drenched forest, birds chirping softly in the background. The sunlight filters through the leaves, creating dappled patterns on the forest floor. He hums a little tune, his steps light and carefree.",
-    "The boy encounters a sparkling river, bending down to touch the cool water, a curious fox watching from behind a tree. The water gurgles gently over smooth stones, and tiny fish dart beneath the surface. The fox, with its bushy tail, peeks out with intelligent eyes, its nose twitching.",
-    "He follows the fox through a field of tall, swaying sunflowers, their heads turning with the sun. The sunflowers tower over them, their bright yellow petals a vibrant contrast against the blue sky. The boy giggles as the fox playfully pounces through the field.",
-    "They arrive at a hidden waterfall, rainbows forming in the mist, and the boy claps his hands in delight. The water cascades down moss-covered rocks, creating a soothing roar. The air is cool and fresh, and the rainbows shimmer with ethereal beauty.",
-    "The boy and the fox sit together on a mossy rock, sharing a sandwich, as the sun begins to set, painting the sky in hues of orange and purple. The sky transforms into a masterpiece of colors, casting a warm glow over the landscape. They share a moment of quiet companionship, the boy offering the fox a piece of his sandwich, which it gently accepts.",
-    "As twilight deepens, fireflies begin to emerge, their tiny lights blinking in the gathering gloom. The boy and the fox watch in wonder, mesmerized by the magical display. The forest, once bright, now holds a gentle, mysterious aura.",
-    "The boy, feeling sleepy, leans against the fox, who has curled up beside him. The fox's fur is soft and warm, a comforting presence in the cool evening air. They drift off to sleep under the watchful eyes of the moon and stars.",
-    "He wakes up to the sound of birdsong and the first rays of dawn. The fox is still beside him, stirring awake. They share a silent understanding, a bond forged in their shared adventure. The forest is alive with the promise of a new day.",
-    "Together, they make their way back through the forest, the boy feeling a sense of accomplishment and joy. He carries the memories of",
-  ];
   //! Using useMutation for when user pressed the button --> this gets triggered
   const createVideo = useMutation({
     mutationKey: ["video", "create"],

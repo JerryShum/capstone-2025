@@ -16,9 +16,9 @@ export function buildImagePrompt(userPrompt: postScriptPrompt): string {
       watercolor:
          'a soft and dreamy watercolor style, with gentle washes of color, soft edges, and an ethereal quality',
       'pixel-art':
-         'a charming and nostalgic 8-bit pixel-art style, reminiscent of classic video games',
+         'a charming and nostalgic 2D 8-bit pixel-art style, reminiscent of classic video games',
       '3d-render':
-         'a polished and modern 3D digital render, similar to a still from an animated movie, with depth and realistic lighting',
+         'a polished and modern 3D digital render, similar to a still from an animated movie, with depth and realistic lighting. The artstyle is reminiscent of modern Pixar & Disney 3D Animation style.',
       'line-art':
          'a clean, elegant, and simple line-art style, perhaps with minimal color fills, focusing on form and shape',
    };

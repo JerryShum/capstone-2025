@@ -7,8 +7,6 @@ import { logger } from 'hono/logger';
 
 // ---
 
-import { db } from '@server/db/index';
-
 // ---
 
 import { createScriptImageRoute } from './routes/create/createScriptImageRoute';

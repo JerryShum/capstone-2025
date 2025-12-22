@@ -1,12 +1,11 @@
-import { createFileRoute, useParams } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_app/dashboard/videos/$videoID')({
    component: RouteComponent,
 });
 
 function RouteComponent() {
-   const params = useParams({ from: '/dashboard/videos/$videoID' });
-   const videoID = params.videoID;
+   const { videoID } = Route.useParams();
 
    return (
       <div>

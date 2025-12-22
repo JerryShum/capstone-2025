@@ -2,16 +2,12 @@ import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import {
    GoogleGenAI,
-   VideoGenerationReferenceType,
    GenerateVideosOperation,
 } from '@google/genai';
-import type { VideoGenerationReferenceImage } from '@google/genai';
-import { z } from 'zod';
 
 //! Shared
 import {
-   postVideoSchema,
-   sendVideoSchema,
+   postVideoSchema
 } from '@shared/schemas/sendVideoSchema';
 
 //----------------------------------------------------------------------
@@ -56,14 +52,6 @@ export const createVideoRoute = new Hono()
       //     /** The MIME type of the image. */
       //     mimeType?: string;
       // }
-
-      const referenceImage: VideoGenerationReferenceImage = {
-         image: {
-            imageBytes: postOBJ.imageBase64,
-            mimeType: 'image/png',
-         },
-         referenceType: VideoGenerationReferenceType.ASSET,
-      };
 
       let operation = await genAI.models.generateVideos({
          model: 'veo-3.1-fast-generate-preview',
