@@ -11,7 +11,7 @@
       "@/*": ["./src/*"],
       "@server/*": ["../server/src/*"],
       "@shared/*": ["../shared/src/*"],
-      "@studio/*": ["../studio/src/*"]
+      "@client/*": ["../client/src/*"]
     }
   }
 }
