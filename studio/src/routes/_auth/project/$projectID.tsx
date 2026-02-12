@@ -1,9 +1,16 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_auth/project/$projectID')({
-  component: RouteComponent,
-})
+   component: RouteComponent,
+});
 
 function RouteComponent() {
-  return <div>Hello "/_auth/project/$projectID"!</div>
+   const { projectID } = Route.useParams();
+
+   return (
+      <div>
+         <h1>Hello "/_auth/project/$projectID"!</h1>
+         <h2>PROJECTID: {projectID}</h2>
+      </div>
+   );
 }
