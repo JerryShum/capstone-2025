@@ -90,24 +90,24 @@ const AppDashboardVideosVideoIDRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof PublicIndexRoute
   '/about': typeof PublicAboutRoute
   '/bhvr': typeof PublicBhvrRoute
   '/login': typeof PublicLoginRoute
   '/signup': typeof PublicSignupRoute
-  '/': typeof PublicIndexRoute
-  '/dashboard': typeof AppDashboardIndexRoute
-  '/create': typeof PublicCreateIndexRoute
+  '/dashboard/': typeof AppDashboardIndexRoute
+  '/create/': typeof PublicCreateIndexRoute
   '/dashboard/videos/$videoID': typeof AppDashboardVideosVideoIDRoute
   '/create/video/$videoID': typeof PublicCreateVideoVideoIDRoute
-  '/dashboard/videos': typeof AppDashboardVideosIndexRoute
-  '/create/video': typeof PublicCreateVideoIndexRoute
+  '/dashboard/videos/': typeof AppDashboardVideosIndexRoute
+  '/create/video/': typeof PublicCreateVideoIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof PublicIndexRoute
   '/about': typeof PublicAboutRoute
   '/bhvr': typeof PublicBhvrRoute
   '/login': typeof PublicLoginRoute
   '/signup': typeof PublicSignupRoute
-  '/': typeof PublicIndexRoute
   '/dashboard': typeof AppDashboardIndexRoute
   '/create': typeof PublicCreateIndexRoute
   '/dashboard/videos/$videoID': typeof AppDashboardVideosVideoIDRoute
@@ -134,24 +134,24 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/about'
     | '/bhvr'
     | '/login'
     | '/signup'
-    | '/'
-    | '/dashboard'
-    | '/create'
+    | '/dashboard/'
+    | '/create/'
     | '/dashboard/videos/$videoID'
     | '/create/video/$videoID'
-    | '/dashboard/videos'
-    | '/create/video'
+    | '/dashboard/videos/'
+    | '/create/video/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/about'
     | '/bhvr'
     | '/login'
     | '/signup'
-    | '/'
     | '/dashboard'
     | '/create'
     | '/dashboard/videos/$videoID'
@@ -185,14 +185,14 @@ declare module '@tanstack/react-router' {
     '/_public': {
       id: '/_public'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof PublicRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
       id: '/_app'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof AppRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -234,28 +234,28 @@ declare module '@tanstack/react-router' {
     '/_public/create/': {
       id: '/_public/create/'
       path: '/create'
-      fullPath: '/create'
+      fullPath: '/create/'
       preLoaderRoute: typeof PublicCreateIndexRouteImport
       parentRoute: typeof PublicRouteRoute
     }
     '/_app/dashboard/': {
       id: '/_app/dashboard/'
       path: '/dashboard'
-      fullPath: '/dashboard'
+      fullPath: '/dashboard/'
       preLoaderRoute: typeof AppDashboardIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
     '/_public/create/video/': {
       id: '/_public/create/video/'
       path: '/create/video'
-      fullPath: '/create/video'
+      fullPath: '/create/video/'
       preLoaderRoute: typeof PublicCreateVideoIndexRouteImport
       parentRoute: typeof PublicRouteRoute
     }
     '/_app/dashboard/videos/': {
       id: '/_app/dashboard/videos/'
       path: '/dashboard/videos'
-      fullPath: '/dashboard/videos'
+      fullPath: '/dashboard/videos/'
       preLoaderRoute: typeof AppDashboardVideosIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
