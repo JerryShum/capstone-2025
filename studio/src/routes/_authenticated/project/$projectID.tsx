@@ -9,6 +9,7 @@ import {
    BackgroundVariant,
    Controls,
    MiniMap,
+   Panel,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -50,6 +51,7 @@ function RouteComponent() {
       [],
    );
    const { projectID } = Route.useParams();
+   const proOptions = { hideAttribution: true };
 
    return (
       <div style={{ width: '100vw', height: '100vh' }}>
@@ -60,10 +62,18 @@ function RouteComponent() {
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             fitView
+            proOptions={proOptions}
          >
             <Background color="#ccc" variant={BackgroundVariant.Dots} />
             <Controls />
             <MiniMap />
+            <Panel
+               position="bottom-center"
+               className="bg-red-200 h-10 w-lg flex items-center justify-center"
+            >
+               bottom-center
+            </Panel>
+            <Panel position="top-left">top-left</Panel>
          </ReactFlow>
       </div>
    );
