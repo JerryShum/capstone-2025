@@ -12,6 +12,7 @@ import {
    Panel,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute('/_authenticated/project/$projectID')({
    component: RouteComponent,
@@ -53,6 +54,18 @@ function RouteComponent() {
    const { projectID } = Route.useParams();
    const proOptions = { hideAttribution: true };
 
+   // --------------------------------
+
+   function addNewNode() {
+      const newNode = {
+         id: String(nodes.length + 1),
+         position: { x: 0, y: 0 },
+         data: { label: `Node ${nodes.length + 1}` },
+      };
+
+      setNodes([...nodes, newNode]);
+   }
+
    return (
       <div style={{ width: '100vw', height: '100vh' }}>
          <ReactFlow
@@ -74,6 +87,13 @@ function RouteComponent() {
                bottom-center
             </Panel>
             <Panel position="top-left">top-left</Panel>
+            <Panel position="center-left">
+               <div>
+                  <Button className="hover:cursor-pointer" onClick={addNewNode}>
+                     Add Node
+                  </Button>
+               </div>
+            </Panel>
          </ReactFlow>
       </div>
    );
