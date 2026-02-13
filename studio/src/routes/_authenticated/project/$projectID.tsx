@@ -5,6 +5,10 @@ import {
    applyNodeChanges,
    applyEdgeChanges,
    addEdge,
+   Background,
+   BackgroundVariant,
+   Controls,
+   MiniMap,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -56,7 +60,11 @@ function RouteComponent() {
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             fitView
-         />
+         >
+            <Background color="#ccc" variant={BackgroundVariant.Dots} />
+            <Controls />
+            <MiniMap />
+         </ReactFlow>
       </div>
    );
 }
