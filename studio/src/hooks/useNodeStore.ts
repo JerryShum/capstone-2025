@@ -31,8 +31,8 @@ const initialEdges = [
 const initialNodes = [
    {
       id: '1',
-      type: 'input',
-      data: { label: 'Input' },
+      type: 'prompt',
+      data: { label: 'Prompt Node' },
       position: { x: 250, y: 25 },
    },
 

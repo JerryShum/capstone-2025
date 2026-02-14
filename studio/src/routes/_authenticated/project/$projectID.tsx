@@ -10,6 +10,7 @@ import {
 import '@xyflow/react/dist/style.css';
 import { Button } from '@/components/ui/button';
 import useNodeStore from '@/hooks/useNodeStore';
+import PromptNode from '@/components/customnodes/PromptNode';
 
 export const Route = createFileRoute('/_authenticated/project/$projectID')({
    component: RouteComponent,
@@ -41,6 +42,10 @@ function RouteComponent() {
       },
    };
 
+   const nodeTypes = {
+      prompt: PromptNode,
+   };
+
    const { projectID } = Route.useParams();
    const proOptions = { hideAttribution: true };
 
@@ -54,6 +59,7 @@ function RouteComponent() {
             onConnect={onConnect}
             fitView
             proOptions={proOptions}
+            nodeTypes={nodeTypes}
          >
             <Background color="#ccc" variant={BackgroundVariant.Dots} />
             <Controls />
