@@ -49,6 +49,15 @@ function RouteComponent() {
    //! USING ZUSTAND STORE TO GET NODES AND STATE
    const nodes = useNodeStore((state) => state.nodes);
    const edges = useNodeStore((state) => state.edges);
+   const addNode = useNodeStore((state) => state.addNode);
+
+   const newNode = {
+      id: String(nodes.length + 1),
+      position: { x: 0, y: 0 },
+      data: {
+         label: `Node ${nodes.length + 1}`,
+      },
+   };
 
    const { projectID } = Route.useParams();
    const proOptions = { hideAttribution: true };
@@ -88,7 +97,12 @@ function RouteComponent() {
             <Panel position="top-left">top-left</Panel>
             <Panel position="center-left">
                <div>
-                  <Button className="hover:cursor-pointer">Add Node</Button>
+                  <Button
+                     className="hover:cursor-pointer"
+                     onClick={() => addNode(newNode)}
+                  >
+                     Add Node
+                  </Button>
                </div>
             </Panel>
          </ReactFlow>

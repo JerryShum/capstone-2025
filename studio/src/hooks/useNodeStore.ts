@@ -7,9 +7,10 @@ type CounterStore = {
       data: { label: string };
    }[];
    edges: { id: string; source: string; target: string }[];
+   addNode: (newNode) => void;
 };
 
-export const useNodeStore = create((set) => ({
+export const useNodeStore = create<CounterStore>((set) => ({
    nodes: [
       { id: 'n1', position: { x: 0, y: 0 }, data: { label: 'Node 1' } },
       { id: 'n2', position: { x: 0, y: 100 }, data: { label: 'Node 2' } },
