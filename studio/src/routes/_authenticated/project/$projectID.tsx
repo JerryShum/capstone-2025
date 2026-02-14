@@ -13,6 +13,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { Button } from '@/components/ui/button';
+import { useNodeStore } from '@/hooks/useNodeStore';
 
 export const Route = createFileRoute('/_authenticated/project/$projectID')({
    component: RouteComponent,
@@ -27,53 +28,51 @@ export const Route = createFileRoute('/_authenticated/project/$projectID')({
 
 //@ ---------------------------------------------------
 
-const initialNodes = [
-   { id: 'n1', position: { x: 0, y: 0 }, data: { label: 'Node 1' } },
-   { id: 'n2', position: { x: 0, y: 100 }, data: { label: 'Node 2' } },
-];
-const initialEdges = [{ id: 'n1-n2', source: 'n1', target: 'n2' }];
-
 function RouteComponent() {
-   const [nodes, setNodes] = useState(initialNodes);
-   const [edges, setEdges] = useState(initialEdges);
+   // const [nodes, setNodes] = useState(initialNodes);
+   // const [edges, setEdges] = useState(initialEdges);
 
-   const onNodesChange = useCallback(
-      (changes) =>
-         setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
-      [],
-   );
-   const onEdgesChange = useCallback(
-      (changes) =>
-         setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
-      [],
-   );
-   const onConnect = useCallback(
-      (params) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
-      [],
-   );
+   // const onNodesChange = useCallback(
+   //    (changes) =>
+   //       setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
+   //    [],
+   // );
+   // const onEdgesChange = useCallback(
+   //    (changes) =>
+   //       setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
+   //    [],
+   // );
+   // const onConnect = useCallback(
+   //    (params) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
+   //    [],
+   // );
+   //! USING ZUSTAND STORE TO GET NODES AND STATE
+   const nodes = useNodeStore((state) => state.nodes);
+   const edges = useNodeStore((state) => state.edges);
+
    const { projectID } = Route.useParams();
    const proOptions = { hideAttribution: true };
 
    // --------------------------------
 
-   function addNewNode() {
-      const newNode = {
-         id: String(nodes.length + 1),
-         position: { x: 0, y: 0 },
-         data: { label: `Node ${nodes.length + 1}` },
-      };
+   // function addNewNode() {
+   //    const newNode = {
+   //       id: String(nodes.length + 1),
+   //       position: { x: 0, y: 0 },
+   //       data: { label: `Node ${nodes.length + 1}` },
+   //    };
 
-      setNodes([...nodes, newNode]);
-   }
+   //    setNodes([...nodes, newNode]);
+   // }
 
    return (
       <div style={{ width: '100vw', height: '100vh' }}>
          <ReactFlow
             nodes={nodes}
             edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
+            // onNodesChange={onNodesChange}
+            // onEdgesChange={onEdgesChange}
+            // onConnect={onConnect}
             fitView
             proOptions={proOptions}
          >
@@ -89,9 +88,7 @@ function RouteComponent() {
             <Panel position="top-left">top-left</Panel>
             <Panel position="center-left">
                <div>
-                  <Button className="hover:cursor-pointer" onClick={addNewNode}>
-                     Add Node
-                  </Button>
+                  <Button className="hover:cursor-pointer">Add Node</Button>
                </div>
             </Panel>
          </ReactFlow>
