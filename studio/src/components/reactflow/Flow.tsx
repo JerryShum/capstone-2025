@@ -10,6 +10,7 @@ import '@xyflow/react/dist/style.css';
 import { Button } from '@/components/ui/button';
 import useFlowStore from '@/hooks/useFlowStore';
 import PromptNode from '@/components/reactflow/customnodes/PromptNode';
+import CharacterNode from './customnodes/CharacterNode';
 import { useShallow } from 'zustand/shallow';
 
 export default function Flow({ props }) {
@@ -26,8 +27,10 @@ export default function Flow({ props }) {
          })),
       );
 
+   //! THIS DEFINES ALL THE TYPES OF NDOES THAT RF EXPECTS --> if there is a node that ISN'T one of these types --> revert to default node
    const nodeTypes = {
       prompt: PromptNode,
+      character: CharacterNode,
    };
 
    const proOptions = { hideAttribution: true };
@@ -35,6 +38,7 @@ export default function Flow({ props }) {
    return (
       <div style={{ width: '100vw', height: '100vh' }}>
          <ReactFlow
+            nodeTypes={nodeTypes}
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
@@ -42,7 +46,6 @@ export default function Flow({ props }) {
             onConnect={onConnect}
             fitView
             proOptions={proOptions}
-            nodeTypes={nodeTypes}
          >
             <Background color="#ccc" variant={BackgroundVariant.Dots} />
             <Controls />
