@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { addEdge, applyNodeChanges, applyEdgeChanges } from '@xyflow/react';
 import type { Edge } from '@xyflow/react';
 import { devtools } from 'zustand/middleware';
-import type { FlowState, AppNode } from '@/types';
+import type { FlowState, AppNode } from '@/lib/types';
 
 const initialEdges = [
    { id: 'e1-2', source: '1', target: '2' },
@@ -16,7 +16,8 @@ const initialNodes = [
       data: {
          type: 'character',
          name: 'barry',
-         visuals: 'pixelated chicken, yellow hair, big blue eyes',
+         style: 'pixelated cartoon chicken',
+         appearance: 'pixelated chicken, yellow hair, big blue eyes',
       },
       position: { x: 250, y: 25 },
    },
