@@ -20,6 +20,16 @@ const initialNodes = [
       },
       position: { x: 250, y: 25 },
    },
+   {
+      id: '2',
+      type: 'script',
+      data: {
+         type: 'script',
+         name: 'barry',
+         visuals: 'pixelated chicken, yellow hair, big blue eyes',
+      },
+      position: { x: 250, y: 25 },
+   },
 ] as AppNode[];
 
 // this is our useStore hook that we can use in our components to get parts of the store and call actions

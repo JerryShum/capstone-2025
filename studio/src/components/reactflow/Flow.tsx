@@ -12,6 +12,7 @@ import useFlowStore from '@/hooks/useFlowStore';
 import PromptNode from '@/components/reactflow/customnodes/PromptNode';
 import CharacterNode from './customnodes/CharacterNode';
 import { useShallow } from 'zustand/shallow';
+import ScriptNode from './customnodes/ScriptNode';
 
 export default function Flow({ props }) {
    //! USING ZUSTAND STORE TO GET NODES, STATE, FUNCTIONS, ETC.
@@ -31,6 +32,7 @@ export default function Flow({ props }) {
    const nodeTypes = {
       prompt: PromptNode,
       character: CharacterNode,
+      script: ScriptNode,
    };
 
    const proOptions = { hideAttribution: true };
