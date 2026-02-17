@@ -3,6 +3,7 @@ import { addEdge, applyNodeChanges, applyEdgeChanges } from '@xyflow/react';
 import type { Edge } from '@xyflow/react';
 import { devtools } from 'zustand/middleware';
 import type { FlowState, AppNode } from '@/lib/types';
+import { nodeBlueprint } from '@/lib/nodeBlueprint';
 
 const initialEdges = [
    { id: 'e1-2', source: '1', target: '2' },
@@ -58,6 +59,23 @@ const useFlowStore = create<FlowState>()(
       },
       setEdges: (edges) => {
          set({ edges });
+      },
+      addNode: (type) => {
+         // use the blueprint to create a "default" node based on the type
+         // character | scene | projectSettings | script
+         const blueprint = nodeBlueprint[type];
+
+         // define new node structure
+         const newNode: AppNode = {
+            id: crypto.randomUUID(),
+            type: type,
+            //$ Position should be changed to fit the middle of current viewport
+            position: { x: 100, y: 100 },
+            data: blueprint.defaultData,
+         };
+
+         // set the new state to include newNode
+         set({ nodes: [...get().nodes, newNode] });
       },
    })),
 );
