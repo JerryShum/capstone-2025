@@ -14,6 +14,13 @@ Studio portion / package for the entire StoryWeaver application. This is going t
    - [ ] refactor current updateScript function
    - [ ] look into generics --> allows us to dynamically type the function
 
+- [ ] Figure out how to save the graph locally
+   - [ ] zustand persist middleware
+
+- [ ] Figure out how to save graph to a database
+   - [ ] Loaders in router --> auto save & fetch from database?
+   - [ ] Implement a timer --> save every 2 seconds? --> streaming approach?
+
 ### Completed Tasks ✓
 
 - [x] Add "addNode" functionality to the studio.
