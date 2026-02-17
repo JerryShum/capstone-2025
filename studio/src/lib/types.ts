@@ -5,6 +5,7 @@ import {
    type OnEdgesChange,
    type OnConnect,
 } from '@xyflow/react';
+// --------------------------------------
 
 //! Defining the types for the custom nodes:
 
@@ -60,6 +61,10 @@ type AppNodeData =
    | SceneNodeData;
 export type AppNode = Node<AppNodeData>; // this appnode tells reactflow that the "official" nodes should only be the ones stated above
 
+//---------------------------------------------------------
+
+type NodeTypes = 'projectSettings' | 'script' | 'character' | 'scene';
+
 //! To be used by zustand store --> this is an interface of the entire reactflow state
 export type FlowState = {
    nodes: AppNode[];
@@ -69,4 +74,5 @@ export type FlowState = {
    onConnect: OnConnect;
    setNodes: (nodes: AppNode[]) => void;
    setEdges: (edges: Edge[]) => void;
+   addNode: (type: NodeTypes) => void;
 };
