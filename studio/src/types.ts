@@ -36,7 +36,7 @@ export type CharacterNodeData = {
    type: 'character';
    name: string;
    visuals: string;
-   referenceImage: httpsURL;
+   referenceImage?: httpsURL;
 };
 export type CharacterNode = Node<CharacterNodeData, 'character'>;
 
