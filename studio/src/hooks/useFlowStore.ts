@@ -1,27 +1,8 @@
 import { create } from 'zustand';
 import { addEdge, applyNodeChanges, applyEdgeChanges } from '@xyflow/react';
+import type { Edge } from '@xyflow/react';
 import { devtools } from 'zustand/middleware';
-
-//! Defining reactflow AppState
-import {
-   type Edge,
-   type Node,
-   type OnNodesChange,
-   type OnEdgesChange,
-   type OnConnect,
-} from '@xyflow/react';
-
-export type AppNode = Node;
-
-export type AppState = {
-   nodes: AppNode[];
-   edges: Edge[];
-   onNodesChange: OnNodesChange<AppNode>;
-   onEdgesChange: OnEdgesChange;
-   onConnect: OnConnect;
-   setNodes: (nodes: AppNode[]) => void;
-   setEdges: (edges: Edge[]) => void;
-};
+import type { FlowState } from '@/types';
 
 const initialEdges = [
    { id: 'e1-2', source: '1', target: '2' },
@@ -50,7 +31,7 @@ const initialNodes = [
 ] as AppNode[];
 
 // this is our useStore hook that we can use in our components to get parts of the store and call actions
-const useNodeStore = create<AppState>()(
+const useFlowStore = create<FlowState>()(
    devtools((set, get) => ({
       nodes: initialNodes,
       edges: initialEdges,
@@ -78,12 +59,4 @@ const useNodeStore = create<AppState>()(
    })),
 );
 
-export default useNodeStore;
-
-//# Example
-// export const useStore = create((set) => ({
-//    bears: 0,
-//$   increasePopulation: function that takes in 0 parameters --> calls the set() function --> set accesses the state --> and returns a new state where bears = state.bears + 1
-//    increasePopulation: () => set((state) => ({ bears: state.bears + 1 }))
-//    removeAllBears: () => set({ bears: 0 }),
-// }));
+export default useFlowStore;
