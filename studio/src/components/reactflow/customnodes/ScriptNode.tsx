@@ -1,7 +1,10 @@
+import useFlowStore from '@/hooks/useFlowStore';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import { ScrollText } from 'lucide-react';
 
-export default function ScriptNode({ data }: NodeProps) {
+export default function ScriptNode({ data, id }: NodeProps) {
+   const updateScriptNode = useFlowStore((state) => state.updateScriptNode);
+
    return (
       <div className="bg-white border-2 border-slate-900 rounded-xl p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] min-w-[300px] flex flex-col gap-3 font-sans">
          <Handle
@@ -20,6 +23,9 @@ export default function ScriptNode({ data }: NodeProps) {
                className="w-full min-h-[120px] text-sm p-3 border-2 border-slate-100 rounded-lg focus:border-purple-500 outline-none transition-colors resize-y font-mono"
                placeholder="Enter your script or detailed prompt here..."
                defaultValue={data?.content as string}
+               onChange={(e) =>
+                  updateScriptNode(id, { content: e.target.value })
+               }
             />
          </div>
 

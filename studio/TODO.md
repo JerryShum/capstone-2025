@@ -9,9 +9,6 @@ Studio portion / package for the entire StoryWeaver application. This is going t
    - [ ] Scene Node
    - [ ] ProjectSettings Node
    - [ ] Script Node
-- [ ] useFlowStore --> updateNode Data (right now the "data" property of each node doesn't actually update whenever we change the info within the fields)
-   - [ ] unique functions for each node that updates their specific data points
-   - [ ] onChange event --> calls updateNode --> replaces their "data" property --> return nodes array
 
 ### Completed Tasks ✓
 
@@ -22,3 +19,7 @@ Studio portion / package for the entire StoryWeaver application. This is going t
    - [x] Custom buttons --> onClick will call the addNode function
    - [x] addNode will use the blueprints to populate the "data" property for their respective node
    - [x] Involves completing the "nodeBlueprint.ts" file --> used for default values
+
+- [x] useFlowStore --> updateNode Data (right now the "data" property of each node doesn't actually update whenever we change the info within the fields)
+   - [x] unique functions for each node that updates their specific data points
+   - [x] onChange event --> calls updateNode --> replaces their "data" property --> return nodes array

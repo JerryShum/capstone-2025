@@ -78,6 +78,27 @@ const useFlowStore = create<FlowState>()(
          // set the new state to include newNode
          set({ nodes: [...get().nodes, newNode] });
       },
+      updateScriptNode: (id, data) => {
+         // filter out all the nodes and find the one we need to update using id
+         set({
+            nodes: get().nodes.map((node) => {
+               if (node.id === id) {
+                  // we found the node we need to update --> create new node with the new data
+
+                  const newScriptNode = {
+                     // spread the general "node" properties
+                     ...node,
+                     // overwriting the old data with new data (keeps whatever wasn't updated)
+                     data: { ...node.data, ...data },
+                  } as AppNode;
+
+                  return newScriptNode;
+               }
+
+               return node;
+            }),
+         });
+      },
    })),
 );
 
