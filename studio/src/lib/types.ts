@@ -35,7 +35,8 @@ export type ScriptNode = Node<ScriptNodeData, 'script'>;
 export type CharacterNodeData = {
    type: 'character';
    name: string;
-   visuals: string;
+   appearance: string;
+   style: string;
    referenceImage?: httpsURL;
 };
 export type CharacterNode = Node<CharacterNodeData, 'character'>;
