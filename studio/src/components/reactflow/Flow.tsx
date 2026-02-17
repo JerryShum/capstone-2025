@@ -13,11 +13,12 @@ import PromptNode from '@/components/reactflow/customnodes/PromptNode';
 import CharacterNode from './customnodes/CharacterNode';
 import { useShallow } from 'zustand/shallow';
 import ScriptNode from './customnodes/ScriptNode';
+import { Plus } from 'lucide-react';
 
 export default function Flow({ props }) {
    //! USING ZUSTAND STORE TO GET NODES, STATE, FUNCTIONS, ETC.
 
-   const { nodes, edges, onNodesChange, onEdgesChange, onConnect } =
+   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, addNode } =
       useFlowStore(
          useShallow((state) => ({
             nodes: state.nodes,
@@ -25,6 +26,7 @@ export default function Flow({ props }) {
             onNodesChange: state.onNodesChange,
             onEdgesChange: state.onEdgesChange,
             onConnect: state.onConnect,
+            addNode: state.addNode,
          })),
       );
 
@@ -56,7 +58,14 @@ export default function Flow({ props }) {
                position="bottom-center"
                className="bg-red-200 h-10 w-lg flex items-center justify-center"
             >
-               bottom-center
+               <Button
+                  variant={'outline'}
+                  size={'icon'}
+                  className="hover:cursor-pointer"
+                  onClick={() => addNode('script')}
+               >
+                  <Plus />
+               </Button>
             </Panel>
             <Panel position="top-left">top-left</Panel>
             <Panel position="center-left">

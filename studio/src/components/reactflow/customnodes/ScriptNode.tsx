@@ -19,7 +19,7 @@ export default function ScriptNode({ data }: NodeProps) {
             <textarea
                className="w-full min-h-[120px] text-sm p-3 border-2 border-slate-100 rounded-lg focus:border-purple-500 outline-none transition-colors resize-y font-mono"
                placeholder="Enter your script or detailed prompt here..."
-               defaultValue={data?.label as string}
+               defaultValue={data?.content as string}
             />
          </div>
 

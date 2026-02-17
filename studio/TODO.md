@@ -4,14 +4,21 @@ Studio portion / package for the entire StoryWeaver application. This is going t
 
 ### TODO
 
-- [ ] Add "addNode" functionality to the studio.
-   - [ ] Update FlowStore interface -- add "addNode"
-   - [ ] Create "addNode" function / state inside the store
-   - [ ] Create custom buttons on the <Flow> componet bottom panels
-   - [ ] Custom buttons --> onClick will call the addNode function
-   - [ ] addNode will use the blueprints to populate the "data" property for their respective node
-   - [ ] Involves completing the "nodeBlueprint.ts" file --> used for default values
+- [ ] Complete the custom node components --> define styles & flush out components
+   - [ ] Character Node
+   - [ ] Scene Node
+   - [ ] ProjectSettings Node
+   - [ ] Script Node
+- [ ] useFlowStore --> updateNode Data
+   - [ ] unique functions for each node that updates their specific data points
+   - [ ] onChange event --> calls updateNode --> replaces their "data" property --> return nodes array
 
 ### Completed Tasks ✓
 
-- [x] Completed task title
+- [x] Add "addNode" functionality to the studio.
+   - [x] Update FlowStore interface -- add "addNode"
+   - [x] Create "addNode" function / state inside the store
+   - [x] Create custom buttons on the <Flow> component bottom panels
+   - [x] Custom buttons --> onClick will call the addNode function
+   - [x] addNode will use the blueprints to populate the "data" property for their respective node
+   - [x] Involves completing the "nodeBlueprint.ts" file --> used for default values

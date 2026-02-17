@@ -61,6 +61,7 @@ const useFlowStore = create<FlowState>()(
          set({ edges });
       },
       addNode: (type) => {
+         console.log('addNode');
          // use the blueprint to create a "default" node based on the type
          // character | scene | projectSettings | script
          const blueprint = nodeBlueprint[type];
