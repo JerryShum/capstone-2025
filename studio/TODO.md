@@ -10,6 +10,10 @@ Studio portion / package for the entire StoryWeaver application. This is going t
    - [ ] ProjectSettings Node
    - [ ] Script Node
 
+- [ ] Create a "general" updateNode function --> used to update all custom nodes
+   - [ ] refactor current updateScript function
+   - [ ] look into generics --> allows us to dynamically type the function
+
 ### Completed Tasks ✓
 
 - [x] Add "addNode" functionality to the studio.
