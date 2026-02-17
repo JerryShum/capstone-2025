@@ -3,9 +3,41 @@
 
 export const nodeBlueprint = {
    character: {
-      name: 'Character name...',
-      style: 'e.g. Cinematic, Realistic, Anime...',
-      appearance: 'e.g. Pirate, Prince, SuperHero...',
-      referenceImage: 'https://...',
+      label: 'Add Character Node',
+      defaultData: {
+         type: 'character',
+         name: 'Character name...',
+         style: 'e.g. Cinematic, Realistic, Anime...',
+         appearance: 'e.g. Pirate, Prince, SuperHero...',
+         referenceImage: 'https://...',
+      },
    },
-};
+   scene: {
+      label: 'Add Scene Node',
+      defaultData: {
+         type: 'scene',
+         prompt: 'Describe the scene action...',
+         status: 'IDLE',
+         videoURL: 'https://...',
+         thumbnailURL: 'https://...',
+         duration: 4,
+      },
+   },
+   script: {
+      label: 'Add Script Node',
+      defaultData: {
+         type: 'script',
+         content: 'Write your script segment here...',
+      },
+   },
+   projectSettings: {
+      label: 'Add Project Settings',
+      defaultData: {
+         type: 'projectsettings',
+         title: 'Untitled Project',
+         aspectRatio: '16:9',
+         globalStyle: 'Cinematic',
+         targetModel: 'Sora',
+      },
+   },
+} as const;
