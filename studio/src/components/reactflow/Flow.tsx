@@ -1,19 +1,19 @@
+import PromptNode from '@/components/reactflow/customnodes/PromptNode';
+import useFlowStore from '@/hooks/useFlowStore';
 import {
-   ReactFlow,
    Background,
    BackgroundVariant,
    Controls,
    MiniMap,
    Panel,
+   ReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Button } from '@/components/ui/button';
-import useFlowStore from '@/hooks/useFlowStore';
-import PromptNode from '@/components/reactflow/customnodes/PromptNode';
-import CharacterNode from './customnodes/CharacterNode';
+import { ScrollText, UserStar } from 'lucide-react';
 import { useShallow } from 'zustand/shallow';
+import CharacterNode from './customnodes/CharacterNode';
 import ScriptNode from './customnodes/ScriptNode';
-import { Plus } from 'lucide-react';
+import NodeButton from './panels/NodeButton';
 
 export default function Flow({ props }) {
    //! USING ZUSTAND STORE TO GET NODES, STATE, FUNCTIONS, ETC.
@@ -56,16 +56,18 @@ export default function Flow({ props }) {
             <MiniMap />
             <Panel
                position="bottom-center"
-               className="bg-red-200 h-10 w-lg flex items-center justify-center"
+               className="flex items-center justify-center gap-2 bg-background/80 backdrop-blur-md border border-border p-3 rounded-xl shadow-lg mb-4"
             >
-               <Button
-                  variant={'outline'}
-                  size={'icon'}
-                  className="hover:cursor-pointer"
-                  onClick={() => addNode('script')}
-               >
-                  <Plus />
-               </Button>
+               <NodeButton
+                  tooltiptext="Script Node"
+                  Icon={ScrollText}
+                  onClickFunction={() => addNode('script')}
+               />
+               <NodeButton
+                  tooltiptext="Character Node"
+                  Icon={UserStar}
+                  onClickFunction={() => addNode('character')}
+               />
             </Panel>
             <Panel position="top-left">top-left</Panel>
             <Panel position="center-left">
