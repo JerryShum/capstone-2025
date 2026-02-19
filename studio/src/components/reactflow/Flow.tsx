@@ -56,7 +56,7 @@ export default function Flow({ props }) {
             <MiniMap />
             <Panel
                position="bottom-center"
-               className="flex items-center justify-center gap-2 bg-background/80 backdrop-blur-md border border-border p-3 rounded-xl shadow-lg mb-4"
+               className="flex items-center justify-center gap-2 bg-background/80 backdrop-blur-md border border-border p-3 rounded-xl shadow-md mb-4 shadow-zinc-400"
             >
                <NodeButton
                   tooltiptext="Script Node"
