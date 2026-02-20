@@ -7,8 +7,7 @@ import {
    MiniMap,
    Panel,
    ReactFlow,
-   useReactFlow,
-   useViewport,
+   useReactFlow
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { ScrollText, UserStar } from 'lucide-react';
@@ -16,6 +15,7 @@ import { useShallow } from 'zustand/shallow';
 import CharacterNode from './customnodes/CharacterNode';
 import ScriptNode from './customnodes/ScriptNode';
 import NodeButton from './panels/NodeButton';
+import { calcPosition } from '@/lib/functions/calcPosition';
 
 export default function Flow({ props }) {
    //! USING ZUSTAND STORE TO GET NODES, STATE, FUNCTIONS, ETC.
@@ -40,18 +40,7 @@ export default function Flow({ props }) {
    };
 
    //---------------------------------------------------------
-
-   //! Defining middle of the browser window
-   const centerX = window.innerWidth / 2;
-   const centerY = window.innerHeight / 2;
    const reactFlow = useReactFlow();
-   const xyposition = reactFlow.screenToFlowPosition({
-      x: centerX,
-      y: centerY,
-   });
-
-   console.log(xyposition);
-   const { x, y } = xyposition;
 
    const proOptions = { hideAttribution: true };
 
@@ -77,12 +66,19 @@ export default function Flow({ props }) {
                <NodeButton
                   tooltiptext="Script Node"
                   Icon={ScrollText}
-                  onClickFunction={() => addNode('script', { x, y })}
+                  onClickFunction={() => {
+
+
+                     addNode('script', calcPosition(reactFlow));
+                  }}
                />
                <NodeButton
                   tooltiptext="Character Node"
                   Icon={UserStar}
-                  onClickFunction={() => addNode('character', { x, y })}
+                  onClickFunction={() => {
+
+                     addNode('character', calcPosition(reactFlow));
+                  }}
                />
             </Panel>
             <Panel position="top-left">top-left</Panel>
