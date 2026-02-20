@@ -12,6 +12,7 @@ import {
 import '@xyflow/react/dist/style.css';
 import { ScrollText, UserStar } from 'lucide-react';
 import { useShallow } from 'zustand/shallow';
+import BackButton from './panels/BackButton';
 import CharacterNode from './customnodes/CharacterNode';
 import ScriptNode from './customnodes/ScriptNode';
 import NodeButton from './panels/NodeButton';
@@ -56,7 +57,7 @@ export default function Flow({ props }) {
             fitView
             proOptions={proOptions}
          >
-            <Background color="#ccc" variant={BackgroundVariant.Dots} />
+            <Background color="#c7c7c7" variant={BackgroundVariant.Dots} />
             <Controls />
             <MiniMap />
             <Panel
@@ -80,8 +81,26 @@ export default function Flow({ props }) {
                      addNode('character', calcPosition(reactFlow));
                   }}
                />
+               <NodeButton
+                  tooltiptext="Character Node"
+                  Icon={UserStar}
+                  onClickFunction={() => {
+
+                     addNode('character', calcPosition(reactFlow));
+                  }}
+               />
+               <NodeButton
+                  tooltiptext="Character Node"
+                  Icon={UserStar}
+                  onClickFunction={() => {
+
+                     addNode('character', calcPosition(reactFlow));
+                  }}
+               />
             </Panel>
-            <Panel position="top-left">top-left</Panel>
+            <Panel position="top-left">
+               <BackButton />
+            </Panel>
             <Panel position="center-left">
                <div></div>
             </Panel>
