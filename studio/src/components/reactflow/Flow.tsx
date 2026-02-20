@@ -7,16 +7,17 @@ import {
    MiniMap,
    Panel,
    ReactFlow,
-   useReactFlow
+   useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { ScrollText, UserStar } from 'lucide-react';
+import { ScrollText, Trees, UserStar } from 'lucide-react';
 import { useShallow } from 'zustand/shallow';
 import BackButton from './panels/BackButton';
 import CharacterNode from './customnodes/CharacterNode';
 import ScriptNode from './customnodes/ScriptNode';
 import NodeButton from './panels/NodeButton';
 import { calcPosition } from '@/lib/functions/calcPosition';
+import EnvironmentNode from './customnodes/EnvironmentNode';
 
 export default function Flow({ props }) {
    //! USING ZUSTAND STORE TO GET NODES, STATE, FUNCTIONS, ETC.
@@ -38,6 +39,7 @@ export default function Flow({ props }) {
       prompt: PromptNode,
       character: CharacterNode,
       script: ScriptNode,
+      environment: EnvironmentNode,
    };
 
    //---------------------------------------------------------
@@ -68,8 +70,6 @@ export default function Flow({ props }) {
                   tooltiptext="Script Node"
                   Icon={ScrollText}
                   onClickFunction={() => {
-
-
                      addNode('script', calcPosition(reactFlow));
                   }}
                />
@@ -77,23 +77,20 @@ export default function Flow({ props }) {
                   tooltiptext="Character Node"
                   Icon={UserStar}
                   onClickFunction={() => {
-
                      addNode('character', calcPosition(reactFlow));
+                  }}
+               />
+               <NodeButton
+                  tooltiptext="Environment Node"
+                  Icon={Trees}
+                  onClickFunction={() => {
+                     addNode('environment', calcPosition(reactFlow));
                   }}
                />
                <NodeButton
                   tooltiptext="Character Node"
                   Icon={UserStar}
                   onClickFunction={() => {
-
-                     addNode('character', calcPosition(reactFlow));
-                  }}
-               />
-               <NodeButton
-                  tooltiptext="Character Node"
-                  Icon={UserStar}
-                  onClickFunction={() => {
-
                      addNode('character', calcPosition(reactFlow));
                   }}
                />
