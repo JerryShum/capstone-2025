@@ -9,7 +9,7 @@ import {
 
 //! Defining the types for the custom nodes:
 
-type httpsURL = `https://${string}`;
+export type httpsURL = `https://${string}`;
 
 //@ Node data type definitions:
 //# Project Settings (Global Config Node)
@@ -75,5 +75,6 @@ export type FlowState = {
    setNodes: (nodes: AppNode[]) => void;
    setEdges: (edges: Edge[]) => void;
    addNode: (type: NodeTypes, position: { x: number; y: number }) => void;
-   updateScriptNode: (id: string, data: Partial<ScriptNodeData>) => void;
+   //updateNode --> accepts a string for ID, and then any of the customNode data types!
+   updateNode: (id: string, data: Partial<AppNodeData>) => void;
 };
