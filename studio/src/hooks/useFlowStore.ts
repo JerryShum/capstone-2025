@@ -10,10 +10,7 @@ import type {
 } from '@/lib/types';
 import { nodeBlueprint } from '@/lib/nodeBlueprint';
 
-const initialEdges = [
-   { id: 'e1-2', source: '1', target: '2' },
-   { id: 'e2-3', source: '2', target: '3' },
-] as Edge[];
+const initialEdges = [] as Edge[];
 
 const initCharacterNode: CharacterNode = {
    id: '1',
