@@ -60,18 +60,19 @@ const useFlowStore = create<FlowState>()(
       setEdges: (edges) => {
          set({ edges });
       },
-      addNode: (type) => {
+      addNode: (type, position) => {
          console.log('addNode');
          // use the blueprint to create a "default" node based on the type
          // character | scene | projectSettings | script
          const blueprint = nodeBlueprint[type];
+         const { x, y } = position;
 
          // define new node structure
          const newNode: AppNode = {
             id: crypto.randomUUID(),
             type: type,
             //$ Position should be changed to fit the middle of current viewport
-            position: { x: 100, y: 100 },
+            position: { x, y },
             data: blueprint.defaultData,
          };
 

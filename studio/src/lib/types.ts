@@ -74,6 +74,6 @@ export type FlowState = {
    onConnect: OnConnect;
    setNodes: (nodes: AppNode[]) => void;
    setEdges: (edges: Edge[]) => void;
-   addNode: (type: NodeTypes) => void;
+   addNode: (type: NodeTypes, position: { x: number; y: number }) => void;
    updateScriptNode: (id: string, data: Partial<ScriptNodeData>) => void;
 };

@@ -7,6 +7,8 @@ import {
    MiniMap,
    Panel,
    ReactFlow,
+   useReactFlow,
+   useViewport,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { ScrollText, UserStar } from 'lucide-react';
@@ -37,6 +39,20 @@ export default function Flow({ props }) {
       script: ScriptNode,
    };
 
+   //---------------------------------------------------------
+
+   //! Defining middle of the browser window
+   const centerX = window.innerWidth / 2;
+   const centerY = window.innerHeight / 2;
+   const reactFlow = useReactFlow();
+   const xyposition = reactFlow.screenToFlowPosition({
+      x: centerX,
+      y: centerY,
+   });
+
+   console.log(xyposition);
+   const { x, y } = xyposition;
+
    const proOptions = { hideAttribution: true };
 
    return (
@@ -61,12 +77,12 @@ export default function Flow({ props }) {
                <NodeButton
                   tooltiptext="Script Node"
                   Icon={ScrollText}
-                  onClickFunction={() => addNode('script')}
+                  onClickFunction={() => addNode('script', { x, y })}
                />
                <NodeButton
                   tooltiptext="Character Node"
                   Icon={UserStar}
-                  onClickFunction={() => addNode('character')}
+                  onClickFunction={() => addNode('character', { x, y })}
                />
             </Panel>
             <Panel position="top-left">top-left</Panel>
