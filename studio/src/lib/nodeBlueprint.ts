@@ -40,4 +40,15 @@ export const nodeBlueprint = {
          targetModel: 'Sora',
       },
    },
+   environment: {
+      label: 'Add Environment Node',
+      defaultData: {
+         type: 'environment',
+         location: 'New Setting...',
+         timeOfDay: 'Morning',
+         weather: 'Clear',
+         lightingStyle: 'Cinematic',
+         description: 'Describe the atmosphere and environmental details...',
+      },
+   },
 } as const;

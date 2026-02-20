@@ -53,17 +53,35 @@ export type SceneNodeData = {
 };
 export type SceneNode = Node<SceneNodeData, 'scene'>;
 
+//# Environment Node
+export type EnvironmentNodeData = {
+   type: 'environment';
+   location: string;
+   timeOfDay: 'Morning' | 'Afternoon' | 'Sunset' | 'Night';
+   weather: 'Clear' | 'Rainy' | 'Foggy' | 'Snowy';
+   lightingStyle: string;
+   description: string;
+};
+
+export type EnvironmentNode = Node<EnvironmentNodeData, 'environment'>;
+
 //@ General App Node (encapsulates all nodes)
 type AppNodeData =
    | ProjectSettingsNodeData
    | ScriptNodeData
    | CharacterNodeData
-   | SceneNodeData;
+   | SceneNodeData
+   | EnvironmentNodeData;
 export type AppNode = Node<AppNodeData>; // this appnode tells reactflow that the "official" nodes should only be the ones stated above
 
 //---------------------------------------------------------
 
-type NodeTypes = 'projectSettings' | 'script' | 'character' | 'scene';
+type NodeTypes =
+   | 'projectSettings'
+   | 'script'
+   | 'character'
+   | 'scene'
+   | 'environment';
 
 //! To be used by zustand store --> this is an interface of the entire reactflow state
 export type FlowState = {
