@@ -10,14 +10,16 @@ import {
    useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { ScrollText, Trees, UserStar } from 'lucide-react';
-import { useShallow } from 'zustand/shallow';
-import BackButton from './panels/BackButton';
 import CharacterNode from './customnodes/CharacterNode';
 import ScriptNode from './customnodes/ScriptNode';
+import SceneNode from './customnodes/SceneNode';
+import EnvironmentNode from './customnodes/EnvironmentNode';
 import NodeButton from './panels/NodeButton';
 import { calcPosition } from '@/lib/functions/calcPosition';
-import EnvironmentNode from './customnodes/EnvironmentNode';
+import { Clapperboard, ScrollText, Trees, UserStar } from 'lucide-react';
+import { useShallow } from 'zustand/shallow';
+import BackButton from './panels/BackButton';
+import type { FlowState } from '@/lib/types';
 
 export default function Flow({ props }) {
    //! USING ZUSTAND STORE TO GET NODES, STATE, FUNCTIONS, ETC.
@@ -88,10 +90,10 @@ export default function Flow({ props }) {
                   }}
                />
                <NodeButton
-                  tooltiptext="Character Node"
-                  Icon={UserStar}
+                  tooltiptext="Scene Node"
+                  Icon={Clapperboard}
                   onClickFunction={() => {
-                     addNode('character', calcPosition(reactFlow));
+                     addNode('scene', calcPosition(reactFlow));
                   }}
                />
             </Panel>
