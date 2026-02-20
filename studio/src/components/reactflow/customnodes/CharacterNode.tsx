@@ -91,7 +91,8 @@ export default function CharacterNode({ data, id }: NodeProps<CharacterNode>) {
          <Handle
             type="source"
             position={Position.Bottom}
-            className="w-3 h-3 bg-slate-900 border-2 border-white"
+            className="bg-slate-900 border-2 border-white !-bottom-1.5"
+            style={{ width: '12px', height: '12px' }}
          />
       </div>
    );

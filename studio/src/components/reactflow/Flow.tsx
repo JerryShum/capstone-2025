@@ -1,5 +1,6 @@
 import PromptNode from '@/components/reactflow/customnodes/PromptNode';
 import useFlowStore from '@/hooks/useFlowStore';
+import { calcPosition } from '@/lib/functions/calcPosition';
 import {
    Background,
    BackgroundVariant,
@@ -10,16 +11,13 @@ import {
    useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import CharacterNode from './customnodes/CharacterNode';
-import ScriptNode from './customnodes/ScriptNode';
-import SceneNode from './customnodes/SceneNode';
-import EnvironmentNode from './customnodes/EnvironmentNode';
-import NodeButton from './panels/NodeButton';
-import { calcPosition } from '@/lib/functions/calcPosition';
 import { Clapperboard, ScrollText, Trees, UserStar } from 'lucide-react';
 import { useShallow } from 'zustand/shallow';
+import CharacterNode from './customnodes/CharacterNode';
+import EnvironmentNode from './customnodes/EnvironmentNode';
+import ScriptNode from './customnodes/ScriptNode';
 import BackButton from './panels/BackButton';
-import type { FlowState } from '@/lib/types';
+import NodeButton from './panels/NodeButton';
 
 export default function Flow({ props }) {
    //! USING ZUSTAND STORE TO GET NODES, STATE, FUNCTIONS, ETC.
