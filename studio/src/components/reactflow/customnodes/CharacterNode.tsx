@@ -14,12 +14,6 @@ export default function CharacterNode({ data, id }: NodeProps<CharacterNode>) {
    const updateNode = useFlowStore((state) => state.updateNode);
    return (
       <div className="bg-white border-2 border-slate-900 rounded-xl p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] min-w-[240px] flex flex-col gap-3 font-sans">
-         <Handle
-            type="target"
-            position={Position.Top}
-            className="w-3 h-3 bg-slate-900 border-2 border-white"
-         />
-
          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
             Character Profile
          </div>

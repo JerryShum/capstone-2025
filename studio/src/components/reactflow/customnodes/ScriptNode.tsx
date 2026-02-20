@@ -7,12 +7,6 @@ export default function ScriptNode({ data, id }: NodeProps) {
 
    return (
       <div className="bg-white border-2 border-slate-900 rounded-xl p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] min-w-[300px] flex flex-col gap-3 font-sans">
-         <Handle
-            type="target"
-            position={Position.Top}
-            className="w-3 h-3 bg-slate-900 border-2 border-white"
-         />
-
          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
             <ScrollText size={14} />
             <span>Script / Prompt</span>
