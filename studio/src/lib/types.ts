@@ -55,11 +55,13 @@ export type CharacterNode = Node<CharacterNodeData, 'character'>;
 //# SceneNode
 export type SceneNodeData = {
    type: 'scene';
-   prompt: string;
+   scenePrompt: string;
+   duration: number;
+   shotType: 'Wide' | 'Medium' | 'Close-up' | 'Over-the-shoulder';
+   cameraMovement: 'Static' | 'Pan' | 'Tilt' | 'Zoom' | 'Dolly';
    status: 'IDLE' | 'PROCESSING' | 'READY' | 'ERROR';
    videoURL: httpsURL;
    thumbnailURL: httpsURL;
-   duration: number;
 };
 export type SceneNode = Node<SceneNodeData, 'scene'>;
 
