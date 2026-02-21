@@ -59,7 +59,12 @@ export default function Flow({ props }) {
             fitView
             proOptions={proOptions}
          >
-            <Background color="#c7c7c7" variant={BackgroundVariant.Dots} />
+            <Background
+               color="#c7c7c7"
+               variant={BackgroundVariant.Dots}
+               size={3}
+               gap={40}
+            />
             <Controls />
             <MiniMap />
             <Panel

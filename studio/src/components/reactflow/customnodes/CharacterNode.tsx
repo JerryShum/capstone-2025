@@ -17,13 +17,13 @@ export default function CharacterNode({ data, id }: NodeProps<CharacterNode>) {
    const updateNode = useFlowStore((state) => state.updateNode);
 
    return (
-      <div className="bg-white border-2 border-slate-900 rounded-xl p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] min-w-[280px] flex flex-col gap-4 font-sans">
+      <div className="bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[240px] flex flex-col gap-3 font-sans">
          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-blue-500">
             <UserStar size={14} />
             <span>Character / Identity</span>
          </div>
 
-         <div className="flex flex-col gap-3">
+         <div className="flex flex-col gap-2">
             {/* name */}
             <div className="flex flex-col gap-1">
                <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
@@ -56,7 +56,7 @@ export default function CharacterNode({ data, id }: NodeProps<CharacterNode>) {
                   <Sparkles size={10} /> Appearance
                </label>
                <textarea
-                  className="w-full text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-blue-500 outline-none transition-colors font-medium min-h-[60px] resize-none"
+                  className="w-full text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-blue-500 outline-none transition-colors font-medium min-h-[50px] resize-none"
                   placeholder="Describe physical traits..."
                   value={data.appearance}
                   onChange={(e) =>
@@ -71,11 +71,10 @@ export default function CharacterNode({ data, id }: NodeProps<CharacterNode>) {
                   <ImageIcon size={10} /> Reference Image URL
                </label>
                <input
-                  className={`w-full text-sm p-2 border-2 rounded-lg focus:border-blue-500 outline-none transition-colors font-medium ${
-                     !isValidURL
-                        ? 'border-red-500 text-red-500'
-                        : 'border-slate-100'
-                  }`}
+                  className={`w-full text-sm p-2 border-2 rounded-lg focus:border-blue-500 outline-none transition-colors font-medium ${!isValidURL
+                     ? 'border-red-500 text-red-500'
+                     : 'border-slate-100'
+                     }`}
                   placeholder="https://..."
                   type="url"
                   value={data.referenceImage}
@@ -91,7 +90,7 @@ export default function CharacterNode({ data, id }: NodeProps<CharacterNode>) {
          <Handle
             type="source"
             position={Position.Bottom}
-            className="bg-slate-900 border-2 border-white !-bottom-1.5"
+            className="bg-slate-900 border-2 border-white -bottom-1.5!"
             style={{ width: '12px', height: '12px' }}
          />
       </div>
