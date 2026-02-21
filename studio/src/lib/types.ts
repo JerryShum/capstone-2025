@@ -14,15 +14,25 @@ export type httpsURL = `https://${string}`;
 //@ Node data type definitions:
 //# Project Settings (Global Config Node)
 export type ProjectSettingsNodeData = {
-   type: 'projectsettings';
+   type: 'projectSettings';
    title: string;
    aspectRatio: '16:9' | '9:16' | '1:1';
-   globalStyle: string;
-   targetModel: string;
+   targetEngine:
+      | 'Google Veo'
+      | 'OpenAI Sora'
+      | 'Runway Gen-3'
+      | 'Luma Dream Machine';
+   negativePrompt: string;
+   seed: number;
+   guidanceScale: number; // CFG
+   motionIntensity: number; // 1-10
+   styleReference?: httpsURL;
+   cinematicPreset: string;
+   summary: string;
 };
 export type ProjectSettingsNode = Node<
    ProjectSettingsNodeData,
-   'projectsettings'
+   'projectSettings'
 >;
 
 //# ScriptNode

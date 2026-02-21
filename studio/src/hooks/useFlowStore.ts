@@ -7,6 +7,7 @@ import type {
    AppNode,
    ScriptNode,
    CharacterNode,
+   ProjectSettingsNode,
 } from '@/lib/types';
 import { nodeBlueprint } from '@/lib/nodeBlueprint';
 
@@ -34,7 +35,30 @@ const initScriptNode: ScriptNode = {
    position: { x: 250, y: 25 },
 };
 
-const initialNodes = [initCharacterNode, initScriptNode] as AppNode[];
+const initProjectSettingsNode: ProjectSettingsNode = {
+   id: '3',
+   type: 'projectSettings',
+   data: {
+      type: 'projectSettings',
+      title: 'Untitled Project',
+      aspectRatio: '16:9',
+      targetEngine: 'Google Veo',
+      negativePrompt: 'blur, low quality, distorted, watermark',
+      seed: -1,
+      guidanceScale: 7.5,
+      motionIntensity: 5,
+      styleReference: 'https://...',
+      cinematicPreset: 'Neo-Noir',
+      summary: 'A brief overview of the project theme...',
+   },
+   position: { x: 300, y: 400 },
+};
+
+const initialNodes = [
+   initCharacterNode,
+   initScriptNode,
+   initProjectSettingsNode,
+] as AppNode[];
 
 // this is our useStore hook that we can use in our components to get parts of the store and call actions
 const useFlowStore = create<FlowState>()(

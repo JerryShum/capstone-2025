@@ -11,15 +11,22 @@ import {
    useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Clapperboard, ScrollText, Trees, UserStar } from 'lucide-react';
+import {
+   Clapperboard,
+   ScrollText,
+   Settings2,
+   Trees,
+   UserStar,
+} from 'lucide-react';
 import { useShallow } from 'zustand/shallow';
 import CharacterNode from './customnodes/CharacterNode';
 import EnvironmentNode from './customnodes/EnvironmentNode';
+import ProjectSettingsNode from './customnodes/ProjectSettingsNode';
 import ScriptNode from './customnodes/ScriptNode';
 import BackButton from './panels/BackButton';
 import NodeButton from './panels/NodeButton';
 
-export default function Flow({ props }) {
+export default function Flow() {
    //! USING ZUSTAND STORE TO GET NODES, STATE, FUNCTIONS, ETC.
 
    const { nodes, edges, onNodesChange, onEdgesChange, onConnect, addNode } =
@@ -40,6 +47,7 @@ export default function Flow({ props }) {
       character: CharacterNode,
       script: ScriptNode,
       environment: EnvironmentNode,
+      projectSettings: ProjectSettingsNode,
    };
 
    //---------------------------------------------------------
@@ -97,6 +105,14 @@ export default function Flow({ props }) {
                   Icon={Clapperboard}
                   onClickFunction={() => {
                      addNode('scene', calcPosition(reactFlow));
+                  }}
+               />
+               <div className="w-px h-8 bg-border mx-1" />
+               <NodeButton
+                  tooltiptext="Project Settings"
+                  Icon={Settings2}
+                  onClickFunction={() => {
+                     addNode('projectSettings', calcPosition(reactFlow));
                   }}
                />
             </Panel>

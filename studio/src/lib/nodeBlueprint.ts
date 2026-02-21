@@ -33,11 +33,17 @@ export const nodeBlueprint = {
    projectSettings: {
       label: 'Add Project Settings',
       defaultData: {
-         type: 'projectsettings',
+         type: 'projectSettings',
          title: 'Untitled Project',
          aspectRatio: '16:9',
-         globalStyle: 'Cinematic',
-         targetModel: 'Sora',
+         targetEngine: 'Google Veo',
+         negativePrompt: 'blur, low quality, distorted, watermark',
+         seed: -1,
+         guidanceScale: 7.5,
+         motionIntensity: 5,
+         styleReference: 'https://...',
+         cinematicPreset: 'Neo-Noir',
+         summary: 'A brief overview of the project theme...',
       },
    },
    environment: {
