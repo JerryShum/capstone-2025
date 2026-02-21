@@ -22,6 +22,7 @@ import { useShallow } from 'zustand/shallow';
 import CharacterNode from './customnodes/CharacterNode';
 import EnvironmentNode from './customnodes/EnvironmentNode';
 import ProjectSettingsNode from './customnodes/ProjectSettingsNode';
+import SceneNode from './customnodes/SceneNode';
 import ScriptNode from './customnodes/ScriptNode';
 import BackButton from './panels/BackButton';
 import NodeButton from './panels/NodeButton';
@@ -48,6 +49,7 @@ export default function Flow() {
       script: ScriptNode,
       environment: EnvironmentNode,
       projectSettings: ProjectSettingsNode,
+      scene: SceneNode,
    };
 
    //---------------------------------------------------------
