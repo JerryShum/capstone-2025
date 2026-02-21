@@ -95,7 +95,7 @@ const useFlowStore = create<FlowState>()(
 
          // define new node structure
          const newNode: AppNode = {
-            id: crypto.randomUUID(),
+            id: (get().nodes.length + 1).toString(),
             type: type,
             //$ Position should be changed to fit the middle of current viewport
             position: { x, y },
