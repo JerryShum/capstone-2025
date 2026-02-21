@@ -11,6 +11,13 @@ Studio portion / package for the entire StoryWeaver application. This is going t
    - [x] ProjectSettings Node
    - [ ] Scene Node
 
+- [ ] Maybe move project settings to a global setting
+   - [ ] Convert topleft panel into a drop down (similar to figma)
+   - [ ] User can:
+      - [ ] Go back to the dashboard
+      - [ ] Edit project settings
+      - [ ] Project settings can be saved to its own store / state
+
 - [ ] Figure out how to save the graph locally
    - [ ] zustand persist middleware
 
