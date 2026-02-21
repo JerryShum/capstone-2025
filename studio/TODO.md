@@ -18,6 +18,10 @@ Studio portion / package for the entire StoryWeaver application. This is going t
       - [ ] Edit project settings
       - [ ] Project settings can be saved to its own store / state
 
+- [ ] Add right click functionality to the nodes
+   - [ ] Delete nodes
+   - [ ] Lock position of nodes ?
+
 - [ ] Figure out how to save the graph locally
    - [ ] zustand persist middleware
 
