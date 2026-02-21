@@ -4,11 +4,12 @@ Studio portion / package for the entire StoryWeaver application. This is going t
 
 ### TODO
 
-- [ ] Complete the custom node components --> define styles & flush out components
-   - [ ] Character Node
+- [ ] Complete the custom node components --> define styles & flesh out components
+   - [x] Character Node
+   - [x] Script Node
+   - [x] Environment Node
    - [ ] Scene Node
    - [ ] ProjectSettings Node
-   - [ ] Script Node
 
 - [ ] Create a "general" updateNode function --> used to update all custom nodes
    - [ ] refactor current updateScript function
