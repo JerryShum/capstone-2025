@@ -8,12 +8,8 @@ Studio portion / package for the entire StoryWeaver application. This is going t
    - [x] Character Node
    - [x] Script Node
    - [x] Environment Node
+   - [x] ProjectSettings Node
    - [ ] Scene Node
-   - [ ] ProjectSettings Node
-
-- [ ] Create a "general" updateNode function --> used to update all custom nodes
-   - [ ] refactor current updateScript function
-   - [ ] look into generics --> allows us to dynamically type the function
 
 - [ ] Figure out how to save the graph locally
    - [ ] zustand persist middleware
@@ -24,6 +20,9 @@ Studio portion / package for the entire StoryWeaver application. This is going t
 
 ### Completed Tasks ✓
 
+- [x] Create a "general" updateNode function --> used to update all custom nodes
+   - [x] refactor current updateScript function
+   - [x] look into generics --> allows us to dynamically type the function
 - [x] Add "addNode" functionality to the studio.
    - [x] Update FlowStore interface -- add "addNode"
    - [x] Create "addNode" function / state inside the store
