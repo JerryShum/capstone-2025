@@ -89,10 +89,12 @@ export default function CharacterNode({ data, id }: NodeProps<CharacterNode>) {
 
          <Handle
             type="source"
-            position={Position.Bottom}
-            className="bg-slate-900 border-2 border-white -bottom-1.5!"
+            position={Position.Right}
+            className="bg-slate-900 border-2 border-white"
             style={{ width: '12px', height: '12px' }}
          />
       </div>
    );
 }
+
+

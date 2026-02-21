@@ -1,5 +1,5 @@
 import { Handle, Position, type NodeProps } from '@xyflow/react';
-import type { SceneNode, httpsURL } from '@/lib/types';
+import type { SceneNode } from '@/lib/types';
 import useFlowStore from '@/hooks/useFlowStore';
 import {
    Clapperboard,
@@ -152,7 +152,7 @@ export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
                         }
                      />
                   ) : data.thumbnailURL &&
-                    data.thumbnailURL !== 'https://...' ? (
+                     data.thumbnailURL !== 'https://...' ? (
                      <img
                         src={data.thumbnailURL}
                         alt="Scene Thumbnail"
@@ -169,51 +169,37 @@ export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
                </div>
             </div>
 
-            {/* URLs */}
-            <div className="grid grid-cols-1 gap-2">
-               <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
-                     <ImageIcon size={10} /> Thumbnail URL
-                  </label>
-                  <input
-                     className="w-full text-[10px] p-1.5 border-2 border-slate-100 rounded-lg focus:border-purple-500 outline-none transition-colors font-medium bg-slate-50/50"
-                     placeholder="https://..."
-                     type="url"
-                     value={data.thumbnailURL}
-                     onChange={(e) =>
-                        updateNode(id, {
-                           thumbnailURL: e.target.value as httpsURL,
-                        })
-                     }
-                  />
-               </div>
-               <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
-                     <Play size={10} /> Video URL
-                  </label>
-                  <input
-                     className="w-full text-[10px] p-1.5 border-2 border-slate-100 rounded-lg focus:border-purple-500 outline-none transition-colors font-medium bg-slate-50/50"
-                     placeholder="https://..."
-                     type="url"
-                     value={data.videoURL}
-                     onChange={(e) =>
-                        updateNode(id, { videoURL: e.target.value as httpsURL })
-                     }
-                  />
-               </div>
-            </div>
+            {/* Generate Button */}
+            <button
+               disabled={data.status === 'PROCESSING'}
+               onClick={() => updateNode(id, { status: 'PROCESSING' })}
+               className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-purple-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-200 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
+            >
+               {data.status === 'PROCESSING' ? (
+                  <>
+                     <Loader2 size={16} className="animate-spin" />
+                     Generating...
+                  </>
+               ) : (
+                  <>
+                     <Play size={16} fill="white" />
+                     Generate Video
+                  </>
+               )}
+            </button>
          </div>
+
 
          <Handle
             type="target"
-            position={Position.Top}
-            className="bg-slate-900 border-2 border-white -top-1.5!"
+            position={Position.Left}
+            className="bg-slate-900 border-2 border-white"
             style={{ width: '12px', height: '12px' }}
          />
          <Handle
             type="source"
-            position={Position.Bottom}
-            className="bg-slate-900 border-2 border-white -bottom-1.5!"
+            position={Position.Right}
+            className="bg-slate-900 border-2 border-white "
             style={{ width: '12px', height: '12px' }}
          />
       </div>
