@@ -1,5 +1,5 @@
 import { Handle, Position, type NodeProps } from '@xyflow/react';
-import type { SceneNode } from '@/lib/types';
+import type { SceneNode } from '@/lib/flowTypes';
 import useFlowStore from '@/hooks/useFlowStore';
 import {
    Clapperboard,
@@ -152,7 +152,7 @@ export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
                         }
                      />
                   ) : data.thumbnailURL &&
-                     data.thumbnailURL !== 'https://...' ? (
+                    data.thumbnailURL !== 'https://...' ? (
                      <img
                         src={data.thumbnailURL}
                         alt="Scene Thumbnail"
@@ -188,7 +188,6 @@ export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
                )}
             </button>
          </div>
-
 
          <Handle
             type="target"

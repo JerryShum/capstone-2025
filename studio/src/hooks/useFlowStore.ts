@@ -8,7 +8,7 @@ import type {
    ScriptNode,
    CharacterNode,
    ProjectSettingsNode,
-} from '@/lib/types';
+} from '@/lib/flowTypes';
 import { nodeBlueprint } from '@/lib/nodeBlueprint';
 
 const initialEdges = [] as Edge[];

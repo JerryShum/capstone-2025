@@ -7,7 +7,7 @@ import type {
    ProjectSettingsNodeData,
    SceneNodeData,
    ScriptNodeData,
-} from './types';
+} from './flowTypes';
 
 export const nodeBlueprint = {
    character: {

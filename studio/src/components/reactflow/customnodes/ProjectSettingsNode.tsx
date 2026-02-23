@@ -1,5 +1,5 @@
 import { Handle, Position } from '@xyflow/react';
-import type { ProjectSettingsNode, httpsURL } from '@/lib/types';
+import type { ProjectSettingsNode, httpsURL } from '@/lib/flowTypes';
 import type { NodeProps } from '@xyflow/react';
 import useFlowStore from '@/hooks/useFlowStore';
 import {
@@ -220,4 +220,3 @@ export default function ProjectSettingsNode({
       </div>
    );
 }
-

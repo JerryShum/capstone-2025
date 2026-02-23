@@ -1,5 +1,5 @@
 import { Handle, Position } from '@xyflow/react';
-import type { CharacterNode, httpsURL } from '@/lib/types';
+import type { CharacterNode, httpsURL } from '@/lib/flowTypes';
 import type { NodeProps } from '@xyflow/react';
 import useFlowStore from '@/hooks/useFlowStore';
 import {
@@ -71,10 +71,11 @@ export default function CharacterNode({ data, id }: NodeProps<CharacterNode>) {
                   <ImageIcon size={10} /> Reference Image URL
                </label>
                <input
-                  className={`w-full text-sm p-2 border-2 rounded-lg focus:border-blue-500 outline-none transition-colors font-medium ${!isValidURL
-                     ? 'border-red-500 text-red-500'
-                     : 'border-slate-100'
-                     }`}
+                  className={`w-full text-sm p-2 border-2 rounded-lg focus:border-blue-500 outline-none transition-colors font-medium ${
+                     !isValidURL
+                        ? 'border-red-500 text-red-500'
+                        : 'border-slate-100'
+                  }`}
                   placeholder="https://..."
                   type="url"
                   value={data.referenceImage}
@@ -96,5 +97,3 @@ export default function CharacterNode({ data, id }: NodeProps<CharacterNode>) {
       </div>
    );
 }
-
-

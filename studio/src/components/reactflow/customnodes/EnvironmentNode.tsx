@@ -1,7 +1,7 @@
 import useFlowStore from '@/hooks/useFlowStore';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import { Mountain, Clock, Cloud, Zap, AlignLeft, Trees } from 'lucide-react';
-import type { EnvironmentNodeData } from '@/lib/types';
+import type { EnvironmentNodeData } from '@/lib/flowTypes';
 
 export default function EnvironmentNode({ data, id }: NodeProps) {
    const updateNode = useFlowStore((state) => state.updateNode);
@@ -13,8 +13,6 @@ export default function EnvironmentNode({ data, id }: NodeProps) {
 
    return (
       <div className="bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[280px] flex flex-col gap-3 font-sans">
-
-
          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-emerald-500">
             <Trees size={14} />
             <span>Environment / Setting</span>
@@ -110,5 +108,3 @@ export default function EnvironmentNode({ data, id }: NodeProps) {
       </div>
    );
 }
-
-
