@@ -24,7 +24,7 @@ import EnvironmentNode from './customnodes/EnvironmentNode';
 import ProjectSettingsNode from './customnodes/ProjectSettingsNode';
 import SceneNode from './customnodes/SceneNode';
 import ScriptNode from './customnodes/ScriptNode';
-import BackButton from './panels/BackButton';
+import IconMenu from './panels/IconMenu';
 import NodeButton from './panels/NodeButton';
 
 export default function Flow() {
@@ -77,6 +77,9 @@ export default function Flow() {
             />
             <Controls />
             <MiniMap />
+            <Panel position="top-left">
+               <IconMenu />
+            </Panel>
             <Panel
                position="bottom-center"
                className="flex items-center justify-center gap-2 bg-background/80 backdrop-blur-md border border-border p-3 rounded-xl shadow-md mb-4 shadow-zinc-400"
@@ -117,9 +120,6 @@ export default function Flow() {
                      addNode('projectSettings', calcPosition(reactFlow));
                   }}
                />
-            </Panel>
-            <Panel position="top-left">
-               <BackButton />
             </Panel>
             <Panel position="center-left">
                <div></div>
