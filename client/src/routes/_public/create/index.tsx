@@ -35,6 +35,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 // story states
 import { useStoryStore } from "@/stores/storyStore";
 import { useState } from "react";
+import GeneratingScreen from "@/components/ui/GeneratingScreen";
 
 export const Route = createFileRoute("/_public/create/")({
   component: RouteComponent,
