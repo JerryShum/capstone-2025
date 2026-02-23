@@ -4,7 +4,6 @@ import {
    DropdownMenuContent,
    DropdownMenuGroup,
    DropdownMenuItem,
-   DropdownMenuLabel,
    DropdownMenuSeparator,
    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
@@ -18,7 +17,7 @@ export default function IconMenu() {
             {/* Button that triggers the dropdown: Storyweaver icon + chevron down */}
             <Button
                variant="outline"
-               className="h-10 px-3 py-2 bg-background/80 backdrop-blur-md border border-border shadow-sm hover:bg-accent/50 transition-all rounded-xl gap-2 group flex items-center"
+               className="h-10 px-3 py-2 bg-background/80 backdrop-blur-md border border-border shadow-md hover:shadow-lg hover:bg-background/90 transition-all rounded-xl gap-2 group flex items-center"
             >
                <div className="flex items-center gap-2">
                   <img
@@ -26,17 +25,19 @@ export default function IconMenu() {
                      alt="Story Weaver Logo"
                      className="size-6 object-contain"
                   />
-                  <span className="font-semibold text-sm tracking-tight text-foreground/90">
+                  <span className="font-semibold text-[16px] tracking-tight text-foreground/90">
                      StoryWeaver
                   </span>
-                  <ChevronDown />
+                  <ChevronDown className="size-4 opacity-50 group-data-[state=open]:rotate-180 transition-transform" />
                </div>
             </Button>
          </DropdownMenuTrigger>
          <DropdownMenuContent side="bottom" align="start">
             <DropdownMenuGroup>
-               <DropdownMenuItem>
-                  <Link to={'/'}>Dashboard</Link>
+               <DropdownMenuItem className="focus:bg-blue-200">
+                  <Link to={'/'} className="w-full h-full">
+                     Dashboard
+                  </Link>
                </DropdownMenuItem>
                <DropdownMenuItem>Billing</DropdownMenuItem>
             </DropdownMenuGroup>

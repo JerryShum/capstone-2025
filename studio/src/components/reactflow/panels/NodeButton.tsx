@@ -23,7 +23,7 @@ export default function NodeButton({
             <Button
                variant={'ghost'}
                size={'icon'}
-               className="hover:cursor-pointer hover:brightness-95 p-0 [&_svg]:size-6"
+               className="hover:cursor-pointer p-0 [&_svg]:size-6"
                onClick={onClickFunction}
             >
                <Icon className="size-5" />
