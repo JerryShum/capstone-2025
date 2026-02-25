@@ -15,8 +15,9 @@ Studio portion / package for the entire StoryWeaver application. This is going t
    - [x] Convert topleft panel into a drop down (similar to figma)
    - [ ] User can:
       - [x] Go back to the dashboard
+      - [ ] Create individual store for saving projectSettings & name
+      - [ ] Move project settings to its own "tab" within the dropdown menu
       - [ ] Edit project settings
-      - [ ] Project settings can be saved to its own store / state
 
 - [ ] Add right click functionality to the nodes
    - [ ] Delete nodes
