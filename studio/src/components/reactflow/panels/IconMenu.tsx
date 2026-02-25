@@ -7,46 +7,54 @@ import {
    DropdownMenuSeparator,
    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import { Link } from '@tanstack/react-router';
 import { ChevronDown } from 'lucide-react';
+import { useState } from 'react';
 
 export default function IconMenu() {
+   const [projectName, setProjectName] = useState('StoryWeaver');
+
    return (
-      <DropdownMenu>
-         <DropdownMenuTrigger asChild>
-            {/* Button that triggers the dropdown: Storyweaver icon + chevron down */}
-            <Button
-               variant="outline"
-               className="h-10 px-3 py-2 bg-background/80 backdrop-blur-md border border-border shadow-md hover:shadow-lg hover:bg-background/90 transition-all rounded-xl gap-2 group flex items-center"
-            >
-               <div className="flex items-center gap-2">
+      <div className="h-10 px-1 bg-background/80 backdrop-blur-md border border-border shadow-md hover:shadow-lg transition-all rounded-xl flex items-center gap-1">
+         <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+               <Button
+                  variant="ghost"
+                  className="h-7 px-1.5 gap-1 hover:bg-accent/50 rounded-lg group"
+               >
                   <img
                      src="/story_weaver_logo_2.svg"
                      alt="Story Weaver Logo"
-                     className="size-6 object-contain"
+                     className="size-5 object-contain"
                   />
-                  <span className="font-semibold text-[16px] tracking-tight text-foreground/90">
-                     StoryWeaver
-                  </span>
-                  <ChevronDown className="size-4 opacity-50 group-data-[state=open]:rotate-180 transition-transform" />
-               </div>
-            </Button>
-         </DropdownMenuTrigger>
-         <DropdownMenuContent side="bottom" align="start">
-            <DropdownMenuGroup>
-               <DropdownMenuItem className="focus:bg-blue-200">
-                  <Link to={'/'} className="w-full h-full">
-                     Dashboard
-                  </Link>
-               </DropdownMenuItem>
-               <DropdownMenuItem>Billing</DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuGroup>
-               <DropdownMenuSeparator />
-               <DropdownMenuItem>Team</DropdownMenuItem>
-               <DropdownMenuItem>Subscription</DropdownMenuItem>
-            </DropdownMenuGroup>
-         </DropdownMenuContent>
-      </DropdownMenu>
+                  <ChevronDown className="size-3.5 opacity-50 group-data-[state=open]:rotate-180 transition-transform" />
+               </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="bottom" align="start">
+               <DropdownMenuGroup>
+                  <DropdownMenuItem className="focus:bg-blue-200">
+                     <Link to={'/'} className="w-full h-full">
+                        Dashboard
+                     </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>Billing</DropdownMenuItem>
+               </DropdownMenuGroup>
+               <DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Team</DropdownMenuItem>
+                  <DropdownMenuItem>Subscription</DropdownMenuItem>
+               </DropdownMenuGroup>
+            </DropdownMenuContent>
+         </DropdownMenu>
+
+         <div className="w-px h-4 bg-border/60 mx-0.5" />
+
+         <Input
+            value={projectName}
+            onChange={(e) => setProjectName(e.target.value)}
+            className="border-none bg-transparent shadow-none focus-visible:ring-0 px-2 h-7 font-semibold !text-[16px] tracking-tight text-foreground/90 w-36 focus-visible:border-none selection:bg-blue-400"
+         />
+      </div>
    );
 }
