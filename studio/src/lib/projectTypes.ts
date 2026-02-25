@@ -6,4 +6,5 @@ export type ProjectState = {
       globalNegativePrompt: string;
       executiveSummary: string;
    };
+   updateProjectTitle: (title: string) => void;
 };

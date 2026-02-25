@@ -24,7 +24,7 @@ import EnvironmentNode from './customnodes/EnvironmentNode';
 import ProjectSettingsNode from './customnodes/ProjectSettingsNode';
 import SceneNode from './customnodes/SceneNode';
 import ScriptNode from './customnodes/ScriptNode';
-import IconMenu from './panels/IconMenu';
+import IconMenu from './panels/PanelMenu';
 import NodeButton from './panels/NodeButton';
 
 export default function Flow() {

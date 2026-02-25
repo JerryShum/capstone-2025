@@ -9,4 +9,9 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       globalNegativePrompt: 'something here',
       executiveSummary: 'summary of your story goes here...',
    },
+   updateProjectTitle: (title) => {
+      set({
+         projectTitle: title,
+      });
+   },
 }));
