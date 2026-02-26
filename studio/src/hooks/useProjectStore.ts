@@ -13,4 +13,10 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
          projectTitle: title,
       });
    },
+   handleUpdate: (field, value) => {
+      set({
+         // [] ==> "computed property name" (allows us to use variables as our property names)
+         [field]: value,
+      });
+   },
 }));
