@@ -1,6 +1,7 @@
 import { AlignLeft, Ban, Clapperboard, Cpu, Monitor, Type } from 'lucide-react';
 import { useProjectStore } from '@/hooks/useProjectStore';
 import { useShallow } from 'zustand/shallow';
+import type { ProjectState } from '@/lib/projectTypes';
 
 export default function ProjectSettingsForm() {
    const inputClasses =
@@ -18,6 +19,7 @@ export default function ProjectSettingsForm() {
       globalNegativePrompt,
       executiveSummary,
       cinematicPreset,
+      handleUpdate,
    } = useProjectStore(
       useShallow((state) => ({
          projectTitle: state.projectTitle,
@@ -26,6 +28,7 @@ export default function ProjectSettingsForm() {
          globalNegativePrompt: state.globalNegativePrompt,
          executiveSummary: state.executiveSummary,
          cinematicPreset: state.cinematicPreset,
+         handleUpdate: state.handleUpdate,
       })),
    );
 
@@ -40,7 +43,7 @@ export default function ProjectSettingsForm() {
                className={inputClasses}
                placeholder="Enter project name..."
                value={projectTitle}
-               onChange={(e) => handleChange('title', e.target.value)}
+               onChange={(e) => handleUpdate('projectTitle', e.target.value)}
             />
          </div>
 
@@ -53,7 +56,12 @@ export default function ProjectSettingsForm() {
                <select
                   className={inputClasses}
                   value={aspectRatio}
-                  onChange={(e) => handleChange('aspectRatio', e.target.value)}
+                  onChange={(e) =>
+                     handleUpdate(
+                        'aspectRatio',
+                        e.target.value as ProjectState['aspectRatio'],
+                     )
+                  }
                >
                   <option value="16:9">16:9 (Cinematic)</option>
                   <option value="9:16">9:16 (Social)</option>
@@ -68,7 +76,12 @@ export default function ProjectSettingsForm() {
                <select
                   className={inputClasses}
                   value={engine}
-                  onChange={(e) => handleChange('targetEngine', e.target.value)}
+                  onChange={(e) =>
+                     handleUpdate(
+                        'engine',
+                        e.target.value as ProjectState['engine'],
+                     )
+                  }
                >
                   <option value="Google Veo">Google Veo</option>
                   <option value="OpenAI Sora">OpenAI Sora</option>
@@ -87,7 +100,9 @@ export default function ProjectSettingsForm() {
                className={`${inputClasses} min-h-[80px] resize-none leading-relaxed`}
                placeholder="Terms to avoid (e.g. blur, low quality, watermark)..."
                value={globalNegativePrompt}
-               onChange={(e) => handleChange('negativePrompt', e.target.value)}
+               onChange={(e) =>
+                  handleUpdate('globalNegativePrompt', e.target.value)
+               }
             />
          </div>
 
@@ -101,7 +116,7 @@ export default function ProjectSettingsForm() {
                className={inputClasses}
                placeholder="https://image-url.com/..."
                value={data.styleReference || ''}
-               onChange={(e) => handleChange('styleReference', e.target.value)}
+               onChange={(e) => handleUpdate('styleReference', e.target.value)}
             />
          </div> */}
 
@@ -114,7 +129,12 @@ export default function ProjectSettingsForm() {
             <select
                className={inputClasses}
                value={cinematicPreset}
-               onChange={(e) => handleChange('cinematicPreset', e.target.value)}
+               onChange={(e) =>
+                  handleUpdate(
+                     'cinematicPreset',
+                     e.target.value as ProjectState['cinematicPreset'],
+                  )
+               }
             >
                <option value="Neo-Noir">Neo-Noir</option>
                <option value="Technicolor">Technicolor</option>
@@ -122,7 +142,7 @@ export default function ProjectSettingsForm() {
                <option value="80s VHS">80s VHS</option>
                <option value="Cyberpunk">Cyberpunk</option>
                <option value="Studio Ghibli">Studio Ghibli</option>
-               <option value="none">None</option>
+               <option value="None">None</option>
             </select>
          </div>
 
@@ -135,7 +155,9 @@ export default function ProjectSettingsForm() {
                className={`${inputClasses} min-h-[100px] resize-none leading-relaxed`}
                placeholder="Describe the core narrative DNA and thematic goals..."
                value={executiveSummary}
-               onChange={(e) => handleChange('summary', e.target.value)}
+               onChange={(e) =>
+                  handleUpdate('executiveSummary', e.target.value)
+               }
             />
          </div>
       </div>
