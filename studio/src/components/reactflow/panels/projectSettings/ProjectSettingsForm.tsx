@@ -1,35 +1,33 @@
-import {
-   AlignLeft,
-   Ban,
-   Clapperboard,
-   Cpu,
-   Dices,
-   ImageIcon,
-   Monitor,
-   Sliders,
-   Type,
-} from 'lucide-react';
-import type { ProjectSettingsNodeData } from '@/lib/flowTypes';
+import { AlignLeft, Ban, Clapperboard, Cpu, Monitor, Type } from 'lucide-react';
+import { useProjectStore } from '@/hooks/useProjectStore';
+import { useShallow } from 'zustand/shallow';
 
-interface ProjectSettingsFormProps {
-   data?: Partial<ProjectSettingsNodeData>;
-   onChange?: (data: Partial<ProjectSettingsNodeData>) => void;
-}
-
-export default function ProjectSettingsForm({
-   data = {},
-   onChange,
-}: ProjectSettingsFormProps) {
-   const handleChange = (field: keyof ProjectSettingsNodeData, value: any) => {
-      onChange?.({ [field]: value });
-   };
-
+export default function ProjectSettingsForm() {
    const inputClasses =
       'w-full text-sm p-2.5 bg-white/5 border border-foreground/15 rounded-xl focus:border-foreground/40 focus:bg-white/10 outline-none transition-all font-medium placeholder:text-slate-600 dark:placeholder:text-slate-400 text-foreground backdrop-blur-sm shadow-inner';
    const labelClasses =
       'text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase flex items-center gap-1.5 tracking-wider mb-1';
    const containerClasses = 'flex flex-col gap-1.5 group';
-   const iconClasses = 'text-foreground/60 group-focus-within:text-foreground transition-colors';
+   const iconClasses =
+      'text-foreground/60 group-focus-within:text-foreground transition-colors';
+
+   const {
+      projectTitle,
+      aspectRatio,
+      engine,
+      globalNegativePrompt,
+      executiveSummary,
+      cinematicPreset,
+   } = useProjectStore(
+      useShallow((state) => ({
+         projectTitle: state.projectTitle,
+         aspectRatio: state.aspectRatio,
+         engine: state.engine,
+         globalNegativePrompt: state.globalNegativePrompt,
+         executiveSummary: state.executiveSummary,
+         cinematicPreset: state.cinematicPreset,
+      })),
+   );
 
    return (
       <div className="grid grid-cols-1 gap-5">
@@ -41,7 +39,7 @@ export default function ProjectSettingsForm({
             <input
                className={inputClasses}
                placeholder="Enter project name..."
-               value={data.title || ''}
+               value={projectTitle}
                onChange={(e) => handleChange('title', e.target.value)}
             />
          </div>
@@ -54,12 +52,11 @@ export default function ProjectSettingsForm({
                </label>
                <select
                   className={inputClasses}
-                  value={data.aspectRatio || '16:9'}
+                  value={aspectRatio}
                   onChange={(e) => handleChange('aspectRatio', e.target.value)}
                >
                   <option value="16:9">16:9 (Cinematic)</option>
                   <option value="9:16">9:16 (Social)</option>
-                  <option value="1:1">1:1 (Square)</option>
                </select>
             </div>
 
@@ -70,7 +67,7 @@ export default function ProjectSettingsForm({
                </label>
                <select
                   className={inputClasses}
-                  value={data.targetEngine || 'Google Veo'}
+                  value={engine}
                   onChange={(e) => handleChange('targetEngine', e.target.value)}
                >
                   <option value="Google Veo">Google Veo</option>
@@ -89,47 +86,13 @@ export default function ProjectSettingsForm({
             <textarea
                className={`${inputClasses} min-h-[80px] resize-none leading-relaxed`}
                placeholder="Terms to avoid (e.g. blur, low quality, watermark)..."
-               value={data.negativePrompt || ''}
+               value={globalNegativePrompt}
                onChange={(e) => handleChange('negativePrompt', e.target.value)}
             />
          </div>
 
-         <div className="grid grid-cols-2 gap-4">
-            {/* Seed */}
-            <div className={containerClasses}>
-               <label className={labelClasses}>
-                  <Dices size={12} className={iconClasses} /> Project Seed
-               </label>
-               <input
-                  type="number"
-                  className={inputClasses}
-                  placeholder="-1 for random"
-                  value={data.seed ?? -1}
-                  onChange={(e) =>
-                     handleChange('seed', parseInt(e.target.value))
-                  }
-               />
-            </div>
-
-            {/* Guidance Scale */}
-            <div className={containerClasses}>
-               <label className={labelClasses}>
-                  <Sliders size={12} className={iconClasses} /> Guidance (CFG)
-               </label>
-               <input
-                  type="number"
-                  step="0.1"
-                  className={inputClasses}
-                  value={data.guidanceScale ?? 7.5}
-                  onChange={(e) =>
-                     handleChange('guidanceScale', parseFloat(e.target.value))
-                  }
-               />
-            </div>
-         </div>
-
          {/* Style Reference */}
-         <div className={containerClasses}>
+         {/* <div className={containerClasses}>
             <label className={labelClasses}>
                <ImageIcon size={12} className={iconClasses} /> Style Reference
                (SREF)
@@ -140,7 +103,7 @@ export default function ProjectSettingsForm({
                value={data.styleReference || ''}
                onChange={(e) => handleChange('styleReference', e.target.value)}
             />
-         </div>
+         </div> */}
 
          {/* Cinematic Preset */}
          <div className={containerClasses}>
@@ -150,7 +113,7 @@ export default function ProjectSettingsForm({
             </label>
             <select
                className={inputClasses}
-               value={data.cinematicPreset || 'Neo-Noir'}
+               value={cinematicPreset}
                onChange={(e) => handleChange('cinematicPreset', e.target.value)}
             >
                <option value="Neo-Noir">Neo-Noir</option>
@@ -159,6 +122,7 @@ export default function ProjectSettingsForm({
                <option value="80s VHS">80s VHS</option>
                <option value="Cyberpunk">Cyberpunk</option>
                <option value="Studio Ghibli">Studio Ghibli</option>
+               <option value="none">None</option>
             </select>
          </div>
 
@@ -170,7 +134,7 @@ export default function ProjectSettingsForm({
             <textarea
                className={`${inputClasses} min-h-[100px] resize-none leading-relaxed`}
                placeholder="Describe the core narrative DNA and thematic goals..."
-               value={data.summary || ''}
+               value={executiveSummary}
                onChange={(e) => handleChange('summary', e.target.value)}
             />
          </div>
