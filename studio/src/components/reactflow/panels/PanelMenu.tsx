@@ -14,7 +14,7 @@ import { useProjectStore } from '@/hooks/useProjectStore';
 import { Link } from '@tanstack/react-router';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
-import ProjectSettings from './ProjectSettings';
+import ProjectSettings from './projectSettings/ProjectSettings';
 
 export default function IconMenu() {
    const projectTitle = useProjectStore((state) => state.projectTitle);
