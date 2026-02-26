@@ -11,17 +11,6 @@ Studio portion / package for the entire StoryWeaver application. This is going t
    - [x] ProjectSettings Node
    - [ ] Scene Node
 
-- [ ] Maybe move project settings to a global setting
-   - [x] Convert topleft panel into a drop down (similar to figma)
-   - [ ] User can:
-      - [x] Go back to the dashboard
-      - [ ] Edit Project Settings --> Side sheet
-
-- [ ] Project Settings Side Sheet
-   - [ ] Triggered by the panelMenu dropdown
-   - [ ] Opens the shadcn side sheet
-   - [ ] Replaces the projectSettings node content
-
 - [ ] Add right click functionality to the nodes
    - [ ] Delete nodes
    - [ ] Lock position of nodes ?
@@ -34,6 +23,17 @@ Studio portion / package for the entire StoryWeaver application. This is going t
    - [ ] Implement a timer --> save every 2 seconds? --> streaming approach?
 
 ### Completed Tasks ✓
+
+- [x] Maybe move project settings to a global setting
+   - [x] Convert topleft panel into a drop down (similar to figma)
+   - [x] User can:
+      - [x] Go back to the dashboard
+      - [x] Edit Project Settings --> Side sheet
+
+- [x] Project Settings Side Sheet
+   - [x] Triggered by the panelMenu dropdown
+   - [x] Opens the shadcn side sheet
+   - [x] Replaces the projectSettings node content
 
 - [x] Create a "general" updateNode function --> used to update all custom nodes
    - [x] refactor current updateScript function
