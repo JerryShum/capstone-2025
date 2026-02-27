@@ -12,8 +12,9 @@ Studio portion / package for the entire StoryWeaver application. This is going t
    - [ ] Scene Node
 
 - [ ] Add right click functionality to the nodes
+   - [ ] Context menu --> shadcn?
    - [ ] Delete nodes
-   - [ ] Lock position of nodes ?
+   - [ ] Lock position of nodes
 
 - [ ] Figure out how to save the graph locally
    - [ ] zustand persist middleware
