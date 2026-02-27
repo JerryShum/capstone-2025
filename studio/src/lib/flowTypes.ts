@@ -107,4 +107,6 @@ export type FlowState = {
    addNode: (type: NodeTypes, position: { x: number; y: number }) => void;
    //updateNode --> accepts a string for ID, and then any of the customNode data types!
    updateNode: (id: string, data: Partial<AppNodeData>) => void;
+   deleteNode: (id: string) => void;
+   duplicateNode: (id: string) => void;
 };
