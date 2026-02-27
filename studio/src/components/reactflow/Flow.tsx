@@ -27,6 +27,7 @@ import ScriptNode from './customnodes/ScriptNode';
 import IconMenu from './panels/PanelMenu';
 import NodeButton from './panels/NodeButton';
 import { useCallback, useRef, useState } from 'react';
+import ContextMenu from './contextmenu/ContextMenu';
 
 export default function Flow() {
    //! USING ZUSTAND STORE TO GET NODES, STATE, FUNCTIONS, ETC.
@@ -58,20 +59,58 @@ export default function Flow() {
    const proOptions = { hideAttribution: true };
 
    //---------------------------------------------------------
-   //@ Context menu handler
+   //! Context Menu
    const ref = useRef(null);
-   const [menu, setMenu] = useState(null);
+
+   interface MenuState {
+      id?: string;
+      top?: number;
+      left?: number;
+      right?: number;
+      bottom?: number;
+      position?: { x: number; y: number };
+   }
+
+   const [menu, setMenu] = useState<MenuState | null>(null);
+
+   //# Right click node event
    const onNodeContextMenu = useCallback(
       (event, node) => {
          // Prevent native context menu from showing
          event.preventDefault();
+         setMenu({
+            id: node.id,
+            top: event.clientY,
+            left: event.clientX,
+            right: undefined,
+            bottom: undefined,
+         });
 
          console.log('right click detected --> NodeContextmenu was fired');
       },
       [setMenu],
    );
 
+   //# Right click pane event (background)
+
    const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
+
+   const onPaneContextMenu = useCallback(
+      (event) => {
+         event.preventDefault();
+
+         setMenu({
+            id: undefined,
+            top: event.clientY,
+            left: event.clientX,
+            right: undefined,
+            bottom: undefined,
+         });
+
+         console.log('right click on pane');
+      },
+      [setMenu],
+   );
 
    return (
       <div style={{ width: '100vw', height: '100vh' }}>
@@ -85,7 +124,11 @@ export default function Flow() {
             onConnect={onConnect}
             fitView
             proOptions={proOptions}
+            // triggers when right clicking on a node
             onNodeContextMenu={onNodeContextMenu}
+            onPaneContextMenu={onPaneContextMenu}
+            onPaneClick={onPaneClick}
+            onMoveStart={onPaneClick}
          >
             {/* Background */}
             <Background
@@ -96,7 +139,8 @@ export default function Flow() {
             />
             <Controls />
             <MiniMap />
-            {/* Context Menu */}
+            {/*  --------------------Context Menu------------------------ */}
+            {menu && <ContextMenu {...menu} onClick={onPaneClick} />}
 
             {/* --------------------Panels------------------------ */}
             <Panel position="top-left">
