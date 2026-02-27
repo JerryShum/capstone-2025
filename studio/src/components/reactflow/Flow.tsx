@@ -26,6 +26,7 @@ import SceneNode from './customnodes/SceneNode';
 import ScriptNode from './customnodes/ScriptNode';
 import IconMenu from './panels/PanelMenu';
 import NodeButton from './panels/NodeButton';
+import { useCallback, useRef, useState } from 'react';
 
 export default function Flow() {
    //! USING ZUSTAND STORE TO GET NODES, STATE, FUNCTIONS, ETC.
@@ -54,12 +55,28 @@ export default function Flow() {
 
    //---------------------------------------------------------
    const reactFlow = useReactFlow();
-
    const proOptions = { hideAttribution: true };
+
+   //---------------------------------------------------------
+   //@ Context menu handler
+   const ref = useRef(null);
+   const [menu, setMenu] = useState(null);
+   const onNodeContextMenu = useCallback(
+      (event, node) => {
+         // Prevent native context menu from showing
+         event.preventDefault();
+
+         console.log('right click detected --> NodeContextmenu was fired');
+      },
+      [setMenu],
+   );
+
+   const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
 
    return (
       <div style={{ width: '100vw', height: '100vh' }}>
          <ReactFlow
+            ref={ref}
             nodeTypes={nodeTypes}
             nodes={nodes}
             edges={edges}
@@ -68,7 +85,9 @@ export default function Flow() {
             onConnect={onConnect}
             fitView
             proOptions={proOptions}
+            onNodeContextMenu={onNodeContextMenu}
          >
+            {/* Background */}
             <Background
                color="#c7c7c7"
                variant={BackgroundVariant.Dots}
@@ -77,6 +96,9 @@ export default function Flow() {
             />
             <Controls />
             <MiniMap />
+            {/* Context Menu */}
+
+            {/* --------------------Panels------------------------ */}
             <Panel position="top-left">
                <IconMenu />
             </Panel>
