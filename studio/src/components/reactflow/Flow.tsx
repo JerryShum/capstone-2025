@@ -1,23 +1,37 @@
+import PromptNode from '@/components/reactflow/customnodes/PromptNode';
+import useFlowStore from '@/hooks/useFlowStore';
+import { calcPosition } from '@/lib/functions/calcPosition';
 import {
-   ReactFlow,
    Background,
    BackgroundVariant,
    Controls,
    MiniMap,
    Panel,
+   ReactFlow,
+   useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Button } from '@/components/ui/button';
-import useFlowStore from '@/hooks/useFlowStore';
-import PromptNode from '@/components/reactflow/customnodes/PromptNode';
-import CharacterNode from './customnodes/CharacterNode';
+import {
+   Clapperboard,
+   ScrollText,
+   Settings2,
+   Trees,
+   UserStar,
+} from 'lucide-react';
 import { useShallow } from 'zustand/shallow';
+import CharacterNode from './customnodes/CharacterNode';
+import EnvironmentNode from './customnodes/EnvironmentNode';
+import ProjectSettingsNode from './customnodes/ProjectSettingsNode';
+import SceneNode from './customnodes/SceneNode';
 import ScriptNode from './customnodes/ScriptNode';
+import IconMenu from './panels/PanelMenu';
+import NodeButton from './panels/NodeButton';
+import { useCallback, useRef, useState } from 'react';
 
-export default function Flow({ props }) {
+export default function Flow() {
    //! USING ZUSTAND STORE TO GET NODES, STATE, FUNCTIONS, ETC.
 
-   const { nodes, edges, onNodesChange, onEdgesChange, onConnect } =
+   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, addNode } =
       useFlowStore(
          useShallow((state) => ({
             nodes: state.nodes,
@@ -25,6 +39,7 @@ export default function Flow({ props }) {
             onNodesChange: state.onNodesChange,
             onEdgesChange: state.onEdgesChange,
             onConnect: state.onConnect,
+            addNode: state.addNode,
          })),
       );
 
@@ -33,13 +48,35 @@ export default function Flow({ props }) {
       prompt: PromptNode,
       character: CharacterNode,
       script: ScriptNode,
+      environment: EnvironmentNode,
+      projectSettings: ProjectSettingsNode,
+      scene: SceneNode,
    };
 
+   //---------------------------------------------------------
+   const reactFlow = useReactFlow();
    const proOptions = { hideAttribution: true };
+
+   //---------------------------------------------------------
+   //@ Context menu handler
+   const ref = useRef(null);
+   const [menu, setMenu] = useState(null);
+   const onNodeContextMenu = useCallback(
+      (event, node) => {
+         // Prevent native context menu from showing
+         event.preventDefault();
+
+         console.log('right click detected --> NodeContextmenu was fired');
+      },
+      [setMenu],
+   );
+
+   const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
 
    return (
       <div style={{ width: '100vw', height: '100vh' }}>
          <ReactFlow
+            ref={ref}
             nodeTypes={nodeTypes}
             nodes={nodes}
             edges={edges}
@@ -48,17 +85,64 @@ export default function Flow({ props }) {
             onConnect={onConnect}
             fitView
             proOptions={proOptions}
+            onNodeContextMenu={onNodeContextMenu}
          >
-            <Background color="#ccc" variant={BackgroundVariant.Dots} />
+            {/* Background */}
+            <Background
+               color="#c7c7c7"
+               variant={BackgroundVariant.Dots}
+               size={3}
+               gap={40}
+            />
             <Controls />
             <MiniMap />
+            {/* Context Menu */}
+
+            {/* --------------------Panels------------------------ */}
+            <Panel position="top-left">
+               <IconMenu />
+            </Panel>
             <Panel
                position="bottom-center"
-               className="bg-red-200 h-10 w-lg flex items-center justify-center"
+               className="flex items-center justify-center gap-2 bg-background/80 backdrop-blur-md border border-border p-3 rounded-xl shadow-md mb-4 shadow-zinc-400"
             >
-               bottom-center
+               <NodeButton
+                  tooltiptext="Script Node"
+                  Icon={ScrollText}
+                  onClickFunction={() => {
+                     addNode('script', calcPosition(reactFlow));
+                  }}
+               />
+               <NodeButton
+                  tooltiptext="Character Node"
+                  Icon={UserStar}
+                  onClickFunction={() => {
+                     addNode('character', calcPosition(reactFlow));
+                  }}
+               />
+               <NodeButton
+                  tooltiptext="Environment Node"
+                  Icon={Trees}
+                  onClickFunction={() => {
+                     addNode('environment', calcPosition(reactFlow));
+                  }}
+               />
+               <NodeButton
+                  tooltiptext="Scene Node"
+                  Icon={Clapperboard}
+                  onClickFunction={() => {
+                     addNode('scene', calcPosition(reactFlow));
+                  }}
+               />
+               <div className="w-px h-8 bg-border mx-1" />
+               <NodeButton
+                  tooltiptext="Project Settings"
+                  Icon={Settings2}
+                  onClickFunction={() => {
+                     addNode('projectSettings', calcPosition(reactFlow));
+                  }}
+               />
             </Panel>
-            <Panel position="top-left">top-left</Panel>
             <Panel position="center-left">
                <div></div>
             </Panel>
