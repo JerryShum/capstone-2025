@@ -140,6 +140,7 @@ export default function Flow() {
             <Controls />
             <MiniMap />
             {/*  --------------------Context Menu------------------------ */}
+            {/* When menu is NOT null (i.e when someone right clicks on the background or on a node --> render the ContextMenu) */}
             {menu && <ContextMenu {...menu} onClick={onPaneClick} />}
 
             {/* --------------------Panels------------------------ */}

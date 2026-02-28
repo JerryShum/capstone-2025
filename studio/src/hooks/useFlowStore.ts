@@ -14,7 +14,7 @@ import { nodeBlueprint } from '@/lib/nodeBlueprint';
 const initialEdges = [] as Edge[];
 
 const initCharacterNode: CharacterNode = {
-   id: '1',
+   id: '1-defaultchar',
    type: 'character',
    data: {
       type: 'character',
@@ -26,7 +26,7 @@ const initCharacterNode: CharacterNode = {
 };
 
 const initScriptNode: ScriptNode = {
-   id: '2',
+   id: '2-initscript',
    type: 'script',
    data: {
       type: 'script',
@@ -36,7 +36,7 @@ const initScriptNode: ScriptNode = {
 };
 
 const initProjectSettingsNode: ProjectSettingsNode = {
-   id: '3',
+   id: '3-initprojectsettings',
    type: 'projectSettings',
    data: {
       type: 'projectSettings',
@@ -95,7 +95,7 @@ const useFlowStore = create<FlowState>()(
 
          // define new node structure
          const newNode: AppNode = {
-            id: (get().nodes.length + 1).toString(),
+            id: (get().nodes.length + 1).toString() + '-' + Date.now(),
             type: type,
             //$ Position should be changed to fit the middle of current viewport
             position: { x, y },
@@ -124,6 +124,38 @@ const useFlowStore = create<FlowState>()(
 
                return node;
             }),
+         });
+      },
+      deleteNode: (id) => {
+         set({
+            //@ Only kepe the nodes with IDS that DO NOT match the input
+            nodes: get().nodes.filter((node) => !(node.id == id)),
+            edges: get().edges.filter(
+               //@ Only keeping the edges where their source AND target DONT match the input
+               (edge) => !(edge.source == id) && !(edge.target == id),
+            ),
+         });
+      },
+      duplicateNode: (id) => {
+         const nodesArray = get().nodes;
+
+         const originalNode = nodesArray.find((node) => {
+            return node.id == id;
+         });
+
+         if (!originalNode) return;
+
+         const duplicate = {
+            ...originalNode,
+            id: nodesArray.length.toString() + '-' + Date.now(),
+            position: {
+               x: originalNode.position.x + 200,
+               y: originalNode.position.y + 200,
+            },
+         } as AppNode;
+
+         set({
+            nodes: [...nodesArray, duplicate],
          });
       },
    })),
