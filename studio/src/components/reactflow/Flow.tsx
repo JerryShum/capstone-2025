@@ -91,26 +91,26 @@ export default function Flow() {
       [setMenu],
    );
 
-   //# Right click pane event (background)
+   //# Right click pane event (background) --> maybe delete if we dont want this functionality
 
    const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
 
-   const onPaneContextMenu = useCallback(
-      (event) => {
-         event.preventDefault();
+   // const onPaneContextMenu = useCallback(
+   //    (event) => {
+   //       event.preventDefault();
 
-         setMenu({
-            id: undefined,
-            top: event.clientY,
-            left: event.clientX,
-            right: undefined,
-            bottom: undefined,
-         });
+   //       setMenu({
+   //          id: undefined,
+   //          top: event.clientY,
+   //          left: event.clientX,
+   //          right: undefined,
+   //          bottom: undefined,
+   //       });
 
-         console.log('right click on pane');
-      },
-      [setMenu],
-   );
+   //       console.log('right click on pane');
+   //    },
+   //    [setMenu],
+   // );
 
    return (
       <div style={{ width: '100vw', height: '100vh' }}>
@@ -126,7 +126,7 @@ export default function Flow() {
             proOptions={proOptions}
             // triggers when right clicking on a node
             onNodeContextMenu={onNodeContextMenu}
-            onPaneContextMenu={onPaneContextMenu}
+            // onPaneContextMenu={onPaneContextMenu}
             onPaneClick={onPaneClick}
             onMoveStart={onPaneClick}
          >
