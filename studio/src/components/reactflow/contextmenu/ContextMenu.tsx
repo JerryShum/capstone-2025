@@ -1,6 +1,8 @@
+import useFlowStore from '@/hooks/useFlowStore';
 import { Copy, Trash } from 'lucide-react';
 
 interface ContextMenuProps {
+   id?: string;
    top?: number;
    left?: number;
    right?: number;
@@ -9,7 +11,9 @@ interface ContextMenuProps {
 }
 
 export default function ContextMenu(props: ContextMenuProps) {
-   const { top, left, right, bottom, onClick } = props;
+   const { id, top, left, right, bottom, onClick } = props;
+   const deleteNode = useFlowStore((state) => state.deleteNode);
+   const duplicateNode = useFlowStore((state) => state.duplicateNode);
 
    return (
       <div
@@ -25,14 +29,28 @@ export default function ContextMenu(props: ContextMenuProps) {
             Node Actions
          </span>
          <button
-            onClick={() => onClick()}
+            onClick={() => {
+               console.log('duplicate node pressed');
+               //# check if theres ID --> means theres a node that was passed
+               if (id) {
+                  duplicateNode(id);
+               }
+               onClick();
+            }}
             className="flex items-center gap-2 px-3 py-2 text-sm font-bold text-slate-700 hover:bg-slate-100 transition-colors text-left"
          >
             <Copy size={16} className="text-blue-500" />
             Duplicate
          </button>
          <button
-            onClick={() => onClick()}
+            onClick={() => {
+               //# check if theres ID --> means theres a node that was passed
+               console.log('delete node clicked');
+               if (id) {
+                  deleteNode(id);
+               }
+               onClick();
+            }}
             className="flex items-center gap-2 px-3 py-2 text-sm font-bold text-destructive hover:bg-slate-100 transition-colors text-left"
          >
             <Trash size={16} className="text-destructive" />
