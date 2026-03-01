@@ -1,5 +1,5 @@
 import { Handle, Position } from '@xyflow/react';
-import type { ProjectSettingsNode, httpsURL } from '@/lib/flowTypes';
+import type { ProjectSettingsNode, httpsURL } from '@shared';
 import type { NodeProps } from '@xyflow/react';
 import useFlowStore from '@/hooks/useFlowStore';
 import {

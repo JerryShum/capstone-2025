@@ -1,5 +1,5 @@
 import { Handle, Position, type NodeProps } from '@xyflow/react';
-import type { SceneNode } from '@/lib/flowTypes';
+import type { SceneNode } from '@shared';
 import useFlowStore from '@/hooks/useFlowStore';
 import {
    Clapperboard,

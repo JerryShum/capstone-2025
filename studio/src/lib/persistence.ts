@@ -2,7 +2,7 @@ import useFlowStore from '@/hooks/useFlowStore';
 import { useProjectStore } from '@/hooks/useProjectStore';
 import debounce from './functions/debounce';
 import type { Edge, Node } from '@xyflow/react';
-import type { AppNode } from './flowTypes';
+import type { AppNode } from '@shared';
 
 //! Creation of store subscribers --> these subscribe to any updates to their store
 // the function runs whenever the store state is updated

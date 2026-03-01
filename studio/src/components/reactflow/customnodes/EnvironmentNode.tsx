@@ -1,7 +1,7 @@
 import useFlowStore from '@/hooks/useFlowStore';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import { Mountain, Clock, Cloud, Zap, AlignLeft, Trees } from 'lucide-react';
-import type { EnvironmentNodeData } from '@/lib/flowTypes';
+import type { EnvironmentNodeData, SceneNode, ProjectSettingsNode, httpsURL } from '@shared';
 
 export default function EnvironmentNode({ data, id }: NodeProps) {
    const updateNode = useFlowStore((state) => state.updateNode);

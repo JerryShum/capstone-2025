@@ -8,57 +8,10 @@ import type {
    ScriptNode,
    CharacterNode,
    ProjectSettingsNode,
-} from '@/lib/flowTypes';
+} from '@shared';
+import { initialNodes, initialEdges } from '@shared';
 import { nodeBlueprint } from '@/lib/nodeBlueprint';
 
-const initialEdges = [] as Edge[];
-
-const initCharacterNode: CharacterNode = {
-   id: '1-defaultchar',
-   type: 'character',
-   data: {
-      type: 'character',
-      name: 'barry',
-      style: 'pixelated cartoon chicken',
-      appearance: 'pixelated chicken, yellow hair, big blue eyes',
-   },
-   position: { x: 250, y: 25 },
-};
-
-const initScriptNode: ScriptNode = {
-   id: '2-initscript',
-   type: 'script',
-   data: {
-      type: 'script',
-      content: 'script for barry the chicken:yapyapyapypaypaypyapp',
-   },
-   position: { x: 250, y: 25 },
-};
-
-const initProjectSettingsNode: ProjectSettingsNode = {
-   id: '3-initprojectsettings',
-   type: 'projectSettings',
-   data: {
-      type: 'projectSettings',
-      title: 'Untitled Project',
-      aspectRatio: '16:9',
-      targetEngine: 'Google Veo',
-      negativePrompt: 'blur, low quality, distorted, watermark',
-      seed: -1,
-      guidanceScale: 7.5,
-      motionIntensity: 5,
-      styleReference: 'https://...',
-      cinematicPreset: 'Neo-Noir',
-      summary: 'A brief overview of the project theme...',
-   },
-   position: { x: 300, y: 400 },
-};
-
-const initialNodes = [
-   initCharacterNode,
-   initScriptNode,
-   initProjectSettingsNode,
-] as AppNode[];
 
 // this is our useStore hook that we can use in our components to get parts of the store and call actions
 const useFlowStore = create<FlowState>()(
