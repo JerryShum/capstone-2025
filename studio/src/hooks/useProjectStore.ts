@@ -1,7 +1,8 @@
-import type { ProjectState } from '@/lib/projectTypes';
+import type { ProjectState } from '@shared';
 import { create } from 'zustand';
 
 export const useProjectStore = create<ProjectState>((set, get) => ({
+   id: 123,
    projectTitle: 'default',
    aspectRatio: '16:9',
    engine: 'veo',

@@ -1,7 +1,7 @@
 import { AlignLeft, Ban, Clapperboard, Cpu, Monitor, Type } from 'lucide-react';
 import { useProjectStore } from '@/hooks/useProjectStore';
 import { useShallow } from 'zustand/shallow';
-import type { ProjectState } from '@/lib/projectTypes';
+import type { ProjectState } from '@shared';
 
 export default function ProjectSettingsForm() {
    const inputClasses =

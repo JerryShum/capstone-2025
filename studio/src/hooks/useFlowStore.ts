@@ -1,17 +1,9 @@
-import { create } from 'zustand';
-import { addEdge, applyNodeChanges, applyEdgeChanges } from '@xyflow/react';
-import type { Edge } from '@xyflow/react';
-import { devtools, subscribeWithSelector } from 'zustand/middleware';
-import type {
-   FlowState,
-   AppNode,
-   ScriptNode,
-   CharacterNode,
-   ProjectSettingsNode,
-} from '@shared';
-import { initialNodes, initialEdges } from '@shared';
 import { nodeBlueprint } from '@/lib/nodeBlueprint';
-
+import type { AppNode, FlowState } from '@shared';
+import { initialEdges, initialNodes } from '@shared';
+import { addEdge, applyEdgeChanges, applyNodeChanges } from '@xyflow/react';
+import { create } from 'zustand';
+import { devtools, subscribeWithSelector } from 'zustand/middleware';
 
 // this is our useStore hook that we can use in our components to get parts of the store and call actions
 const useFlowStore = create<FlowState>()(
