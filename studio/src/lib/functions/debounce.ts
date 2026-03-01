@@ -15,7 +15,7 @@ export default function debounce<
 >(
    func: FuncType,
    delay: number,
-   maxWaitTime: number,
+   maxWaitTime: number = 30000,
 ): (...args: Parameters<FuncType>) => void {
    //the persistent variable / state of the debounce function
    let timeoutID: ReturnType<typeof setTimeout> | undefined;

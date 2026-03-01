@@ -29,4 +29,7 @@ function saveFlow(nodes: AppNode[], edges: Edge[]) {
    console.log('Edges:', edges);
 }
 
-const debouncedSaveFlow = debounce(saveFlow, 2000);
+//@ This is the function that has been returned from debounce:
+// Guaranteed save 10 seconds after performing consecutive actions
+// Saves 2 seconds after an action (debounced)
+const debouncedSaveFlow = debounce(saveFlow, 2000, 10000);
