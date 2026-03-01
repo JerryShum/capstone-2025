@@ -11,17 +11,20 @@ Studio portion / package for the entire StoryWeaver application. This is going t
    - [x] ProjectSettings Node
    - [ ] Scene Node
 
-- [ ] Add right click functionality to the nodes
-   - [ ] Context menu --> shadcn?
-   - [ ] Delete nodes
-   - [ ] Lock position of nodes
+- [x] Add right click functionality to the nodes
+   - [x] Context menu --> shadcn?
+   - [x] Delete nodes
+   - [ ] Lock position of nodes --> maybe create a "locked" state for each node (small icon in the corner?)
 
 - [ ] Figure out how to save the graph locally
    - [ ] zustand persist middleware
 
 - [ ] Figure out how to save graph to a database
-   - [ ] Loaders in router --> auto save & fetch from database?
-   - [ ] Implement a timer --> save every 2 seconds? --> streaming approach?
+   - [ ] Auto-save --> look into debouncing --> whenever the user is moving --> reset our "save timer" --> even if user is moving, we will still save to the DB every 10 / 30 seconds.
+      - [ ] Create an "observer"
+         - [ ] zustand subscribe allows us to "watch the store"
+         - [ ] within here, we can define and call the debounce save logic
+         - [ ] save the nodes and edges arrays to the database
 
 ### Completed Tasks ✓
 
