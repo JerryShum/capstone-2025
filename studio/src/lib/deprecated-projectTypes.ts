@@ -8,6 +8,7 @@ export type CinematicPreset =
    | 'None';
 
 export type ProjectState = {
+   id: number;
    projectTitle: string;
    aspectRatio: '16:9' | '9:16';
    engine: 'veo' | 'sora';
