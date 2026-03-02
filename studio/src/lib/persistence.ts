@@ -20,13 +20,49 @@ export const unsub2 = useProjectStore.subscribe((state, prevState) => {
    console.log(state.projectTitle);
 });
 
-// unsub();
-// unsub2();'
-
-function saveFlow(nodes: AppNode[], edges: Edge[]) {
+async function saveFlow(nodes: AppNode[], edges: Edge[]) {
    console.log('---Saving to the cloud---');
    console.log('Nodes:', nodes);
    console.log('Edges:', edges);
+
+   //# get the id and project title from the store
+   const { id, projectTitle } = useProjectStore.getState();
+   console.log(id);
+
+   //# Checking if ID is real / legit (not 123 since we should be loading a new ID from the db)
+   if (!id || id === 123) {
+      console.warn('Persistence: No valid project ID found. Skipping save.');
+      return;
+   }
+
+   //@ Save Logic
+   try {
+      console.log(`--- Saving Project: ${id} ---`);
+
+      // send request to server
+      const response = await fetch(`/api/studio/update/${id}`, {
+         method: 'PATCH',
+         headers: {
+            'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({
+            projectTitle,
+            flowData: {
+               nodes,
+               edges,
+            },
+         }),
+      });
+
+      // if there was an error
+      if (!response.ok) {
+         throw new Error('Failed to save project to database.');
+      }
+
+      console.log('Successfully saved project to database!');
+   } catch (error) {
+      console.error('X Persistence Error:', error);
+   }
 }
 
 //@ This is the function that has been returned from debounce:
