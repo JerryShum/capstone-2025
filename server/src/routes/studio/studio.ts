@@ -16,27 +16,16 @@ export const studioRoute = new Hono()
 
       return c.json(data, { status: 200 });
    })
-   .get('/:id', async (c) => {
-      //! This route is for loading/getting a single project (whenever the user clicks on a project card from the dashboard)
-      const projectID = parseInt(c.req.param('id'), 10);
-
-      const [project] = await db
-         .select()
-         .from(projectsTable)
-         .where(eq(projectsTable.id, projectID));
-
-      if (!project) {
-         return c.json({ error: 'Project not found' }, 404);
-      }
-
-      return c.json(project, 200);
-   })
    .get('/list', async (c) => {
       //! This route is for getting all of the user's projects
       const projects = await db
          .select()
          .from(projectsTable)
          .orderBy(desc(projectsTable.updatedAt));
+
+      if (!projects) {
+         return c.json({ error: 'Projects not found' }, 404);
+      }
 
       return c.json(projects, { status: 200 });
    })
@@ -53,6 +42,21 @@ export const studioRoute = new Hono()
          .returning();
 
       return c.json({ id: newProject?.id }, 201);
+   })
+   .get('/:id', async (c) => {
+      //! This route is for loading/getting a single project (whenever the user clicks on a project card from the dashboard)
+      const projectID = parseInt(c.req.param('id'), 10);
+
+      const [project] = await db
+         .select()
+         .from(projectsTable)
+         .where(eq(projectsTable.id, projectID));
+
+      if (!project) {
+         return c.json({ error: 'Project not found' }, 404);
+      }
+
+      return c.json(project, 200);
    })
    .patch('/update/:id', zValidator('json', updateProjectSchema), async (c) => {
       //! This route is for updating/saving a pre-existing project
