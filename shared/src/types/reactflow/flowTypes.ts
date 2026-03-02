@@ -109,4 +109,5 @@ export type FlowState = {
    updateNode: (id: string, data: Partial<AppNodeData>) => void;
    deleteNode: (id: string) => void;
    duplicateNode: (id: string) => void;
+   generateVideo: (nodeId: string) => Promise<void>;
 };

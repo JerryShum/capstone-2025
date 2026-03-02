@@ -36,8 +36,11 @@ export function ProjectCard({ project, updatedAt }: ProjectCardProps) {
          className="group cursor-pointer overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-2xl hover:shadow-indigo-100/50"
          to={URL}
       >
-         <div className="relative h-40 overflow-hidden bg-gray-100">
-            <ImageWithFallback src={''} />
+         <div className="relative flex h-40 items-center justify-center overflow-hidden bg-gray-100">
+            <ImageWithFallback
+               src={'/backup.jpg'}
+               className="h-full w-full object-cover"
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent" />
             <button
                onClick={(e) => e.stopPropagation()}

@@ -4,6 +4,10 @@ import { initialEdges, initialNodes } from '@shared';
 import { addEdge, applyEdgeChanges, applyNodeChanges } from '@xyflow/react';
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
+import { gatherSceneContext } from '@/lib/functions/graphUtils';
+import { api } from '@/lib/api';
+import { useProjectStore } from './useProjectStore';
+import type { SceneNode } from '@shared';
 
 // this is our useStore hook that we can use in our components to get parts of the store and call actions
 const useFlowStore = create<FlowState>()(
@@ -103,6 +107,71 @@ const useFlowStore = create<FlowState>()(
             set({
                nodes: [...nodesArray, duplicate],
             });
+         },
+         generateVideo: async (nodeId: string) => {
+            const nodes = get().nodes;
+            const edges = get().edges;
+            const sceneNode = nodes.find((n) => n.id === nodeId) as SceneNode | undefined;
+
+            if (!sceneNode || sceneNode.type !== 'scene') return;
+
+            // 1. Gather context from upstream nodes
+            const context = gatherSceneContext(nodeId, nodes, edges);
+            const projectSettings = useProjectStore.getState();
+
+            // 2. Set status to PROCESSING
+            get().updateNode(nodeId, { status: 'PROCESSING' });
+
+            try {
+               // 3. Trigger video generation
+               const response = await api.studio.video.generate.$post({
+                  json: {
+                     prompt: sceneNode.data.scenePrompt,
+                     aspectRatio: projectSettings.aspectRatio as '16:9' | '9:16' | '1:1',
+                     duration: sceneNode.data.duration,
+                     characters: context.characters,
+                     environments: context.environments,
+                     // imageBase64: ... (Optional reference image)
+                  },
+               });
+
+               if (!response.ok) throw new Error('Failed to initiate video generation');
+
+               const operationData = await response.json();
+               const operationName = operationData.operationName as string;
+
+               // 4. Polling for status
+               let isDone = false;
+               while (!isDone) {
+                  // Wait for 3 seconds between polls
+                  await new Promise((resolve) => setTimeout(resolve, 3000));
+
+                  const statusRes = await api.studio.video.status[':name{.+}'].$get({
+                     param: { name: operationName },
+                  });
+
+                  if (!statusRes.ok) throw new Error('Failed to check status');
+
+                  const result = (await statusRes.json()) as {
+                     status: 'SUCCESS' | 'PROCESSING' | 'FAILED';
+                     videoURL?: string;
+                     error?: string;
+                  };
+
+                  if (result.status === 'SUCCESS') {
+                     get().updateNode(nodeId, {
+                        status: 'READY',
+                        videoURL: result.videoURL as any,
+                     });
+                     isDone = true;
+                  } else if (result.status === 'FAILED') {
+                     throw new Error(result.error || 'Generation failed');
+                  }
+               }
+            } catch (error) {
+               console.error('Video Generation Error:', error);
+               get().updateNode(nodeId, { status: 'ERROR' });
+            }
          },
       })),
    ),

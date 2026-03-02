@@ -52,7 +52,7 @@ export async function storeAndShowVideo(
       const options = {
          version: 'v4' as const, // Use v4 signing
          action: 'read' as const, // We want to read (view) the file
-         expires: Date.now() + 15 * 60 * 1000, // 15 minutes from now
+         expires: Date.now() + 60 * 60 * 1000, // 1 hour from now
       };
 
       // Get the signed URL for the file you just uploaded

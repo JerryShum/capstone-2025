@@ -8,8 +8,8 @@ import { desc, eq } from 'drizzle-orm';
 import type { ApiResponse } from '@shared';
 
 import { createScriptImageRoute } from './routes/create/createScriptImageRoute';
-import { createVideoRoute } from './routes/create/createVideoRoute';
 import { studioRoute } from './routes/studio/studio';
+import { videoRoute } from './routes/studio/videoRoute';
 
 export const apiRoutes = new Hono()
    .get('/hello', async (c) => {
@@ -21,7 +21,7 @@ export const apiRoutes = new Hono()
       return c.json(data, { status: 200 });
    })
    .route('/create', createScriptImageRoute)
-   .route('/create', createVideoRoute)
+   .route('/studio/video', videoRoute)
    .route('/studio', studioRoute);
 
 export type ApiRoutes = typeof apiRoutes;

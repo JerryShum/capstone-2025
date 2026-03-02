@@ -1,12 +1,12 @@
-import { Edge } from '@xyflow/react';
-import {
+import type { Edge } from '@xyflow/react';
+import type {
    AppNode,
    CharacterNodeData,
    EnvironmentNodeData,
    ScriptNodeData,
-   type CharacterNode,
-   type EnvironmentNode,
-   type ScriptNode,
+   CharacterNode,
+   EnvironmentNode,
+   ScriptNode,
 } from '@shared';
 
 /**

@@ -3,8 +3,8 @@ import { Hono } from 'hono';
 import { GoogleGenAI, GenerateVideosOperation } from '@google/genai';
 
 //! Shared
-import { postVideoSchema, postVideoSchemaType } from '@shared/schemas/sendVideoSchema';
-import { CharacterNodeData, EnvironmentNodeData } from '@shared';
+import { postVideoSchema, type postVideoSchemaType } from '@shared/schemas/sendVideoSchema';
+import type { CharacterNodeData, EnvironmentNodeData } from '@shared';
 
 //----------------------------------------------------------------------
 
@@ -16,7 +16,9 @@ import { storeAndShowVideo } from '@server/functions/storeAndShowVideo';
 const GCS_BUCKET_NAME = process.env.GCS_BUCKET_NAME; // Add this to your .env!
 
 //! Connecting to GCS
-const storage = new Storage();
+const storage = new Storage({
+   keyFilename: './gcs-service-account.json', // Use explicit service account if present
+});
 const bucket = storage.bucket(GCS_BUCKET_NAME!);
 
 //----------------------------------------------------------------------
@@ -43,30 +45,37 @@ const genAI = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 function buildGCPVideoPrompt(data: postVideoSchemaType): string {
    const { prompt, characters, environments } = data;
 
-   // TODO: Your logic here!
-   // Hint: Use .map and .join(', ') to turn those arrays into readable sentences.
+   // 1. Build Environment Context
+   const environmentContext = environments.length > 0
+      ? environments.map((env: EnvironmentNodeData) => 
+         `at ${env.location}, during the ${env.timeOfDay}, with ${env.weather} weather and ${env.lightingStyle} lighting. ${env.description}`
+      ).join(' ')
+      : '';
+
+   // 2. Build Character Context
+   const characterContext = characters.length > 0
+      ? `Featuring ${characters.map((char: CharacterNodeData) => 
+         `${char.name} (${char.appearance}, in ${char.style} style)`
+      ).join(' and ')}.`
+      : '';
+
+   // 3. Combine with Scene Action
+   const masterPrompt = [
+      environmentContext,
+      characterContext,
+      `Action: ${prompt}`,
+      'Cinematic style, high quality, professional cinematography.'
+   ].filter(Boolean).join(' ');
    
-   return `A video of ${prompt}`; 
+   return masterPrompt; 
 }
 
 // -----------------------------------------------------------------------------------
 
-export const createVideoRoute = new Hono()
-   .post('/video', zValidator('json', postVideoSchema), async (c) => {
+export const videoRoute = new Hono()
+   .post('/generate', zValidator('json', postVideoSchema), async (c) => {
       //! get validated data from zValidator
       const postOBJ = await c.req.valid('json');
-
-      // declare interface Image_2 {
-      //     /** The Cloud Storage URI of the image. ``Image`` can contain a value
-      //      for this field or the ``image_bytes`` field but not both. */
-      //     gcsUri?: string;
-      //     /** The image bytes data. ``Image`` can contain a value for this field
-      //      or the ``gcs_uri`` field but not both.
-      //      * @remarks Encoded as base64 string. */
-      //     imageBytes?: string;
-      //     /** The MIME type of the image. */
-      //     mimeType?: string;
-      // }
 
       const masterPrompt = buildGCPVideoPrompt(postOBJ);
 
@@ -87,7 +96,7 @@ export const createVideoRoute = new Hono()
          operationName: operation.name,
       });
    })
-   .get('/video/status/:name{.+}', async (c) => {
+   .get('/status/:name{.+}', async (c) => {
       // get the "ticket number / operation number" from the URL (that the client will send)
       const operationName = c.req.param('name');
 
@@ -104,7 +113,7 @@ export const createVideoRoute = new Hono()
             status: 'PROCESSING',
             videoURL: undefined,
             error: undefined,
-            message: undefined, // <-- Add this
+            message: undefined,
          });
       }
 
@@ -115,12 +124,13 @@ export const createVideoRoute = new Hono()
             status: 'FAILED',
             videoURL: undefined,
             error: operation.error.message || 'Unknown error',
-            message: undefined, // <-- Add this
+            message: undefined,
          });
       }
 
       //@ operation should be ready here
       const generatedVideos = operation.response?.generatedVideos;
+      console.log('GENERATED VIDEOS RESPONSE:', JSON.stringify(generatedVideos, null, 2));
 
       //@ 3. FAILED (NO VIDEOS)
       if (!generatedVideos || generatedVideos.length === 0) {
@@ -128,7 +138,7 @@ export const createVideoRoute = new Hono()
             status: 'FAILED',
             videoURL: undefined,
             error: 'no generated video found in operation response',
-            message: undefined, // <-- Add this
+            message: undefined,
          });
       }
 
@@ -140,7 +150,7 @@ export const createVideoRoute = new Hono()
             status: 'FAILED',
             videoURL: undefined,
             error: 'Video data missing in response',
-            message: undefined, // <-- Add this
+            message: undefined,
          });
       }
 
@@ -152,7 +162,7 @@ export const createVideoRoute = new Hono()
          {
             status: 'SUCCESS',
             videoURL: videoURL,
-            error: undefined, // <-- Add this
+            error: undefined,
             message: 'video has been successfully generated.',
          },
          200
