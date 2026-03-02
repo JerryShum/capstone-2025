@@ -8,6 +8,7 @@
     "dev": "tsc --watch"
   },
   "devDependencies": {
+    "@xyflow/react": "^12.10.1",
     "typescript": "^5.8.3"
   },
   "dependencies": {
