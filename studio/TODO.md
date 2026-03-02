@@ -19,11 +19,15 @@ Studio portion / package for the entire StoryWeaver application. This is going t
 - [ ] Figure out how to save the graph locally
    - [ ] zustand persist middleware
 
-- [ ] Add projectSettings to the save logic.
-   - [ ] Create a new observer for projectSettingsStore
-   - [ ] Use the same debounce / save function
+- [ ] Dashboard page --> retrieve list of projects from DB
+   - [ ] Tanstack query to manage requests (maybe)
+   - [ ] Map out and render projectcards based on the information from DB
 
 ### Completed Tasks ✓
+
+- [x] Add projectSettings to the save logic.
+   - [x] Create a new observer for projectSettingsStore
+   - [x] Use the same debounce / save function
 
 - [x] Figure out how to save graph to a database
    - [x] Auto-save --> look into debouncing --> whenever the user is moving --> reset our "save timer" --> even if user is moving, we will still save to the DB every 10 / 30 seconds.
