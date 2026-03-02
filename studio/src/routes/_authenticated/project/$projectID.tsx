@@ -1,10 +1,12 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useParams } from '@tanstack/react-router';
 
 import Flow from '@/components/reactflow/Flow';
 import { ReactFlowProvider } from '@xyflow/react';
+import { loadProject } from '@/lib/persistence';
 
 export const Route = createFileRoute('/_authenticated/project/$projectID')({
    component: RouteComponent,
+   loader: async ({ params }) => loadProject(parseInt(params.projectID)),
 });
 
 //! THIS IS GOING TO BE THE PRIMARY PAGE FOR THE STUDIO
