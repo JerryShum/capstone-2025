@@ -28,6 +28,7 @@
          "@/*": ["./src/*"],
          "@shared/*": ["../shared/src/*"],
          "@shared": ["../shared/src"],
+         "@server/*": ["../server/src/*"],
          "@server": ["../server/src"]
       }
    },
