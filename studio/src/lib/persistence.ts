@@ -3,6 +3,7 @@ import { useProjectStore } from '@/hooks/useProjectStore';
 import debounce from './functions/debounce';
 import type { Edge, Node } from '@xyflow/react';
 import type { AppNode } from '@shared';
+import { api } from './api';
 
 //! Creation of store subscribers --> these subscribe to any updates to their store
 // the function runs whenever the store state is updated
@@ -39,19 +40,13 @@ async function saveFlow(nodes: AppNode[], edges: Edge[]) {
    try {
       console.log(`--- Saving Project: ${id} ---`);
 
-      // send request to server
-      const response = await fetch(`/api/studio/update/${id}`, {
-         method: 'PATCH',
-         headers: {
-            'Content-Type': 'application/json',
-         },
-         body: JSON.stringify({
+      // api.create.video.$post({ json: data });
+      const response = await api.studio.update[':id'].$patch({
+         param: { id: id.toString() },
+         json: {
             projectTitle,
-            flowData: {
-               nodes,
-               edges,
-            },
-         }),
+            flowData: { nodes, edges },
+         },
       });
 
       // if there was an error
@@ -85,11 +80,8 @@ export async function loadProject(id: number) {
 
    // Get project info from server / DB
    try {
-      const response = await fetch(`/api/studio/${id}`, {
-         method: 'GET',
-         headers: {
-            'Content-Type': 'application/json',
-         },
+      const response = await api.studio[':id'].$get({
+         param: { id: id.toString() },
       });
 
       if (!response.ok) {
@@ -102,6 +94,6 @@ export async function loadProject(id: number) {
       useProjectStore.setState({ id, projectTitle });
       useFlowStore.setState({ nodes: flowData.nodes, edges: flowData.edges });
    } catch (error) {
-      console.error(`Encountered error when retrieving project:${id}. `);
+      console.error(`Encountered error when retrieving project:${id}. `, error);
    }
 }
