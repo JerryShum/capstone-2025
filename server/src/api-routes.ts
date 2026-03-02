@@ -11,6 +11,8 @@ import { createScriptImageRoute } from './routes/create/createScriptImageRoute';
 import { createVideoRoute } from './routes/create/createVideoRoute';
 import { studioRoute } from './routes/studio/studio';
 import { videoRoute } from './routes/studio/videoRoute';
+import { loginRoute } from './routes/account/loginRoute';
+import { adminRoute } from './routes/account/adminRoute';
 
 export const apiRoutes = new Hono()
    .get('/hello', async (c) => {
@@ -24,6 +26,8 @@ export const apiRoutes = new Hono()
    .route('/create', createScriptImageRoute)
    .route('/create', createVideoRoute)
    .route('/studio', studioRoute)
-   .route('/studio/video', videoRoute);
+   .route('/studio/video', videoRoute)
+   .route('/login', loginRoute)
+   .route('/admin', adminRoute);
 
 export type ApiRoutes = typeof apiRoutes;
