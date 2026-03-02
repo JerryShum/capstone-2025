@@ -47,7 +47,6 @@ function RouteComponent() {
               id="email"
               placeholder="user@example.com"
               type="email"
-              disabled
             />
           </Field>
           <Field className="gap-1">
@@ -56,7 +55,6 @@ function RouteComponent() {
               id="password"
               type="password"
               placeholder="password"
-              disabled
             />
           </Field>
           <Button className="w-full">Sign up</Button>
