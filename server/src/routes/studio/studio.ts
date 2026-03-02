@@ -38,6 +38,8 @@ export const studioRoute = new Hono()
          .values({
             projectTitle: 'Untitled Project',
             flowData: { nodes: initialNodes, edges: initialEdges },
+            executiveSummary:
+               'This is a simple animation following a baby chick going around his daily life around the bard.',
          })
          .returning();
 
