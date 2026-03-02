@@ -68,7 +68,6 @@ function RouteComponent() {
                 placeholder="you@example.com"
                 type="email"
                 className="rounded-xl border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:ring-2 focus:ring-blue-500/30 h-11"
-                disabled
               />
             </Field>
             <Field className="gap-1.5">
@@ -78,7 +77,6 @@ function RouteComponent() {
                 type="password"
                 placeholder="••••••••"
                 className="rounded-xl border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:ring-2 focus:ring-blue-500/30 h-11"
-                disabled
               />
             </Field>
           </div>
