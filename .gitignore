@@ -44,3 +44,7 @@ bun.lockb
 
 # server static files
 server/static
+
+# Build Output
+dist/
+**/dist/
