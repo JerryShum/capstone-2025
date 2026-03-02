@@ -20,8 +20,10 @@ Studio portion / package for the entire StoryWeaver application. This is going t
    - [ ] zustand persist middleware
 
 - [ ] Dashboard page --> retrieve list of projects from DB
-   - [ ] Tanstack query to manage requests (maybe)
-   - [ ] Map out and render projectcards based on the information from DB
+   - [x] Tanstack query to manage requests (maybe)
+   - [x] Map out and render projectcards based on the information from DB
+   - [ ] Figure out how to re-fetch data after updating it on the studio side
+      - [ ] --> maybe invalidate query within persistence.ts?
 
 ### Completed Tasks ✓
 
