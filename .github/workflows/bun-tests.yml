@@ -1,0 +1,20 @@
+name: "Bun CI"
+on:
+  push:
+    branches: [ci-setup, loginsignup]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+      
+    - name: Install Dependencies
+      run: bun install
+
+    - name: Run tests
+      run: bun test
