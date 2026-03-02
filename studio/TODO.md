@@ -19,14 +19,18 @@ Studio portion / package for the entire StoryWeaver application. This is going t
 - [ ] Figure out how to save the graph locally
    - [ ] zustand persist middleware
 
-- [ ] Figure out how to save graph to a database
-   - [ ] Auto-save --> look into debouncing --> whenever the user is moving --> reset our "save timer" --> even if user is moving, we will still save to the DB every 10 / 30 seconds.
-      - [ ] Create an "observer"
-         - [ ] zustand subscribe allows us to "watch the store"
-         - [ ] within here, we can define and call the debounce save logic
-         - [ ] save the nodes and edges arrays to the database
+- [ ] Add projectSettings to the save logic.
+   - [ ] Create a new observer for projectSettingsStore
+   - [ ] Use the same debounce / save function
 
 ### Completed Tasks ✓
+
+- [x] Figure out how to save graph to a database
+   - [x] Auto-save --> look into debouncing --> whenever the user is moving --> reset our "save timer" --> even if user is moving, we will still save to the DB every 10 / 30 seconds.
+      - [x] Create an "observer"
+         - [x] zustand subscribe allows us to "watch the store"
+         - [x] within here, we can define and call the debounce save logic
+         - [x] save the nodes and edges arrays to the database
 
 - [x] Maybe move project settings to a global setting
    - [x] Convert topleft panel into a drop down (similar to figma)
