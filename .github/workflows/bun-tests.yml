@@ -18,3 +18,5 @@ jobs:
 
     - name: Run tests
       run: bun test
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
