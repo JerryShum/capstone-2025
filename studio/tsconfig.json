@@ -9,7 +9,8 @@
       "paths": {
          "@/*": ["./src/*"],
          "@shared": ["../shared/src"],
-         "@shared/*": ["../shared/src/*"]
+         "@shared/*": ["../shared/src/*"],
+         "@server": ["../server/src"]
       }
    }
 }
