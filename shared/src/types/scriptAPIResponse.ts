@@ -4,3 +4,8 @@ export interface scriptAPIResponse {
    video_prompt: string[];
    imageBase64: string;
 }
+
+export type ApiResponse = {
+   message: string;
+   success: boolean;
+};

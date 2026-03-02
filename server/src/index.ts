@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { serveStatic } from 'hono/bun';
-import type { ApiResponse } from 'shared/dist';
+import type { ApiResponse } from '@shared';
 import { logger } from 'hono/logger';
 
 // ---

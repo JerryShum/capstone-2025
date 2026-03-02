@@ -1,6 +1,6 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import type { ApiResponse } from 'shared/dist';
+import type { ApiResponse } from '@shared';
 import { updateProjectSchema } from '@shared/schemas/updateProjectSchema';
 import { db } from '@server/db';
 import { projectsTable } from '@server/db/schemas/schema';
