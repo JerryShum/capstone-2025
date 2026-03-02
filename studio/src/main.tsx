@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { Link, RouterProvider, createRouter } from '@tanstack/react-router';
 import { routeTree } from './routeTree.gen';
 import './index.css';
+import './lib/persistence';
 
 import PageNotFound from './components/PageNotFound';
 
