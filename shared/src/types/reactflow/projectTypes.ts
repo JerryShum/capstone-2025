@@ -25,3 +25,13 @@ export type ProjectState = {
       value: ProjectState[K],
    ) => void;
 };
+
+export type Project = {
+   id: number;
+   projectTitle: string;
+   aspectRatio: '16:9' | '9:16';
+   engine: 'veo' | 'sora';
+   globalNegativePrompt: string;
+   executiveSummary: string;
+   cinematicPreset: CinematicPreset;
+};

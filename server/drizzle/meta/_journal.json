@@ -8,6 +8,13 @@
       "when": 1772410213094,
       "tag": "0000_broad_mojo",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1772490745857,
+      "tag": "0001_fixed_firebrand",
+      "breakpoints": true
     }
   ]
 }

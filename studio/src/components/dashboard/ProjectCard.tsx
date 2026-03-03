@@ -2,21 +2,14 @@ import { Folder, Calendar, MoreVertical } from 'lucide-react';
 import { ImageWithFallback } from './ProjectCardImage';
 import fallbackimage from '/backup.jpg';
 import { Link } from '@tanstack/react-router';
-
-interface Project {
-   id: string;
-   name: string;
-   description: string;
-   createdAt: string;
-   updatedAt: string;
-   imageUrl?: string;
-}
+import type { Project } from '@shared/types';
 
 interface ProjectCardProps {
    project: Project;
+   updatedAt: string | null;
 }
 
-export function ProjectCard({ project }: ProjectCardProps) {
+export function ProjectCard({ project, updatedAt }: ProjectCardProps) {
    //! Define the navigation URL
    const URL = `/project/${project.id}`;
 
@@ -44,7 +37,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
          to={URL}
       >
          <div className="relative h-40 overflow-hidden bg-gray-100">
-            <ImageWithFallback src={project.imageUrl} />
+            <ImageWithFallback src={''} />
             <div className="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent" />
             <button
                onClick={(e) => e.stopPropagation()}
@@ -61,16 +54,16 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
          <div className="p-5">
             <h3 className="mb-1.5 truncate font-medium text-gray-900 transition-colors group-hover:text-indigo-600">
-               {project.name}
+               {project.projectTitle}
             </h3>
             <p className="mb-4 line-clamp-2 h-[40px] text-[13px] leading-relaxed text-gray-600">
-               {project.description}
+               {project.executiveSummary}
             </p>
 
             <div className="flex items-center justify-between border-t border-gray-100 pt-3">
                <div className="flex items-center gap-1.5 text-xs text-gray-500">
                   <Calendar className="h-3 w-3" />
-                  <span>{formatDate(project.updatedAt)}</span>
+                  <span>{formatDate(updatedAt)}</span>
                </div>
 
                <div className="flex items-center gap-1">
