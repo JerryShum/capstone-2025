@@ -2,7 +2,7 @@ import useFlowStore from '@/hooks/useFlowStore';
 import { useProjectStore } from '@/hooks/useProjectStore';
 import debounce from './functions/debounce';
 import type { Edge, Node } from '@xyflow/react';
-import type { AppNode } from '@shared';
+import type { AppNode, CinematicPreset } from '@shared';
 import { api } from './api';
 
 //! Creation of store subscribers --> these subscribe to any updates to their store
@@ -11,23 +11,28 @@ export const unsub = useFlowStore.subscribe(
    (state) => [state.nodes, state.edges] as const,
    ([nodes, edges], prevState) => {
       // call debounce function here --> sends the state to the server (after an amount of time after an action occurred)
-      debouncedSaveFlow(nodes, edges);
+      debouncedSaveProject();
    },
 );
 
 export const unsub2 = useProjectStore.subscribe((state, prevState) => {
-   console.log(state, prevState);
-
-   console.log(state.projectTitle);
+   debouncedSaveProject();
 });
 
-async function saveFlow(nodes: AppNode[], edges: Edge[]) {
+async function saveProject() {
    console.log('---Saving to the cloud---');
-   console.log('Nodes:', nodes);
-   console.log('Edges:', edges);
 
-   //# get the id and project title from the store
-   const { id, projectTitle } = useProjectStore.getState();
+   //# get all the states from each store
+   const { nodes, edges } = useFlowStore.getState();
+   const {
+      id,
+      projectTitle,
+      aspectRatio,
+      engine,
+      globalNegativePrompt,
+      executiveSummary,
+      cinematicPreset,
+   } = useProjectStore.getState();
    console.log(id);
 
    //# Checking if ID is real / legit (not 123 since we should be loading a new ID from the db)
@@ -46,6 +51,11 @@ async function saveFlow(nodes: AppNode[], edges: Edge[]) {
          json: {
             projectTitle,
             flowData: { nodes, edges },
+            aspectRatio,
+            engine,
+            globalNegativePrompt,
+            executiveSummary,
+            cinematicPreset,
          },
       });
 
@@ -63,7 +73,7 @@ async function saveFlow(nodes: AppNode[], edges: Edge[]) {
 //@ This is the function that has been returned from debounce:
 // Guaranteed save 10 seconds after performing consecutive actions
 // Saves 2 seconds after an action (debounced)
-const debouncedSaveFlow = debounce(saveFlow, 2000, 10000);
+const debouncedSaveProject = debounce(saveProject, 2000, 10000);
 
 //---------------------------------------------------------
 
@@ -88,10 +98,26 @@ export async function loadProject(id: number) {
          throw new Error(`Failed retrieving Project: ${id} from database.`);
       }
 
-      const { projectTitle, flowData } = await response.json();
+      const {
+         projectTitle,
+         flowData,
+         aspectRatio,
+         engine,
+         globalNegativePrompt,
+         executiveSummary,
+         cinematicPreset,
+      } = await response.json();
 
       // update application states using info from DB
-      useProjectStore.setState({ id, projectTitle });
+      useProjectStore.setState({
+         id,
+         projectTitle,
+         aspectRatio: aspectRatio as '16:9' | '9:16',
+         engine: engine as 'veo' | 'sora',
+         globalNegativePrompt,
+         executiveSummary,
+         cinematicPreset: cinematicPreset as CinematicPreset,
+      });
       useFlowStore.setState({ nodes: flowData.nodes, edges: flowData.edges });
    } catch (error) {
       console.error(`Encountered error when retrieving project:${id}. `, error);

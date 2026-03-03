@@ -38,6 +38,8 @@ export const studioRoute = new Hono()
          .values({
             projectTitle: 'Untitled Project',
             flowData: { nodes: initialNodes, edges: initialEdges },
+            executiveSummary:
+               'This is a simple animation following a baby chick going around his daily life around the bard.',
          })
          .returning();
 
@@ -63,13 +65,26 @@ export const studioRoute = new Hono()
 
       const projectID = parseInt(c.req.param('id'), 10);
       const validatedData = c.req.valid('json');
-      const { projectTitle, flowData } = validatedData;
+      const {
+         projectTitle,
+         flowData,
+         aspectRatio,
+         engine,
+         globalNegativePrompt,
+         executiveSummary,
+         cinematicPreset,
+      } = validatedData;
 
       await db
          .update(projectsTable)
          .set({
             projectTitle: projectTitle,
             flowData: flowData,
+            aspectRatio,
+            engine,
+            globalNegativePrompt,
+            executiveSummary,
+            cinematicPreset,
             updatedAt: new Date(),
          })
          .where(eq(projectsTable.id, projectID));
