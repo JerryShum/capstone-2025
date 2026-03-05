@@ -62,6 +62,7 @@ export type SceneNodeData = {
    status: 'IDLE' | 'PROCESSING' | 'READY' | 'ERROR';
    videoURL: httpsURL;
    thumbnailURL: httpsURL;
+   lastOperationName?: string;
 };
 export type SceneNode = Node<SceneNodeData, 'scene'>;
 
