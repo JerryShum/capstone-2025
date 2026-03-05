@@ -8,8 +8,8 @@ import { sendScriptSchema } from '@shared/schemas/sendScriptSchema';
 import { postScriptSchema } from '@shared/schemas/sendScriptSchema';
 
 //! Importing prompt builder functions
-import { buildScriptPrompt } from '@server/functions/buildScriptPrompt';
-import { buildImagePrompt } from '@server/functions/buildImagePrompt';
+import { buildScriptPrompt } from '@server/functions/deprecated/buildScriptPrompt';
+import { buildImagePrompt } from '@server/functions/deprecated/buildImagePrompt';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
@@ -195,5 +195,5 @@ export const createScriptImageRoute = new Hono().post(
          video_prompt: structuredScriptJSON.video_prompt,
          imageBase64: imageBase64,
       });
-   }
+   },
 );
