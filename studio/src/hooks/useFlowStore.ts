@@ -5,6 +5,8 @@ import { initialEdges, initialNodes } from '@shared';
 import { addEdge, applyEdgeChanges, applyNodeChanges } from '@xyflow/react';
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
+import { useProjectStore } from './useProjectStore';
+import { api } from '@/lib/api';
 
 // this is our useStore hook that we can use in our components to get parts of the store and call actions
 const useFlowStore = create<FlowState>()(
@@ -106,23 +108,43 @@ const useFlowStore = create<FlowState>()(
             });
          },
          generateVideo: (id) => {
-            // getting the current nodes and edges state
+            //@ getting the current nodes and edges state
             const nodes = get().nodes;
             const edges = get().edges;
+
+            //@ getting the project settings & state
+            const projectState = useProjectStore.getState();
 
             // getting the specific sceneNode --> changing its state
             const sceneNode = nodes.find((node) => node.id === id) as
                | SceneNode
                | undefined;
 
+            // modifying the state of the sceneNode (idle --> processing) and updating the overall nodes state / array
             if (!sceneNode || sceneNode.type !== 'scene') return;
-
-            // calling graphUtils.ts functions
-            const nodeContext = gatherSceneContext(id, nodes, edges);
-
-            // modiftying the state of the sceneNode (idle --> processing) and updating the overall nodes state / array
             const updateNode = get().updateNode;
             updateNode(id, { status: 'PROCESSING' });
+
+            // calling graphUtils.ts functions --> gets the info from parent nodes
+            const nodeContext = gatherSceneContext(id, nodes, edges);
+
+            try {
+               const response = await api.studio.video.generate.$post({
+                  json: {
+                     prompt: sceneNode.data.scenePrompt,
+                     characters: nodeContext.characters,
+                     environments: nodeContext.environments,
+                     scripts: nodeContext.scripts, // <-- Watch out for the 's'!
+                     aspectRatio: projectState.aspectRatio,
+                     engine: projectState.engine,
+                     cinematicPreset: projectState.cinematicPreset,
+                     negativePrompt: projectState.globalNegativePrompt,
+                     imageBase64: '', // We can leave this empty for now
+                  },
+               });
+            } catch (error) {
+               console.log('ERROR', error);
+            }
          },
       })),
    ),
