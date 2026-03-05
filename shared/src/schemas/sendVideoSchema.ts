@@ -5,7 +5,7 @@ export const sendVideoSchema = z.object({
    imageBase64: z.string(),
    characters: z.array(z.any()),
    environments: z.array(z.any()),
-   scripts: z.array(z.string()),
+   scripts: z.array(z.object({ content: z.string() })),
    prompt: z.string(),
    duration: z.string().optional(),
    aspectRatio: z.string(),
