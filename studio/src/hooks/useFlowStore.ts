@@ -1,5 +1,6 @@
+import { gatherSceneContext } from '@/lib/functions/graphUtils';
 import { nodeBlueprint } from '@/lib/nodeBlueprint';
-import type { AppNode, FlowState } from '@shared';
+import type { AppNode, FlowState, SceneNode } from '@shared';
 import { initialEdges, initialNodes } from '@shared';
 import { addEdge, applyEdgeChanges, applyNodeChanges } from '@xyflow/react';
 import { create } from 'zustand';
@@ -103,6 +104,25 @@ const useFlowStore = create<FlowState>()(
             set({
                nodes: [...nodesArray, duplicate],
             });
+         },
+         generateVideo: (id) => {
+            // getting the current nodes and edges state
+            const nodes = get().nodes;
+            const edges = get().edges;
+
+            // getting the specific sceneNode --> changing its state
+            const sceneNode = nodes.find((node) => node.id === id) as
+               | SceneNode
+               | undefined;
+
+            if (!sceneNode || sceneNode.type !== 'scene') return;
+
+            // calling graphUtils.ts functions
+            const nodeContext = gatherSceneContext(id, nodes, edges);
+
+            // modiftying the state of the sceneNode (idle --> processing) and updating the overall nodes state / array
+            const updateNode = get().updateNode;
+            updateNode(id, { status: 'PROCESSING' });
          },
       })),
    ),
