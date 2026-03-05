@@ -44,7 +44,7 @@ export function gatherSceneContext(
       environments: parentNodes
          .filter((node): node is EnvironmentNode => node.type === 'environment')
          .map((node) => node.data),
-      script: parentNodes
+      scripts: parentNodes
          .filter((node): node is ScriptNode => node.type === 'script')
          .map((node) => node.data.content),
    };
