@@ -7,6 +7,7 @@ import { videoOperationsTable } from '@server/db/schemas/schema';
 import { db } from '@server/db';
 import { eq } from 'drizzle-orm';
 import { storeAndShowVideo } from '@server/functions/video/storeAndShowVideo';
+import { Storage } from '@google-cloud/storage';
 
 //---------------------------------------------------------
 
