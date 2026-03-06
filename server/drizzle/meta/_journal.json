@@ -15,6 +15,13 @@
       "when": 1772490745857,
       "tag": "0001_fixed_firebrand",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772759647150,
+      "tag": "0002_curved_sentinels",
+      "breakpoints": true
     }
   ]
 }
