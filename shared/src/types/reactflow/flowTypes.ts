@@ -60,7 +60,7 @@ export type SceneNodeData = {
    shotType: 'Wide' | 'Medium' | 'Close-up' | 'Over-the-shoulder';
    cameraMovement: 'Static' | 'Pan' | 'Tilt' | 'Zoom' | 'Dolly';
    status: 'IDLE' | 'PROCESSING' | 'READY' | 'ERROR';
-   videoURL: httpsURL;
+   videoURL: string;
    thumbnailURL: httpsURL;
    lastOperationName?: string;
 };

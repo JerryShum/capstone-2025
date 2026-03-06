@@ -107,7 +107,7 @@ const useFlowStore = create<FlowState>()(
                nodes: [...nodesArray, duplicate],
             });
          },
-         generateVideo: (id) => {
+         generateVideo: async (id) => {
             //@ getting the current nodes and edges state
             const nodes = get().nodes;
             const edges = get().edges;
@@ -129,6 +129,7 @@ const useFlowStore = create<FlowState>()(
             const nodeContext = gatherSceneContext(id, nodes, edges);
 
             try {
+               // send request to server --> we get an "operationName" --> polling name / ticket number
                const response = await api.studio.video.generate.$post({
                   json: {
                      prompt: sceneNode.data.scenePrompt,
@@ -142,6 +143,59 @@ const useFlowStore = create<FlowState>()(
                      imageBase64: '', // We can leave this empty for now
                   },
                });
+
+               if (!response) {
+                  console.error('ERROR: Unable to generate video.');
+               }
+
+               const responseData = await response.json();
+
+               if (!('operationName' in responseData)) {
+                  console.error('ERROR: Invalid response format.');
+                  return;
+               }
+
+               const { operationName } = responseData;
+
+               let isDone = false;
+
+               while (!isDone) {
+                  // wait 3 seconds
+                  await new Promise((resolve) => setTimeout(resolve, 3000));
+                  // TODO: Use operationName to poll for video generation status
+
+                  //ask API for the status of the video
+                  const videoStatusResponse = await api.studio.video.status[
+                     ':name{.+}'
+                  ].$get({ param: { name: operationName } });
+
+                  const { status, videosURL } =
+                     (await videoStatusResponse.json()) as {
+                        status: string;
+                        videosURL?: string;
+                     };
+
+                  //@ React to the status:
+
+                  if (status === 'READY_TO_DOWNLOAD') {
+                     // video is in the DB and has been downloaded --> the URL is good and we can use it!
+                     updateNode(id, {
+                        status: 'READY',
+                        videoURL: videosURL,
+                     });
+
+                     isDone = true;
+                  } else if (status === 'ERROR') {
+                     // something happened and NO video could be generated.
+                     updateNode(id, {
+                        status: 'ERROR',
+                     });
+
+                     isDone = true;
+                  }
+
+                  // status == processing --> loop restarts
+               }
             } catch (error) {
                console.log('ERROR', error);
             }
