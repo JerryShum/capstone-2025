@@ -1,21 +1,22 @@
-import { Handle, Position, type NodeProps } from '@xyflow/react';
-import type { SceneNode } from '@shared';
 import useFlowStore from '@/hooks/useFlowStore';
+import type { SceneNode } from '@shared';
+import { Handle, Position, type NodeProps } from '@xyflow/react';
 import {
-   Clapperboard,
-   Type,
-   Clock,
+   AlertCircle,
    Camera,
-   Move,
-   Play,
+   CheckCircle2,
+   Clapperboard,
+   Clock,
    Image as ImageIcon,
    Loader2,
-   AlertCircle,
-   CheckCircle2,
+   Move,
+   Play,
+   Type
 } from 'lucide-react';
 
 export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
    const updateNode = useFlowStore((state) => state.updateNode);
+   const generateVideo = useFlowStore((state) => state.generateVideo);
 
    const getStatusIcon = () => {
       switch (data.status) {
@@ -170,23 +171,54 @@ export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
             </div>
 
             {/* Generate Button */}
-            <button
-               disabled={data.status === 'PROCESSING'}
-               onClick={() => updateNode(id, { status: 'PROCESSING' })}
-               className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-purple-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-200 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
-            >
-               {data.status === 'PROCESSING' ? (
-                  <>
-                     <Loader2 size={16} className="animate-spin" />
-                     Generating...
-                  </>
-               ) : (
+            {/* STATUS IS IDLE (user has not generated a video) */}
+            {data.status === 'IDLE' && (
+               <button
+                  onClick={() => generateVideo(id)}
+                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-purple-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-200 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
+               >
                   <>
                      <Play size={16} fill="white" />
                      Generate Video
                   </>
-               )}
-            </button>
+               </button>
+            )}
+            {/* status is PROCESSING --> show disabled + loader */}
+            {data.status === 'PROCESSING' && (
+               <button
+                  disabled
+                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-slate-100 border-2 border-slate-200 rounded-xl text-slate-400 font-bold uppercase tracking-widest text-[10px] transition-all"
+               >
+                  <>
+                     <Loader2 size={16} className="animate-spin" />
+                     Generating Video...
+                  </>
+               </button>
+            )}
+            {/* status is ERROR --> show try again button */}
+            {data.status === 'ERROR' && (
+               <button
+                  onClick={() => generateVideo(id)}
+                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-red-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all"
+               >
+                  <>
+                     <AlertCircle size={16} />
+                     Retry Generation
+                  </>
+               </button>
+            )}
+            {/* status is READY --> show regenerate button */}
+            {data.status === 'READY' && (
+               <button
+                  onClick={() => generateVideo(id)}
+                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all"
+               >
+                  <>
+                     <Play size={16} fill="white" />
+                     Regenerate Video
+                  </>
+               </button>
+            )}
          </div>
 
          <Handle
