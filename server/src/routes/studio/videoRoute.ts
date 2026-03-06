@@ -1,7 +1,7 @@
 import { zValidator } from '@hono/zod-validator';
 import { postVideoSchema } from '@shared/schemas/sendVideoSchema';
 import { Hono } from 'hono';
-import { buildGCPVideoPrompt } from '@server/functions/studio/buildGCPVideoPrompt';
+import { buildGCPVideoPrompt } from '@server/functions/video/buildGCPVideoPrompt';
 import { GenerateVideosOperation, GoogleGenAI } from '@google/genai';
 
 //---------------------------------------------------------
