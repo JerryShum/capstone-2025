@@ -25,3 +25,10 @@ export const projectsTable = pgTable('projects', {
    flowData: jsonb('flow_data').notNull(),
    updatedAt: timestamp('updated_at').defaultNow(),
 });
+
+export const videoOperationsTable = pgTable('videoOperations', {
+   name: varchar({ length: 255 }).primaryKey(),
+   status: varchar({ length: 50 }).notNull().default('PROCESSING'),
+   videosURL: varchar({ length: 2048 }),
+   createdAt: timestamp('created_at').defaultNow(),
+});
