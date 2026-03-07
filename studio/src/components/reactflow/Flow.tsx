@@ -26,7 +26,7 @@ import SceneNode from './customnodes/SceneNode';
 import ScriptNode from './customnodes/ScriptNode';
 import IconMenu from './panels/PanelMenu';
 import NodeButton from './panels/NodeButton';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import ContextMenu from './contextmenu/ContextMenu';
 
 import { unsub, unsub2 } from '@/lib/persistence';
@@ -34,17 +34,25 @@ import { unsub, unsub2 } from '@/lib/persistence';
 export default function Flow() {
    //! USING ZUSTAND STORE TO GET NODES, STATE, FUNCTIONS, ETC.
 
-   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, addNode } =
-      useFlowStore(
-         useShallow((state) => ({
-            nodes: state.nodes,
-            edges: state.edges,
-            onNodesChange: state.onNodesChange,
-            onEdgesChange: state.onEdgesChange,
-            onConnect: state.onConnect,
-            addNode: state.addNode,
-         })),
-      );
+   const {
+      nodes,
+      edges,
+      onNodesChange,
+      onEdgesChange,
+      onConnect,
+      addNode,
+      resumeVideoPoll,
+   } = useFlowStore(
+      useShallow((state) => ({
+         nodes: state.nodes,
+         edges: state.edges,
+         onNodesChange: state.onNodesChange,
+         onEdgesChange: state.onEdgesChange,
+         onConnect: state.onConnect,
+         addNode: state.addNode,
+         resumeVideoPoll: state.resumeVideoPoll,
+      })),
+   );
 
    //! THIS DEFINES ALL THE TYPES OF NDOES THAT RF EXPECTS --> if there is a node that ISN'T one of these types --> revert to default node
    const nodeTypes = {
@@ -59,6 +67,15 @@ export default function Flow() {
    //---------------------------------------------------------
    const reactFlow = useReactFlow();
    const proOptions = { hideAttribution: true };
+
+   //---------------------------------------------------------
+
+   //@ when this component mounts (loads) --> call the resumeVideoPoll() function.
+   // this checks our sceneNodes to see if any of them were in the middle of a generation --> if they were, we continue it.
+   useEffect(() => {
+      console.log('call poll video using useEffect');
+      resumeVideoPoll();
+   });
 
    //---------------------------------------------------------
    //! Context Menu

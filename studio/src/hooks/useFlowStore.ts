@@ -1,9 +1,12 @@
+import { gatherSceneContext } from '@/lib/functions/graphUtils';
 import { nodeBlueprint } from '@/lib/nodeBlueprint';
-import type { AppNode, FlowState } from '@shared';
+import type { AppNode, FlowState, SceneNode } from '@shared';
 import { initialEdges, initialNodes } from '@shared';
 import { addEdge, applyEdgeChanges, applyNodeChanges } from '@xyflow/react';
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
+import { useProjectStore } from './useProjectStore';
+import { api } from '@/lib/api';
 
 // this is our useStore hook that we can use in our components to get parts of the store and call actions
 const useFlowStore = create<FlowState>()(
@@ -102,6 +105,139 @@ const useFlowStore = create<FlowState>()(
 
             set({
                nodes: [...nodesArray, duplicate],
+            });
+         },
+         generateVideo: async (id) => {
+            //@ getting the current nodes and edges state
+            const nodes = get().nodes;
+            const edges = get().edges;
+
+            //@ getting the project settings & state
+            const projectState = useProjectStore.getState();
+
+            // getting the specific sceneNode --> changing its state
+            const sceneNode = nodes.find((node) => node.id === id) as
+               | SceneNode
+               | undefined;
+
+            // modifying the state of the sceneNode (idle --> processing) and updating the overall nodes state / array
+            if (!sceneNode || sceneNode.type !== 'scene') return;
+            const updateNode = get().updateNode;
+            updateNode(id, { status: 'PROCESSING' });
+
+            // calling graphUtils.ts functions --> gets the info from parent nodes
+            const nodeContext = gatherSceneContext(id, nodes, edges);
+
+            try {
+               // send request to server --> we get an "operationName" --> polling name / ticket number
+               const response = await api.studio.video.generate.$post({
+                  json: {
+                     prompt: sceneNode.data.scenePrompt,
+                     characters: nodeContext.characters,
+                     environments: nodeContext.environments,
+                     scripts: nodeContext.scripts, // <-- Watch out for the 's'!
+                     aspectRatio: projectState.aspectRatio,
+                     engine: projectState.engine,
+                     cinematicPreset: projectState.cinematicPreset,
+                     negativePrompt: projectState.globalNegativePrompt,
+                     imageBase64: '', // We can leave this empty for now
+                  },
+               });
+
+               if (!response) {
+                  console.error('ERROR: Unable to generate video.');
+               }
+
+               const responseData = await response.json();
+
+               if (!('operationName' in responseData)) {
+                  console.error('ERROR: Invalid response format.');
+                  return;
+               }
+
+               const { operationName } = responseData;
+
+               // set sceneNode state --> save the operationname within the scenenode (to be used later)
+               updateNode(id, {
+                  lastOperationName: operationName,
+                  status: 'PROCESSING',
+               });
+
+               // start polling the server to get the video
+               get().pollVideoStatus(id, operationName);
+            } catch (error) {
+               console.log('ERROR', error);
+            }
+         },
+         pollVideoStatus: async (nodeID, operationName) => {
+            const updateNode = get().updateNode;
+            let isDone = false;
+
+            while (!isDone) {
+               // wait 3 seconds
+               await new Promise((resolve) => setTimeout(resolve, 3000));
+               // TODO: Use operationName to poll for video generation status
+
+               try {
+                  //ask API for the status of the video
+                  const videoStatusResponse = await api.studio.video.status[
+                     ':name{.+}'
+                  ].$get({ param: { name: operationName } });
+
+                  const { status, videosURL } =
+                     (await videoStatusResponse.json()) as {
+                        status: string;
+                        videosURL?: string;
+                     };
+
+                  //@ React to the status:
+                  if (status === 'READY_TO_DOWNLOAD') {
+                     // video is in the DB and has been downloaded --> the URL is good and we can use it!
+                     updateNode(nodeID, {
+                        status: 'READY',
+                        videoURL: videosURL,
+                     });
+
+                     isDone = true;
+                  } else if (status === 'ERROR') {
+                     // something happened and NO video could be generated.
+                     updateNode(nodeID, {
+                        status: 'ERROR',
+                     });
+                     isDone = true;
+                  }
+               } catch (error) {
+                  console.error(
+                     'Polling Error. Was unable to retrieve video:',
+                     error,
+                  );
+               }
+
+               // status == processing --> loop restarts
+            }
+         },
+         resumeVideoPoll: () => {
+            const nodes = get().nodes;
+
+            nodes.forEach((node) => {
+               // if the node is a scene node in the processing state
+               if (
+                  node.type === 'scene' &&
+                  (node as SceneNode).data.status === 'PROCESSING' &&
+                  (node as SceneNode).data.lastOperationName !== undefined &&
+                  (node as SceneNode).data.lastOperationName
+               ) {
+                  const lastOperationName = (node as SceneNode).data
+                     .lastOperationName;
+
+                  if (lastOperationName) {
+                     console.log(
+                        'Resuming polling for stuck scene node:',
+                        node.id,
+                     );
+                     get().pollVideoStatus(node.id, lastOperationName);
+                  }
+               }
             });
          },
       })),

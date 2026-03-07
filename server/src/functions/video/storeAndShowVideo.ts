@@ -4,12 +4,12 @@ import { v4 as uuidv4 } from 'uuid';
 import * as fs from 'fs';
 
 import { GoogleGenAI } from '@google/genai';
-import { waitForFile } from './waitForFile';
+import { waitForFile } from '../deprecated/waitForFile';
 
 export async function storeAndShowVideo(
    videoFile: Video,
    bucket: Bucket,
-   genAI: GoogleGenAI
+   genAI: GoogleGenAI,
 ): Promise<string> {
    console.log('VIDEO FILE:' + videoFile.uri);
 
@@ -26,6 +26,9 @@ export async function storeAndShowVideo(
    const uniqueFileName = `${uuidv4()}.mp4`;
    const FILE_PATH = `./tmp/${uniqueFileName}`;
    console.log('FILENAME:' + uniqueFileName);
+
+   //@ create a /tmp folder in the server (if it doesnt exist)
+   fs.mkdirSync('./tmp', { recursive: true });
 
    try {
       //! Downloading the video from google using the videoFile (name)
@@ -45,23 +48,15 @@ export async function storeAndShowVideo(
          },
       });
 
-      //! 3. Get a secure, shareable link (Signed URL)
-      console.log('Generating signed URL...');
+      //! 3. create a public URL (unlisted url similar to youtube) --> allows any user with the URL to access video
+      console.log('Generating public URL...');
 
-      // Set options for the signed URL
-      const options = {
-         version: 'v4' as const, // Use v4 signing
-         action: 'read' as const, // We want to read (view) the file
-         expires: Date.now() + 15 * 60 * 1000, // 15 minutes from now
-      };
+      const publicURL = `https://storage.googleapis.com/${bucket.name}/${gcsFileName}`;
 
-      // Get the signed URL for the file you just uploaded
-      const [signedUrl] = await bucket.file(gcsFileName).getSignedUrl(options);
-
-      console.log('Upload complete! Signed URL:', signedUrl);
+      console.log('Upload complete! Signed URL:', publicURL);
 
       // Return the secure, temporary URL
-      return signedUrl;
+      return publicURL;
    } catch (err) {
       console.error('Error processing video:', err);
       throw err;

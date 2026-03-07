@@ -1,0 +1,144 @@
+import { zValidator } from '@hono/zod-validator';
+import { postVideoSchema } from '@shared/schemas/sendVideoSchema';
+import { Hono } from 'hono';
+import { buildGCPVideoPrompt } from '@server/functions/video/buildGCPVideoPrompt';
+import { GenerateVideosOperation, GoogleGenAI } from '@google/genai';
+import { videoOperationsTable } from '@server/db/schemas/schema';
+import { db } from '@server/db';
+import { eq } from 'drizzle-orm';
+import { storeAndShowVideo } from '@server/functions/video/storeAndShowVideo';
+import { Storage } from '@google-cloud/storage';
+
+//---------------------------------------------------------
+
+//! Google Gemini API Setup
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+if (!GEMINI_API_KEY) {
+   throw new Error('GEMINI_API_KEY is not set in the environment variables.');
+}
+
+const genAI = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+
+//---------------------------------------------------------
+
+//! GCS bucket name and credentials
+const GCS_BUCKET_NAME = process.env.GCS_BUCKET_NAME; // Add this to your .env!
+
+// Connecting to GCS
+const storage = new Storage();
+const bucket = storage.bucket(GCS_BUCKET_NAME!);
+
+//---------------------------------------------------------
+
+export const videoRoute = new Hono()
+   .post('/generate', zValidator('json', postVideoSchema), async (c) => {
+      // get validated data from validator
+      const data = c.req.valid('json');
+
+      //---------------------------------------------------------
+      // create master prompt using prompt builder function:
+      const masterPrompt = buildGCPVideoPrompt(data);
+      console.log('--- MASTER PROMPT BUILT ---');
+      console.log(masterPrompt);
+      console.log('---------------------------');
+
+      //---------------------------------------------------------
+      //@ Gemini api call
+      try {
+         // make a request to gemini API --> get an operationID / ticket
+         const operation = await genAI.models.generateVideos({
+            model: 'veo-3.1-fast-generate-preview',
+            prompt: masterPrompt,
+            config: {
+               durationSeconds: 8,
+            },
+         });
+
+         if (!operation) {
+            throw new Error('SERVER: Failed to start video generation.');
+         }
+
+         if (!operation.name) {
+            throw new Error('SERVER: Operation name is missing.');
+         }
+
+         // saving the operationName / ticket to DB
+         await db.insert(videoOperationsTable).values({
+            name: operation.name,
+            status: 'PROCESSING',
+         });
+
+         return c.json({
+            operationName: operation.name,
+         });
+      } catch (error) {
+         return c.json(
+            {
+               message: error,
+            },
+            500,
+         );
+      }
+   })
+   .get('/status/:name{.+}', async (c) => {
+      // get the operationName from the URL
+      const operationName = c.req.param('name');
+
+      //@ Check the DB to see if their video has already been saved (we don't have to save & download from google)
+      const [dbRecord] = await db
+         .select()
+         .from(videoOperationsTable)
+         .where(eq(videoOperationsTable.name, operationName));
+
+      if (dbRecord && dbRecord.status == 'DONE') {
+         // we already have the video --> inside GCP bucket --> WE DO NOT WANT TO DOWNLOAD IT AGAIN
+         // return URL to the video
+         return c.json({
+            status: 'READY_TO_DOWNLOAD',
+            videosURL: dbRecord.videosURL,
+         });
+      }
+
+      // if no record in DB --> ask gemini for the status on the operation --> download if ready
+      const operationBuild = new GenerateVideosOperation();
+      operationBuild.name = operationName;
+
+      const operation = await genAI.operations.getVideosOperation({
+         operation: operationBuild,
+      });
+
+      //@ return the state of the operation
+      // if the operation is not done yet
+      if (!operation.done) {
+         return c.json({ status: 'PROCESSING', videosURL: undefined });
+      }
+
+      if (operation.error) {
+         return c.json({ status: 'ERROR', videosURL: undefined });
+      }
+
+      //@ GEMINI is done generating the video --> upload to GCP --> store into DB
+      const generatedVideos = operation.response?.generatedVideos;
+      if (!generatedVideos || generatedVideos.length === 0) {
+         return c.json({ status: 'ERROR', videosURL: undefined });
+      }
+
+      // get video from gemini
+      const video = generatedVideos[0]?.video;
+
+      if (!video) {
+         return c.json({ status: 'ERROR', videosURL: undefined });
+      }
+
+      // call storeAndShowVideo() --> returns public URL from GCP
+      const videoURL = await storeAndShowVideo(video, bucket, genAI);
+
+      // save URL to DB
+      await db
+         .update(videoOperationsTable)
+         .set({ status: 'DONE', videosURL: videoURL })
+         .where(eq(videoOperationsTable.name, operationName));
+
+      // return the URL back to the studio
+      return c.json({ status: 'READY_TO_DOWNLOAD', videosURL: videoURL });
+   });

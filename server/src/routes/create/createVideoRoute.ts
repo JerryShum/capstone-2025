@@ -9,7 +9,7 @@ import { postVideoSchema } from '@shared/schemas/sendVideoSchema';
 
 //! Imports for GCS
 import { Storage } from '@google-cloud/storage'; // The GCS toolbox
-import { storeAndShowVideo } from '@server/functions/storeAndShowVideo';
+import { storeAndShowVideo } from '@server/functions/video/storeAndShowVideo';
 
 //! GCS bucket name and credentials
 const GCS_BUCKET_NAME = process.env.GCS_BUCKET_NAME; // Add this to your .env!
@@ -132,7 +132,7 @@ export const createVideoRoute = new Hono()
             error: undefined, // <-- Add this
             message: 'video has been successfully generated.',
          },
-         200
+         200,
       );
    })
    .get('/test', async (c) => {
