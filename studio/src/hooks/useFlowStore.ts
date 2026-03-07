@@ -157,6 +157,9 @@ const useFlowStore = create<FlowState>()(
 
                const { operationName } = responseData;
 
+               // set sceneNode state --> save the operationname within the scenenode (to be used later)
+               updateNode(id, { lastOperationName: operationName });
+
                let isDone = false;
 
                while (!isDone) {
