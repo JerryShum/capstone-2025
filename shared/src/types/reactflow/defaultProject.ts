@@ -1,7 +1,6 @@
 import type {
    AppNode,
    CharacterNode,
-   ProjectSettingsNode,
    SceneNode,
    ScriptNode,
 } from './flowTypes';
@@ -42,6 +41,7 @@ const initSceneNode: SceneNode = {
       status: 'IDLE',
       videoURL: 'https://',
       thumbnailURL: 'https://',
+      lastOperationName: '',
    },
    position: { x: 0, y: 25 },
 };
