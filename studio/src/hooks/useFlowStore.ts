@@ -216,6 +216,30 @@ const useFlowStore = create<FlowState>()(
                // status == processing --> loop restarts
             }
          },
+         resumeVideoPoll: () => {
+            const nodes = get().nodes;
+
+            nodes.forEach((node) => {
+               // if the node is a scene node in the processing state
+               if (
+                  node.type === 'scene' &&
+                  (node as SceneNode).data.status === 'PROCESSING' &&
+                  (node as SceneNode).data.lastOperationName !== undefined &&
+                  (node as SceneNode).data.lastOperationName
+               ) {
+                  const lastOperationName = (node as SceneNode).data
+                     .lastOperationName;
+
+                  if (lastOperationName) {
+                     console.log(
+                        'Resuming polling for stuck scene node:',
+                        node.id,
+                     );
+                     get().pollVideoStatus(node.id, lastOperationName);
+                  }
+               }
+            });
+         },
       })),
    ),
 );

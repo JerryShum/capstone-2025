@@ -106,4 +106,5 @@ export type FlowState = {
    duplicateNode: (id: string) => void;
    generateVideo: (nodeID: string) => Promise<void>;
    pollVideoStatus: (nodeID: string, operationName: string) => Promise<void>;
+   resumeVideoPoll: () => void;
 };
