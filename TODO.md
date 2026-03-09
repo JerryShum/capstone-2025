@@ -4,33 +4,49 @@
 
 ---
 
+### Client / Server Tasks
+- [ ] Authentication
+   - [ ] Ensure users can login with google, etc.
+   - [ ] Automatically route them to the studio dashboard
+   - [ ] Edit server DB schema to include a users table --> links to projects & videos table
+   - [ ] Edit projects & videos table to make them link to users properly
+   - [ ] Edit server queries to account for users
+
+
+
+- [ ]  
+
 ### Studio Tasks
 
-- [ ] Complete the custom node components --> define styles & flesh out components
-   - [x] Character Node
-   - [x] Script Node
-   - [x] Environment Node
-   - [x] ProjectSettings Node
-   - [ ] Scene Node
+- [ ] Incorporate local storage using zustand middleware (persist)
+
+- [ ] Allow users to view their generated clips with an overview?
+   - [ ] "view videos" page in the dashboard
+   - [ ] Custom video view component in the dashboard
+
+- [ ] Studio --> refactor the graphutils functions to allow understanding of previous scenes and what happened.
+   - [ ] --> maybe we need to incorporate some "thumbnail" / last frame system to give reference images to the video generation.
+   - [ ] Scene Node --> add a "previous scene" reference toggle --> if toggled on, add the previous scene to the prompt.
 
 - [x] Add right click functionality to the nodes
    - [x] Context menu --> shadcn?
    - [x] Delete nodes
    - [ ] Lock position of nodes --> maybe create a "locked" state for each node (small icon in the corner?)
 
-- [ ] Figure out how to save the graph locally
-   - [ ] zustand persist middleware
-
 - [ ] Dashboard page --> retrieve list of projects from DB
    - [x] Tanstack query to manage requests (maybe)
    - [x] Map out and render projectcards based on the information from DB
    - [ ] Figure out how to re-fetch data after updating it on the studio side
       - [ ] --> maybe invalidate query within persistence.ts?
-
-- [] Studio --> refactor the graphutils functions to allow understanding of previous scenes and what happened.
-   - [] --> maybe we need to incorporate some "thumbnail" / last frame system to give reference images to the video generation.
+      
 
 ### Completed Tasks ✓
+- [x] Complete the custom node components --> define styles & flesh out components
+   - [x] Character Node
+   - [x] Script Node
+   - [x] Environment Node
+   - [x] ProjectSettings Node
+   - [x] Scene Node
 
 - [x] Add projectSettings to the save logic.
    - [x] Create a new observer for projectSettingsStore
