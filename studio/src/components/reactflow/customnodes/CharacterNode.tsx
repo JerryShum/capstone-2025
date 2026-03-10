@@ -8,6 +8,7 @@ import {
    Palette,
    Sparkles,
    Image as ImageIcon,
+   Lock,
 } from 'lucide-react';
 
 export default function CharacterNode({ data, id }: NodeProps<CharacterNode>) {
@@ -17,7 +18,12 @@ export default function CharacterNode({ data, id }: NodeProps<CharacterNode>) {
    const updateNode = useFlowStore((state) => state.updateNode);
 
    return (
-      <div className="bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[240px] flex flex-col gap-3 font-sans">
+      <div className="relative bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[240px] flex flex-col gap-3 font-sans">
+         {data.locked && (
+            <div className="absolute -top-3 -right-3 bg-amber-500 text-white p-1.5 rounded-full shadow-md z-10">
+               <Lock size={14} />
+            </div>
+         )}
          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-blue-500">
             <UserStar size={14} />
             <span>Character / Identity</span>

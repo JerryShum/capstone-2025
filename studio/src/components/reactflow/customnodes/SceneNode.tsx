@@ -11,7 +11,8 @@ import {
    Loader2,
    Move,
    Play,
-   Type
+   Type,
+   Lock
 } from 'lucide-react';
 
 export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
@@ -45,7 +46,12 @@ export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
    };
 
    return (
-      <div className="bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[400px] flex flex-col gap-3 font-sans">
+      <div className="relative bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[400px] flex flex-col gap-3 font-sans">
+         {!!data.locked && (
+            <div className="absolute -top-3 -right-3 bg-amber-500 text-white p-1.5 rounded-full shadow-md z-10">
+               <Lock size={14} />
+            </div>
+         )}
          <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-purple-500">
                <Clapperboard size={14} />

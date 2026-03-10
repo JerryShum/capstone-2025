@@ -1,12 +1,17 @@
 import useFlowStore from '@/hooks/useFlowStore';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
-import { ScrollText, AlignLeft } from 'lucide-react';
+import { ScrollText, AlignLeft, Lock } from 'lucide-react';
 
 export default function ScriptNode({ data, id }: NodeProps) {
    const updateNode = useFlowStore((state) => state.updateNode);
 
    return (
-      <div className="bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[280px] flex flex-col gap-3 font-sans">
+      <div className="relative bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[280px] flex flex-col gap-3 font-sans">
+         {!!data.locked && (
+            <div className="absolute -top-3 -right-3 bg-amber-500 text-white p-1.5 rounded-full shadow-md z-10">
+               <Lock size={14} />
+            </div>
+         )}
          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-purple-500">
             <ScrollText size={14} />
             <span>Script / Storyboard</span>
