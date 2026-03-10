@@ -101,6 +101,11 @@ const useFlowStore = create<FlowState>()(
                   x: originalNode.position.x + 200,
                   y: originalNode.position.y + 200,
                },
+               data: {
+                  ...originalNode.data,
+                  locked: false,
+               },
+               draggable: true,
             } as AppNode;
 
             set({
