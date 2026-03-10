@@ -12,7 +12,7 @@ import {
    Move,
    Play,
    Type,
-   Lock
+   Lock,
 } from 'lucide-react';
 
 export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
@@ -146,12 +146,12 @@ export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
                <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
                   <ImageIcon size={10} /> Media Preview
                </label>
-               <div className="relative w-full aspect-video bg-slate-50 border-2 border-slate-100 rounded-lg overflow-hidden flex items-center justify-center group">
+               <div className="relative w-full aspect-video max-h-[300px] bg-slate-50 border-2 border-slate-100 rounded-lg overflow-hidden flex items-center justify-center group">
                   {data.videoURL && data.videoURL !== 'https://...' ? (
                      <video
                         src={data.videoURL}
                         controls
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain bg-black"
                         poster={
                            data.thumbnailURL !== 'https://...'
                               ? data.thumbnailURL
