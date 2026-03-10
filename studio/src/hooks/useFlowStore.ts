@@ -107,6 +107,30 @@ const useFlowStore = create<FlowState>()(
                nodes: [...nodesArray, duplicate],
             });
          },
+         toggleNodeLock: (id) => {
+            const nodesArray = get().nodes;
+            const originalNode = nodesArray.find((node) => node.id === id);
+
+            if (!originalNode) return;
+
+            const isLocked = originalNode.data?.locked || false;
+
+            set({
+               nodes: nodesArray.map((node) => {
+                  if (node.id === id) {
+                     return {
+                        ...node,
+                        draggable: isLocked,
+                        data: {
+                           ...node.data,
+                           locked: !isLocked,
+                        },
+                     } as AppNode;
+                  }
+                  return node;
+               }),
+            });
+         },
          generateVideo: async (id) => {
             //@ getting the current nodes and edges state
             const nodes = get().nodes;
