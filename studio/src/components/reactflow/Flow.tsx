@@ -21,7 +21,6 @@ import {
 import { useShallow } from 'zustand/shallow';
 import CharacterNode from './customnodes/CharacterNode';
 import EnvironmentNode from './customnodes/EnvironmentNode';
-import ProjectSettingsNode from './customnodes/ProjectSettingsNode';
 import SceneNode from './customnodes/SceneNode';
 import ScriptNode from './customnodes/ScriptNode';
 import IconMenu from './panels/PanelMenu';
@@ -60,7 +59,6 @@ export default function Flow() {
       character: CharacterNode,
       script: ScriptNode,
       environment: EnvironmentNode,
-      projectSettings: ProjectSettingsNode,
       scene: SceneNode,
    };
 
@@ -199,13 +197,6 @@ export default function Flow() {
                   }}
                />
                <div className="w-px h-8 bg-border mx-1" />
-               <NodeButton
-                  tooltiptext="Project Settings"
-                  Icon={Settings2}
-                  onClickFunction={() => {
-                     addNode('projectSettings', calcPosition(reactFlow));
-                  }}
-               />
             </Panel>
             <Panel position="center-left">
                <div></div>
