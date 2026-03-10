@@ -1,5 +1,5 @@
 import useFlowStore from '@/hooks/useFlowStore';
-import { Copy, Trash } from 'lucide-react';
+import { Copy, Trash, Lock, Unlock } from 'lucide-react';
 
 interface ContextMenuProps {
    id?: string;
@@ -14,6 +14,9 @@ export default function ContextMenu(props: ContextMenuProps) {
    const { id, top, left, right, bottom, onClick } = props;
    const deleteNode = useFlowStore((state) => state.deleteNode);
    const duplicateNode = useFlowStore((state) => state.duplicateNode);
+   const toggleNodeLock = useFlowStore((state) => state.toggleNodeLock);
+   const nodes = useFlowStore((state) => state.nodes);
+   const isLocked = nodes.find((n) => n.id === id)?.data?.locked;
 
    return (
       <div
@@ -41,6 +44,22 @@ export default function ContextMenu(props: ContextMenuProps) {
          >
             <Copy size={16} className="text-blue-500" />
             Duplicate
+         </button>
+         <button
+            onClick={() => {
+               if (id) {
+                  toggleNodeLock(id);
+               }
+               onClick();
+            }}
+            className="flex items-center gap-2 px-3 py-2 text-sm font-bold text-slate-700 hover:bg-slate-100 transition-colors text-left"
+         >
+            {isLocked ? (
+               <Unlock size={16} className="text-amber-500" />
+            ) : (
+               <Lock size={16} className="text-amber-500" />
+            )}
+            {isLocked ? 'Unlock' : 'Lock'}
          </button>
          <button
             onClick={() => {
