@@ -12,33 +12,12 @@ import {
 export type httpsURL = `https://${string}`;
 
 //@ Node data type definitions:
-//# Project Settings (Global Config Node)
-// export type ProjectSettingsNodeData = {
-//    type: 'projectSettings';
-//    title: string;
-//    aspectRatio: '16:9' | '9:16' | '1:1';
-//    targetEngine:
-//       | 'Google Veo'
-//       | 'OpenAI Sora'
-//       | 'Runway Gen-3'
-//       | 'Luma Dream Machine';
-//    negativePrompt: string;
-//    seed: number;
-//    guidanceScale: number; // CFG
-//    motionIntensity: number; // 1-10
-//    styleReference?: httpsURL;
-//    cinematicPreset: string;
-//    summary: string;
-// };
-// export type ProjectSettingsNode = Node<
-//    ProjectSettingsNodeData,
-//    'projectSettings'
-// >;
 
 //# ScriptNode
 export type ScriptNodeData = {
    type: 'script';
    content: string;
+   locked?: boolean;
 };
 export type ScriptNode = Node<ScriptNodeData, 'script'>;
 
@@ -49,6 +28,7 @@ export type CharacterNodeData = {
    appearance: string;
    style: string;
    referenceImage?: httpsURL;
+   locked?: boolean;
 };
 export type CharacterNode = Node<CharacterNodeData, 'character'>;
 
@@ -63,6 +43,7 @@ export type SceneNodeData = {
    videoURL: string;
    thumbnailURL: httpsURL;
    lastOperationName?: string;
+   locked?: boolean;
 };
 export type SceneNode = Node<SceneNodeData, 'scene'>;
 
@@ -74,21 +55,22 @@ export type EnvironmentNodeData = {
    weather: 'Clear' | 'Rainy' | 'Foggy' | 'Snowy';
    lightingStyle: string;
    description: string;
+   locked?: boolean;
 };
 
 export type EnvironmentNode = Node<EnvironmentNodeData, 'environment'>;
 
 //@ General App Node (encapsulates all nodes)
 type AppNodeData =
-   // | ProjectSettingsNodeData
-   ScriptNodeData | CharacterNodeData | SceneNodeData | EnvironmentNodeData;
+   | ScriptNodeData
+   | CharacterNodeData
+   | SceneNodeData
+   | EnvironmentNodeData;
 export type AppNode = Node<AppNodeData>; // this appnode tells reactflow that the "official" nodes should only be the ones stated above
 
 //---------------------------------------------------------
 
-type NodeTypes =
-   // | 'projectSettings'
-   'script' | 'character' | 'scene' | 'environment';
+type NodeTypes = 'script' | 'character' | 'scene' | 'environment';
 
 //! To be used by zustand store --> this is an interface of the entire reactflow state
 export type FlowState = {
@@ -104,6 +86,7 @@ export type FlowState = {
    updateNode: (id: string, data: Partial<AppNodeData>) => void;
    deleteNode: (id: string) => void;
    duplicateNode: (id: string) => void;
+   toggleNodeLock: (id: string) => void;
    generateVideo: (nodeID: string) => Promise<void>;
    pollVideoStatus: (nodeID: string, operationName: string) => Promise<void>;
    resumeVideoPoll: () => void;
