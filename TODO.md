@@ -5,6 +5,7 @@
 ---
 
 ### Client / Server Tasks
+
 - [ ] Authentication
    - [ ] Ensure users can login with google, etc.
    - [ ] Automatically route them to the studio dashboard
@@ -12,9 +13,7 @@
    - [ ] Edit projects & videos table to make them link to users properly
    - [ ] Edit server queries to account for users
 
-
-
-- [ ]  
+- [ ]
 
 ### Studio Tasks
 
@@ -28,19 +27,18 @@
    - [ ] --> maybe we need to incorporate some "thumbnail" / last frame system to give reference images to the video generation.
    - [ ] Scene Node --> add a "previous scene" reference toggle --> if toggled on, add the previous scene to the prompt.
 
+- [x] Dashboard page --> retrieve list of projects from DB
+   - [x] Tanstack query to manage requests (maybe)
+   - [x] Map out and render projectcards based on the information from DB
+   - [x] Figure out how to re-fetch data after updating it on the studio side
+      - [x] --> invalidate the query within persistence.ts (after a successful update)
+
+### Completed Tasks ✓
+
 - [x] Add right click functionality to the nodes
    - [x] Context menu --> shadcn?
    - [x] Delete nodes
-   - [ ] Lock position of nodes --> maybe create a "locked" state for each node (small icon in the corner?)
-
-- [ ] Dashboard page --> retrieve list of projects from DB
-   - [x] Tanstack query to manage requests (maybe)
-   - [x] Map out and render projectcards based on the information from DB
-   - [ ] Figure out how to re-fetch data after updating it on the studio side
-      - [ ] --> maybe invalidate query within persistence.ts?
-      
-
-### Completed Tasks ✓
+   - [x] Lock position of nodes --> maybe create a "locked" state for each node (small icon in the corner?)
 - [x] Complete the custom node components --> define styles & flesh out components
    - [x] Character Node
    - [x] Script Node

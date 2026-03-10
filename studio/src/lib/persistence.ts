@@ -4,6 +4,7 @@ import debounce from './functions/debounce';
 import type { Edge, Node } from '@xyflow/react';
 import type { AppNode, CinematicPreset } from '@shared';
 import { api } from './api';
+import { queryClient } from '@/routes/__root';
 
 //! Creation of store subscribers --> these subscribe to any updates to their store
 // the function runs whenever the store state is updated
@@ -65,6 +66,9 @@ async function saveProject() {
       }
 
       console.log('Successfully saved project to database!');
+
+      // invalidate the dashboard_projects query (forces refetch when user goes back to dashboard)
+      queryClient.invalidateQueries({ queryKey: ['dashboard_projects'] });
    } catch (error) {
       console.error('X Persistence Error:', error);
    }
