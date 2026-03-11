@@ -7,7 +7,7 @@ import { db } from '../../db';
 import { eq } from 'drizzle-orm';
 import { sign } from 'hono/jwt';
 
-const JWT_SECRET = process.env.JWT_SECRET!;
+const JWT_SECRET = process.env.JWT_SECRET || "test-secret";
 
 
 export const loginRoute = new Hono()
