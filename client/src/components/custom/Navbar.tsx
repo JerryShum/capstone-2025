@@ -4,7 +4,7 @@ import logo from "/story_weaver_logo_2.svg";
 
 export default function Navbar() {
   return (
-    <header className="bg-background sticky top-0 z-[1000000] flex h-16 items-center border-b px-4 lg:px-6">
+    <header className="bg-background/50 backdrop-blur-xl sticky top-0 z-1000000 flex h-16 items-center border-b border-border/50 px-4 lg:px-6">
       <div className="flex items-center gap-6">
         <Link to="/" className="flex items-center gap-2">
           <img className="w- h-10" src={logo} />
