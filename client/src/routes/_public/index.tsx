@@ -53,6 +53,9 @@ function Index() {
           className="absolute inset-0 z-0 h-full w-full"
           quantity={100}
           ease={80}
+          staticity={20}
+          vx={0.2}
+          vy={0.2}
           color="#3b82f6"
           refresh
         />
