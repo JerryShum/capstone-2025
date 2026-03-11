@@ -13,8 +13,12 @@
    - [ ] Edit projects & videos table to make them link to users properly
    - [ ] Edit server queries to account for users
 
-- [ ]
+- [ ] SceneNode --> choose own colour (not purple)
 
+- [ ] Improve the initial nodes & introduce a simple tutorial!
+   - [ ] Barry the chicken with proper spelling
+   - [ ] Shadcn tutorial?
+  
 ### Studio Tasks
 
 - [ ] Undo & Redo functionality

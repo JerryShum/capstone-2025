@@ -21,12 +21,6 @@ export default function Footer() {
         {/* Navigation Column 1 */}
         <div className="col-span-1 flex flex-col items-start gap-2">
           <h4 className="text-foreground text-lg font-semibold">Explore</h4>
-          <Link to="/create" className="hover:text-primary text-sm">
-            Create Story
-          </Link>
-          <Link to="/dashboard" className="hover:text-primary text-sm">
-            Dashboard
-          </Link>
           <Link to="/about" className="hover:text-primary text-sm">
             About Us
           </Link>
@@ -35,13 +29,13 @@ export default function Footer() {
         {/* Navigation Column 2 (Example) */}
         <div className="col-span-1 flex flex-col items-start gap-2">
           <h4 className="text-foreground text-lg font-semibold">Support</h4>
-          <Link to="/contact" className="hover:text-primary text-sm">
+          <Link to="/" className="hover:text-primary text-sm">
             Contact
           </Link>
-          <Link to="/faq" className="hover:text-primary text-sm">
+          <Link to="/" className="hover:text-primary text-sm">
             FAQ
           </Link>
-          <Link to="/terms" className="hover:text-primary text-sm">
+          <Link to="/" className="hover:text-primary text-sm">
             Terms of Service
           </Link>
         </div>

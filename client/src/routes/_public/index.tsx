@@ -28,7 +28,7 @@ function Index() {
             illustrate, and animate a unique tale in minutes.
           </h2>
           <div className="mt-4">
-            <Link to="/create">
+            <Link to="/login">
               {/* UPDATED CTA */}
               <Button variant="default" size="lg" className="text-lg">
                 Start Weaving
@@ -152,7 +152,7 @@ function Index() {
           every day.
         </p>
         <div className="mt-8">
-          <Link to="/create">
+          <Link to="/login">
             <Button variant="default" size="lg" className="text-lg">
               Start Your Story Now
             </Button>

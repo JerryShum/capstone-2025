@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/field";
 
 // tanstack
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { formOptions, useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
@@ -53,7 +53,6 @@ const createScriptMutation = {
 };
 
 function RouteComponent() {
-  const navigate = useNavigate();
   //@ get the setter function from the store
   const setStory = useStoryStore((state) => state.setStory);
 
@@ -68,10 +67,9 @@ function RouteComponent() {
 
       //@ Use navigate to navigate to the generated script page...
       // Ensure data.script and data.imageBase64 are not null/undefined before setting the story
-      if (data.script && data.imageBase64 && data.video_prompt) {
+      if (data.script && data.imageBase64) {
         setStory({
           script: data.script,
-          video_prompt: data.video_prompt,
           imageBase64: data.imageBase64,
         });
       }
@@ -154,25 +152,7 @@ function RouteComponent() {
           </div>
         )}
       </Card>
-      {
-        //! Only show the convert to video button if we succeed in creating script and image
-        createScript.isSuccess &&
-          createScript.data?.script &&
-          !createScript.isPending && (
-            <Button
-              className="text-md mt-4"
-              size={"lg"}
-              onClick={() => {
-                //@ navigate to /create/video
-                navigate({
-                  to: "/create/video",
-                });
-              }}
-            >
-              Convert to Video
-            </Button>
-          )
-      }
+
       <form
         className="mt-4 w-3/4"
         onSubmit={(e) => {
