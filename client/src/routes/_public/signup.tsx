@@ -1,16 +1,48 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { AtSign, Cat, Sparkles } from "lucide-react";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { Particles } from "@/components/ui/particles";
+import { useMutation } from "@tanstack/react-query"
 
 export const Route = createFileRoute("/_public/signup")({
   component: RouteComponent,
 });
 
+
+type SignupCredentials = {
+  [k: string]: FormDataEntryValue;
+};
+
 function RouteComponent() {
+
+  const navigate = useNavigate();
+
+  const mutation = useMutation<any, Error, SignupCredentials>({
+    mutationFn: async (credentials) => {
+      const res = await fetch ("/api/login/addUser", {
+        method: "POST",
+        headers: { "Content-type" : "application/json"},
+        body: JSON.stringify(credentials),
+      })
+      return res.json();
+    },
+    onSuccess: (data) => {
+        console.log("Signup processed",data)
+        navigate({ to: "/login" }) // later should change to route to the page with user's videos
+    },
+  });
+
+    // event handler:  sends the data to mutationFn
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData);
+    mutation.mutate(data); 
+  };
   return (
     <div className="flex w-full min-h-[calc(100vh-4rem)] flex-col items-center justify-center relative overflow-hidden px-4 py-16">
       {/* Particles Background */}
@@ -60,36 +92,58 @@ function RouteComponent() {
           </div>
 
           {/* Fields */}
-          <div className="flex flex-col gap-4">
-            <Field className="gap-1.5">
-              <FieldLabel htmlFor="email" className="text-sm font-medium">Email</FieldLabel>
-              <Input
-                id="email"
-                placeholder="you@example.com"
-                type="email"
-                className="rounded-xl border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:ring-2 focus:ring-blue-500/30 h-11"
-                disabled
-              />
-            </Field>
-            <Field className="gap-1.5">
-              <FieldLabel htmlFor="password" className="text-sm font-medium">Password</FieldLabel>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                className="rounded-xl border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:ring-2 focus:ring-blue-500/30 h-11"
-                disabled
-              />
-            </Field>
-          </div>
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-4">
+              <Field className="gap-1.5">
+                <FieldLabel htmlFor="name" className="text-sm font-medium">Name</FieldLabel>
+                <Input
+                  id="name"
+                  name="name"
+                  placeholder="name"
+                  type="name"
+                  className="rounded-xl border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:ring-2 focus:ring-blue-500/30 h-11"
+                />
+              </Field>
+              <Field className="gap-1.5">
+                <FieldLabel htmlFor="age" className="text-sm font-medium">Age</FieldLabel>
+                <Input
+                  id="age"
+                  name="age"
+                  placeholder="age"
+                  type="age"
+                  className="rounded-xl border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:ring-2 focus:ring-blue-500/30 h-11"
+                />
+              </Field>
+              <Field className="gap-1.5">
+                <FieldLabel htmlFor="email" className="text-sm font-medium">Email</FieldLabel>
+                <Input
+                  id="email"
+                  name="email"
+                  placeholder="you@example.com"
+                  type="email"
+                  className="rounded-xl border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:ring-2 focus:ring-blue-500/30 h-11"
+                />
+              </Field>
+              <Field className="gap-1.5">
+                <FieldLabel htmlFor="password" className="text-sm font-medium">Password</FieldLabel>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="••••••••"
+                  className="rounded-xl border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:ring-2 focus:ring-blue-500/30 h-11"
+                />
+              </Field>
+            </div>
 
           {/* CTA */}
           <div className="relative group mt-6">
-            <div className="absolute -inset-1 rounded-xl bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 opacity-60 blur-md transition-all duration-500 group-hover:opacity-100 group-hover:blur-xl" />
-            <Button className="relative w-full rounded-xl h-12 bg-black text-white dark:bg-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90 font-bold text-base">
-              Create Account
-            </Button>
-          </div>
+              <div className="absolute -inset-1 rounded-xl bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 opacity-60 blur-md transition-all duration-500 group-hover:opacity-100 group-hover:blur-xl" />
+              <Button className="relative w-full rounded-xl h-12 bg-black text-white dark:bg-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90 font-bold text-base">
+                Create Account
+              </Button>
+            </div>
+          </form>
 
           <p className="mt-6 text-center text-sm text-black/50 dark:text-white/40">
             Already have an account?{" "}

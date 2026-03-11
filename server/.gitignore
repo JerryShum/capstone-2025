@@ -4,3 +4,9 @@ node_modules/
 src/downloads
 
 gcs-service-account.json
+
+# Build Output
+dist/
+**/dist/
+
+.env

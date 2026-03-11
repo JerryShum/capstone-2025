@@ -1,16 +1,53 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel, FieldSeparator } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { AtSign, Cat, Sparkles } from "lucide-react";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { Particles } from "@/components/ui/particles";
+import { useMutation } from "@tanstack/react-query"
+
+
 
 export const Route = createFileRoute("/_public/login")({
   component: RouteComponent,
 });
 
+type LoginCredentials = {
+  [k: string]: FormDataEntryValue;
+};
+
 function RouteComponent() {
+
+  const navigate = useNavigate();
+
+  // Tanstack mutation used for POST operations, sends the credential user input to the backend
+  const mutation = useMutation<any, Error, LoginCredentials>({
+    mutationFn: async (credentials) => {
+      const res = await fetch ("/api/login/login", {
+        method: "POST",
+        headers: { "Content-type" : "application/json"},
+        body: JSON.stringify(credentials),
+      })
+      return res.json();
+    },
+    onSuccess: (data) => {
+        console.log("login processed",data)
+        localStorage.setItem("token", data.token)
+        localStorage.setItem("user", JSON.stringify(data.user))
+        navigate({ to: "/" }) // later should change to route to the page with user's videos
+    },
+  });
+
+
+  // event handler:  sends the data to mutationFn
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData);
+    mutation.mutate(data); 
+  };
   return (
     <div className="flex w-full min-h-[calc(100vh-4rem)] flex-col items-center justify-center relative overflow-hidden px-4 py-16">
       {/* Particles Background */}
@@ -60,36 +97,40 @@ function RouteComponent() {
           </div>
 
           {/* Fields */}
-          <div className="flex flex-col gap-4">
-            <Field className="gap-1.5">
-              <FieldLabel htmlFor="email" className="text-sm font-medium">Email</FieldLabel>
-              <Input
-                id="email"
-                placeholder="you@example.com"
-                type="email"
-                className="rounded-xl border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:ring-2 focus:ring-purple-500/30 h-11"
-                disabled
-              />
-            </Field>
-            <Field className="gap-1.5">
-              <FieldLabel htmlFor="password" className="text-sm font-medium">Password</FieldLabel>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                className="rounded-xl border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:ring-2 focus:ring-purple-500/30 h-11"
-                disabled
-              />
-            </Field>
-          </div>
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-4">
+              <Field className="gap-1.5">
+                <FieldLabel htmlFor="email" className="text-sm font-medium">Email</FieldLabel>
+                <Input
+                  id="email"
+                  placeholder="you@example.com"
+                  type="email"
+                  name="email"
+                  className="rounded-xl border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:ring-2 focus:ring-purple-500/30 h-11"
+                />
+              </Field>
+              <Field className="gap-1.5">
+                <FieldLabel htmlFor="password" className="text-sm font-medium">Password</FieldLabel>
+                <Input
+                  id="password"
+                  type="password"
+                  name="password"
+                  placeholder="••••••••"
+                  className="rounded-xl border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:ring-2 focus:ring-purple-500/30 h-11"
+                />
+              </Field>
+            </div>
 
-          {/* CTA */}
-          <div className="relative group mt-6">
-            <div className="absolute -inset-1 rounded-xl bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 opacity-60 blur-md transition-all duration-500 group-hover:opacity-100 group-hover:blur-xl" />
-            <Button className="relative w-full rounded-xl h-12 bg-black text-white dark:bg-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90 font-bold text-base">
-              Login
-            </Button>
-          </div>
+            {/* CTA */}
+            <div className="relative group mt-6">
+              <div className="absolute -inset-1 rounded-xl bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 opacity-60 blur-md transition-all duration-500 group-hover:opacity-100 group-hover:blur-xl" />
+              <Button className="relative w-full rounded-xl h-12 bg-black text-white dark:bg-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90 font-bold text-base">
+                Login
+              </Button>
+            </div>
+          </form>
+
+         
 
           <p className="mt-6 text-center text-sm text-black/50 dark:text-white/40">
             Don&apos;t have an account?{" "}
