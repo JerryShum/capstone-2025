@@ -1,6 +1,7 @@
 import {Hono} from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { loginSchema } from '@shared/schemas/loginSchema';
+import { signupSchema } from '@shared/schemas/signupSchema';
 import { usersTable } from '@server/db/schemas/schema';
 import { db } from '../../db'; 
 import { eq } from 'drizzle-orm';
@@ -38,5 +39,14 @@ export const loginRoute = new Hono()
                 }
             }, 200)
         }
+    })
+    
+    
+    // sign up
+    .post('/addUser', zValidator('json',signupSchema), async(c) => {
+        const info = await c.req.valid('json');
+        const result = await db.insert(usersTable).values(info).returning();
+        return c.json(result);
+
     })
     
