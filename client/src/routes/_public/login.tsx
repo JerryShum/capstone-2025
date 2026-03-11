@@ -35,6 +35,8 @@ function RouteComponent() {
     },
     onSuccess: (data) => {
         console.log("login successful",data)
+        localStorage.setItem("token", data.token)
+        localStorage.setItem("user", JSON.stringify(data.user))
         navigate({ to: "/" }) // later should change to route to the page with user's videos
     },
   });

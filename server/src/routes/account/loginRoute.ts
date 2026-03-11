@@ -5,6 +5,9 @@ import { signupSchema } from '@shared/schemas/signupSchema';
 import { usersTable } from '@server/db/schemas/schema';
 import { db } from '../../db'; 
 import { eq } from 'drizzle-orm';
+import { sign } from 'hono/jwt';
+
+const JWT_SECRET = process.env.JWT_SECRET!;
 
 
 export const loginRoute = new Hono()
@@ -28,10 +31,20 @@ export const loginRoute = new Hono()
             return c.json({message: "Invalid username/password"}, 401);
         }
         else{
+
+            const payload = {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            exp: Math.floor(Date.now() / 1000) + 60 * 60, //1 hr session before exp.
+            };
+
+            const token = await sign(payload, JWT_SECRET);
             // return success msg
             return c.json({
                 success: true,
                 message: "logged in success!",
+                token,
                 user:{
                     id: user.id,
                     name: user.name,
