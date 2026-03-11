@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 
 import { Button } from "@/components/ui/button";
-import { Field, FieldLabel, FieldSeparator } from "@/components/ui/field";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { AtSign, Cat, Sparkles } from "lucide-react";
 import { BlurFade } from "@/components/ui/blur-fade";
@@ -49,7 +49,7 @@ function RouteComponent() {
     mutation.mutate(data); 
   };
   return (
-    <div className="flex w-full min-h-[calc(100vh-4rem)] flex-col items-center justify-center relative overflow-hidden px-4 py-16">
+    <div className="flex w-full min-h-[calc(100vh-4rem)] flex-col items-center justify-center relative overflow-x-hidden px-4 py-16">
       {/* Particles Background */}
       <Particles
         className="absolute inset-0 z-0 h-full w-full"
@@ -61,8 +61,8 @@ function RouteComponent() {
       />
 
       {/* Ambient Glows */}
-      <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-blue-500/10 dark:bg-blue-500/20 blur-[130px] rounded-full pointer-events-none z-0" />
-      <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-purple-500/10 dark:bg-purple-500/20 blur-[110px] rounded-full pointer-events-none z-0" />
+      <div className="absolute top-1/4 right-1/4 w-[min(500px,80vw)] h-[min(500px,80vw)] bg-blue-500/10 dark:bg-blue-500/20 blur-[130px] rounded-full pointer-events-none z-0" />
+      <div className="absolute bottom-1/4 left-1/4 w-[min(400px,80vw)] h-[min(400px,80vw)] bg-purple-500/10 dark:bg-purple-500/20 blur-[110px] rounded-full pointer-events-none z-0" />
 
       {/* Card */}
       <BlurFade delay={0.15} offset={30} className="z-10 w-full max-w-md">
