@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_public")({
 
 function RouteComponent() {
   return (
-    <div className="dark bg-background text-foreground grid min-h-screen grid-rows-[auto_1fr] selection:bg-blue-500/30">
+    <div className="bg-background text-foreground grid min-h-screen grid-rows-[auto_1fr] selection:bg-blue-500/30">
       <Navbar />
 
       <Outlet />
