@@ -17,7 +17,11 @@
 
 ### Studio Tasks
 
-- [ ] Incorporate local storage using zustand middleware (persist)
+- [ ] Undo & Redo functionality
+   - [ ] Look into useUndoRedo hook & helpers
+   - [ ] --> this is a custom hook that we have to create
+      - [ ] snapshot() whenever we call undo or redo --> take a snapshot() of the current state
+   - [ ] Every time they call that hook, check if its saving to the DB
 
 - [ ] Allow users to view their generated clips with an overview?
    - [ ] "view videos" page in the dashboard
@@ -27,13 +31,15 @@
    - [ ] --> maybe we need to incorporate some "thumbnail" / last frame system to give reference images to the video generation.
    - [ ] Scene Node --> add a "previous scene" reference toggle --> if toggled on, add the previous scene to the prompt.
 
+### Completed Tasks ✓
+
+~- [ ] Incorporate local storage using zustand middleware (persist)~
+
 - [x] Dashboard page --> retrieve list of projects from DB
    - [x] Tanstack query to manage requests (maybe)
    - [x] Map out and render projectcards based on the information from DB
    - [x] Figure out how to re-fetch data after updating it on the studio side
       - [x] --> invalidate the query within persistence.ts (after a successful update)
-
-### Completed Tasks ✓
 
 - [x] Add right click functionality to the nodes
    - [x] Context menu --> shadcn?
