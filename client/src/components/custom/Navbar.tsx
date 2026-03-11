@@ -13,12 +13,24 @@ export default function Navbar() {
         </Link>
 
         <nav className="flex items-center gap-4 sm:gap-6">
-          {/* <Link
+          <Link
+            to="/"
+            className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
+          >
+            Home
+          </Link>
+          <Link
             to="/about"
             className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
           >
             About
-          </Link> */}
+          </Link>
+          <Link
+            to="/how-it-works"
+            className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
+          >
+            How it Works
+          </Link>
         </nav>
       </div>
 
