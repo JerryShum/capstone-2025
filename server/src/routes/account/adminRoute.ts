@@ -10,9 +10,9 @@ export const adminRoute = new Hono()
 
     // ADD user
     .post('/add', async (c) => {
-    const body = await c.req.json();
-    const result = await db.insert(usersTable).values(body).returning();
-    return c.json({ success: true, user: result[0] });
+        const body = await c.req.json();
+        const result = await db.insert(usersTable).values(body).returning();
+        return c.json({ success: true, user: result[0] });
     })
 
     // GET user 
