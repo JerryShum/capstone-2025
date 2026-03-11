@@ -13,7 +13,6 @@ import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as PublicSignupRouteImport } from './routes/_public/signup'
 import { Route as PublicLoginRouteImport } from './routes/_public/login'
-import { Route as PublicBhvrRouteImport } from './routes/_public/bhvr'
 import { Route as PublicAboutRouteImport } from './routes/_public/about'
 
 const PublicRouteRoute = PublicRouteRouteImport.update({
@@ -35,11 +34,6 @@ const PublicLoginRoute = PublicLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => PublicRouteRoute,
 } as any)
-const PublicBhvrRoute = PublicBhvrRouteImport.update({
-  id: '/bhvr',
-  path: '/bhvr',
-  getParentRoute: () => PublicRouteRoute,
-} as any)
 const PublicAboutRoute = PublicAboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -49,13 +43,11 @@ const PublicAboutRoute = PublicAboutRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/about': typeof PublicAboutRoute
-  '/bhvr': typeof PublicBhvrRoute
   '/login': typeof PublicLoginRoute
   '/signup': typeof PublicSignupRoute
 }
 export interface FileRoutesByTo {
   '/about': typeof PublicAboutRoute
-  '/bhvr': typeof PublicBhvrRoute
   '/login': typeof PublicLoginRoute
   '/signup': typeof PublicSignupRoute
   '/': typeof PublicIndexRoute
@@ -64,21 +56,19 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_public': typeof PublicRouteRouteWithChildren
   '/_public/about': typeof PublicAboutRoute
-  '/_public/bhvr': typeof PublicBhvrRoute
   '/_public/login': typeof PublicLoginRoute
   '/_public/signup': typeof PublicSignupRoute
   '/_public/': typeof PublicIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/bhvr' | '/login' | '/signup'
+  fullPaths: '/' | '/about' | '/login' | '/signup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/about' | '/bhvr' | '/login' | '/signup' | '/'
+  to: '/about' | '/login' | '/signup' | '/'
   id:
     | '__root__'
     | '/_public'
     | '/_public/about'
-    | '/_public/bhvr'
     | '/_public/login'
     | '/_public/signup'
     | '/_public/'
@@ -118,13 +108,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicLoginRouteImport
       parentRoute: typeof PublicRouteRoute
     }
-    '/_public/bhvr': {
-      id: '/_public/bhvr'
-      path: '/bhvr'
-      fullPath: '/bhvr'
-      preLoaderRoute: typeof PublicBhvrRouteImport
-      parentRoute: typeof PublicRouteRoute
-    }
     '/_public/about': {
       id: '/_public/about'
       path: '/about'
@@ -137,7 +120,6 @@ declare module '@tanstack/react-router' {
 
 interface PublicRouteRouteChildren {
   PublicAboutRoute: typeof PublicAboutRoute
-  PublicBhvrRoute: typeof PublicBhvrRoute
   PublicLoginRoute: typeof PublicLoginRoute
   PublicSignupRoute: typeof PublicSignupRoute
   PublicIndexRoute: typeof PublicIndexRoute
@@ -145,7 +127,6 @@ interface PublicRouteRouteChildren {
 
 const PublicRouteRouteChildren: PublicRouteRouteChildren = {
   PublicAboutRoute: PublicAboutRoute,
-  PublicBhvrRoute: PublicBhvrRoute,
   PublicLoginRoute: PublicLoginRoute,
   PublicSignupRoute: PublicSignupRoute,
   PublicIndexRoute: PublicIndexRoute,
