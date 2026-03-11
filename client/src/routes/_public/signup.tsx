@@ -31,7 +31,7 @@ function RouteComponent() {
       return res.json();
     },
     onSuccess: (data) => {
-        console.log("Signup successful",data)
+        console.log("Signup processed",data)
         navigate({ to: "/login" }) // later should change to route to the page with user's videos
     },
   });
@@ -92,8 +92,8 @@ function RouteComponent() {
           </div>
 
           {/* Fields */}
-          <div className="flex flex-col gap-4">
-            <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-4">
               <Field className="gap-1.5">
                 <FieldLabel htmlFor="name" className="text-sm font-medium">Name</FieldLabel>
                 <Input
@@ -134,17 +134,16 @@ function RouteComponent() {
                   className="rounded-xl border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:ring-2 focus:ring-blue-500/30 h-11"
                 />
               </Field>
-            </form>
-
-          </div>
+            </div>
 
           {/* CTA */}
           <div className="relative group mt-6">
-            <div className="absolute -inset-1 rounded-xl bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 opacity-60 blur-md transition-all duration-500 group-hover:opacity-100 group-hover:blur-xl" />
-            <Button className="relative w-full rounded-xl h-12 bg-black text-white dark:bg-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90 font-bold text-base">
-              Create Account
-            </Button>
-          </div>
+              <div className="absolute -inset-1 rounded-xl bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 opacity-60 blur-md transition-all duration-500 group-hover:opacity-100 group-hover:blur-xl" />
+              <Button className="relative w-full rounded-xl h-12 bg-black text-white dark:bg-white dark:text-black hover:bg-black/90 dark:hover:bg-white/90 font-bold text-base">
+                Create Account
+              </Button>
+            </div>
+          </form>
 
           <p className="mt-6 text-center text-sm text-black/50 dark:text-white/40">
             Already have an account?{" "}
