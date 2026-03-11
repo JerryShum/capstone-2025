@@ -3,7 +3,7 @@ import logo from "/story_weaver_logo_2.svg";
 
 export default function Footer() {
   return (
-    <footer className="bg-background text-muted-foreground border-t p-6">
+    <footer className="bg-background/50 backdrop-blur-xl border-t border-border/50 p-6">
       <div className="container mx-auto grid grid-cols-1 gap-8 md:grid-cols-3 lg:grid-cols-4">
         {/* Logo and Copyright */}
         <div className="col-span-1 flex flex-col items-start gap-4">
