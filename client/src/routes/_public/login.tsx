@@ -1,16 +1,52 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel, FieldSeparator } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { AtSign, Cat, Sparkles } from "lucide-react";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { Particles } from "@/components/ui/particles";
+import { AtSign, Cat } from "lucide-react";
+import { useMutation } from "@tanstack/react-query"
+
+
 
 export const Route = createFileRoute("/_public/login")({
   component: RouteComponent,
 });
 
+type LoginCredentials = {
+  [k: string]: FormDataEntryValue;
+};
+
 function RouteComponent() {
+
+  const navigate = useNavigate();
+
+  // Tanstack mutation used for POST operations, sends the credential user input to the backend
+  const mutation = useMutation<any, Error, LoginCredentials>({
+    mutationFn: async (credentials) => {
+      const res = await fetch ("/api/login/login", {
+        method: "POST",
+        headers: { "Content-type" : "application/json"},
+        body: JSON.stringify(credentials),
+      })
+      return res.json();
+    },
+    onSuccess: (data) => {
+        console.log("login successful",data)
+        navigate({ to: "/" }) // later should change to route to the page with user's videos
+    },
+  });
+
+
+  // event handler:  sends the data to mutationFn
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData);
+    mutation.mutate(data); 
+  };
   return (
     <div className="flex w-full min-h-[calc(100vh-4rem)] flex-col items-center justify-center relative overflow-hidden px-4 py-16">
       {/* Particles Background */}
