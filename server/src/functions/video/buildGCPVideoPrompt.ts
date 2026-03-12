@@ -95,6 +95,7 @@ export function buildGCPVideoPrompt(data: postVideoSchemaType): string {
       cinematicPreset,
       negativePrompt,
       aspectRatio,
+      previousSceneOperationName,
    } = data;
 
    // 1. Scene Setting (EnvironmentNode)
@@ -145,6 +146,13 @@ export function buildGCPVideoPrompt(data: postVideoSchemaType): string {
 
    if (sceneContext) {
       sections.push(`SCENE DIRECTION: ${sceneContext}`);
+   }
+
+   // Extension Logic
+   if (previousSceneOperationName) {
+      sections.push(
+         `CONTINUITY: This is a direct continuation of the previous shot. Maintain visual consistency, character positions, and environmental details from the preceding footage to ensure a seamless transition.`,
+      );
    }
 
    sections.push(
