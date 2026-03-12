@@ -38,7 +38,7 @@ const useFlowStore = create<FlowState>()(
          addNode: (type, position) => {
             console.log('addNode');
             // use the blueprint to create a "default" node based on the type
-            // character | scene | projectSettings | script
+            // character | scene | script
             const blueprint = nodeBlueprint[type];
             const { x, y } = position;
 
@@ -164,7 +164,7 @@ const useFlowStore = create<FlowState>()(
                      prompt: sceneNode.data.scenePrompt,
                      characters: nodeContext.characters,
                      environments: nodeContext.environments,
-                     scripts: nodeContext.scripts, // <-- Watch out for the 's'!
+                     scripts: nodeContext.scripts,
                      aspectRatio: projectState.aspectRatio,
                      engine: projectState.engine,
                      cinematicPreset: projectState.cinematicPreset,

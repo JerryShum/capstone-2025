@@ -4,7 +4,6 @@
 import type {
    CharacterNodeData,
    EnvironmentNodeData,
-   ProjectSettingsNodeData,
    SceneNodeData,
    ScriptNodeData,
 } from '@shared';
@@ -31,6 +30,7 @@ export const nodeBlueprint = {
          status: 'IDLE',
          videoURL: 'https://...',
          thumbnailURL: 'https://...',
+         extend: false,
       } as SceneNodeData,
    },
    script: {
@@ -39,22 +39,6 @@ export const nodeBlueprint = {
          type: 'script',
          content: 'Write your script segment here...',
       } as ScriptNodeData,
-   },
-   projectSettings: {
-      label: 'Add Project Settings',
-      defaultData: {
-         type: 'projectSettings',
-         title: 'Untitled Project',
-         aspectRatio: '16:9',
-         targetEngine: 'Google Veo',
-         negativePrompt: 'blur, low quality, distorted, watermark',
-         seed: -1,
-         guidanceScale: 7.5,
-         motionIntensity: 5,
-         styleReference: 'https://...',
-         cinematicPreset: 'Neo-Noir',
-         summary: 'A brief overview of the project theme...',
-      } as ProjectSettingsNodeData,
    },
    environment: {
       label: 'Add Environment Node',
