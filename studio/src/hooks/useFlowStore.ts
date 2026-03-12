@@ -186,16 +186,32 @@ const useFlowStore = create<FlowState>()(
 
                const { operationName } = responseData;
 
+               if (!operationName) {
+                  updateNode(id, {
+                     status: 'ERROR',
+                     errorMessage: 'Server failed to provide an operation ID.',
+                  });
+                  return;
+               }
+
                // set sceneNode state --> save the operationname within the scenenode (to be used later)
                updateNode(id, {
                   lastOperationName: operationName,
                   status: 'PROCESSING',
+                  errorMessage: undefined,
                });
 
                // start polling the server to get the video
                get().pollVideoStatus(id, operationName);
             } catch (error) {
-               console.log('ERROR', error);
+               console.error('ERROR during video generation:', error);
+               updateNode(id, {
+                  status: 'ERROR',
+                  errorMessage:
+                     error instanceof Error
+                        ? error.message
+                        : 'An unexpected error occurred.',
+               });
             }
          },
          pollVideoStatus: async (nodeID, operationName) => {
@@ -207,40 +223,57 @@ const useFlowStore = create<FlowState>()(
                await new Promise((resolve) => setTimeout(resolve, 3000));
                // TODO: Use operationName to poll for video generation status
 
-               try {
-                  //ask API for the status of the video
-                  const videoStatusResponse = await api.studio.video.status[
-                     ':name{.+}'
-                  ].$get({ param: { name: operationName } });
+                try {
+                   //ask API for the status of the video
+                   const videoStatusResponse = await api.studio.video.status[
+                      ':name{.+}'
+                   ].$get({ param: { name: operationName } });
 
-                  const { status, videosURL } =
-                     (await videoStatusResponse.json()) as {
-                        status: string;
-                        videosURL?: string;
-                     };
+                   if (!videoStatusResponse.ok) {
+                      throw new Error(
+                         `Status check failed: ${videoStatusResponse.statusText}`,
+                      );
+                   }
 
-                  //@ React to the status:
-                  if (status === 'READY_TO_DOWNLOAD') {
-                     // video is in the DB and has been downloaded --> the URL is good and we can use it!
-                     updateNode(nodeID, {
-                        status: 'READY',
-                        videoURL: videosURL,
-                     });
+                   const responseData = await videoStatusResponse.json();
+                   const { status, videosURL, message } = responseData as {
+                      status: string;
+                      videosURL?: string;
+                      message?: string;
+                   };
 
-                     isDone = true;
-                  } else if (status === 'ERROR') {
-                     // something happened and NO video could be generated.
-                     updateNode(nodeID, {
-                        status: 'ERROR',
-                     });
-                     isDone = true;
-                  }
-               } catch (error) {
-                  console.error(
-                     'Polling Error. Was unable to retrieve video:',
-                     error,
-                  );
-               }
+                   //@ React to the status:
+                   if (status === 'READY_TO_DOWNLOAD') {
+                      // video is in the DB and has been downloaded --> the URL is good and we can use it!
+                      updateNode(nodeID, {
+                         status: 'READY',
+                         videoURL: videosURL,
+                         errorMessage: undefined,
+                      });
+
+                      isDone = true;
+                   } else if (status === 'ERROR') {
+                      // something happened and NO video could be generated.
+                      updateNode(nodeID, {
+                         status: 'ERROR',
+                         errorMessage: message || 'Video generation failed.',
+                      });
+                      isDone = true;
+                   }
+                } catch (error) {
+                   console.error(
+                      'Polling Error. Was unable to retrieve video:',
+                      error,
+                   );
+                   updateNode(nodeID, {
+                      status: 'ERROR',
+                      errorMessage:
+                         error instanceof Error
+                            ? error.message
+                            : 'Connection error during status check.',
+                   });
+                   isDone = true; // Break loop on error
+                }
 
                // status == processing --> loop restarts
             }

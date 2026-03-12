@@ -137,9 +137,18 @@ export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
                   <option value="Pan">Pan</option>
                   <option value="Tilt">Tilt</option>
                   <option value="Zoom">Zoom</option>
-                  <option value="Dolly">Dolly</option>
-               </select>
+               <option value="Dolly">Dolly</option>
+            </select>
+         </div>
+
+         {data.status === 'ERROR' && data.errorMessage && (
+            <div className="flex items-start gap-2 p-2 bg-red-50 border border-red-100 rounded-lg">
+               <AlertCircle size={14} className="text-red-500 shrink-0 mt-0.5" />
+               <p className="text-[10px] text-red-600 font-medium leading-relaxed">
+                  {data.errorMessage}
+               </p>
             </div>
+         )}
 
             {/* Media Display */}
             <div className="flex flex-col gap-1">
