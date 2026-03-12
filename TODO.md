@@ -2,6 +2,15 @@
 
 ### Tasks / Ideas
 
+- [ ] Video Extension
+   - [ ] Add a new "extend" property to the sceneNode parameters
+   - [ ] Add a new "extend" property to the schema for sending to the server
+   - [ ] GraphUtils --> add a fucnction to check if sceneNode can be extended (if there is a previous scene)
+   - [ ] Generate Video Button / function --> use graphutils extendcheck --> returns true --> we can set extend to true
+   - [ ] Use the current /studio/video/generate endpoint
+      - [ ] If extend is true --> add the previous scene to the prompt --> use a different generation request to VEO
+      - [ ] If extend is false --> use the normal one
+
 ---
 
 ### Client / Server Tasks
@@ -13,13 +22,12 @@
    - [ ] Edit projects & videos table to make them link to users properly
    - [ ] Edit server queries to account for users
 
-- [ ] SceneNode --> choose own colour (not purple)
-
 - [ ] Improve the initial nodes & introduce a simple tutorial!
    - [ ] Barry the chicken with proper spelling
    - [ ] Shadcn tutorial?
   
 ### Studio Tasks
+- [ ] SceneNode --> choose own colour (not purple)
 
 - [ ] Undo & Redo functionality
    - [ ] Look into useUndoRedo hook & helpers
