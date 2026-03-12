@@ -12,6 +12,8 @@ export const sendVideoSchema = z.object({
    engine: z.string(),
    cinematicPreset: z.string(),
    negativePrompt: z.string(),
+   // this is used in the case that sceneNode --> extend = true (we want to extend the scene)
+   // useFlowStore --> generateVideo() --> send previousSceneOperationName to get the server to fetch the previously generated video
    previousSceneOperationName: z.string().optional(),
 });
 
