@@ -42,6 +42,7 @@ const initSceneNode: SceneNode = {
       videoURL: 'https://',
       thumbnailURL: 'https://',
       lastOperationName: '',
+      extend: false,
    },
    position: { x: 0, y: 25 },
 };
