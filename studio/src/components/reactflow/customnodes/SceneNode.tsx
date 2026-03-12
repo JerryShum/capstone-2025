@@ -13,11 +13,17 @@ import {
    Play,
    Type,
    Lock,
+   Layers,
 } from 'lucide-react';
+import { canExtendScene } from '@/lib/functions/graphUtils';
 
 export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
    const updateNode = useFlowStore((state) => state.updateNode);
    const generateVideo = useFlowStore((state) => state.generateVideo);
+   const nodes = useFlowStore((state) => state.nodes);
+   const edges = useFlowStore((state) => state.edges);
+
+   const canExtend = canExtendScene(id, nodes, edges);
 
    const getStatusIcon = () => {
       switch (data.status) {
@@ -141,6 +147,31 @@ export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
                </select>
             </div>
 
+            {/* Extend Previous Scene Toggle */}
+            <div className="flex items-center justify-between p-2 bg-slate-50 rounded-lg border-2 border-slate-100 mt-1">
+               <div className="flex items-center gap-2">
+                  <Layers size={14} className={canExtend ? "text-purple-500" : "text-slate-300"} />
+                  <span className={`text-[10px] font-bold uppercase ${canExtend ? "text-slate-700" : "text-slate-300"}`}>
+                     Extend Previous Scene
+                  </span>
+               </div>
+               <button
+                  disabled={!canExtend}
+                  onClick={() => updateNode(id, { extend: !data.extend })}
+                  className={`w-10 h-5 rounded-full relative transition-colors ${!canExtend
+                     ? "bg-slate-200 cursor-not-allowed"
+                     : data.extend
+                        ? "bg-purple-600"
+                        : "bg-slate-300"
+                     }`}
+               >
+                  <div
+                     className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${data.extend ? "left-6" : "left-1"
+                        }`}
+                  />
+               </button>
+            </div>
+
             {/* Media Display */}
             <div className="flex flex-col gap-1">
                <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
@@ -159,7 +190,7 @@ export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
                         }
                      />
                   ) : data.thumbnailURL &&
-                    data.thumbnailURL !== 'https://...' ? (
+                     data.thumbnailURL !== 'https://...' ? (
                      <img
                         src={data.thumbnailURL}
                         alt="Scene Thumbnail"
