@@ -2,6 +2,7 @@ import type {
    AppNode,
    CharacterNode,
    EnvironmentNode,
+   SceneNode,
    ScriptNode,
 } from '@shared/types';
 import type { Edge } from '@xyflow/react';
@@ -48,4 +49,44 @@ export function gatherSceneContext(
          .filter((node): node is ScriptNode => node.type === 'script')
          .map((node) => node.data),
    };
+}
+
+export function getPreviousSceneNode(
+   currentSceneNodeID: string,
+   nodes: AppNode[],
+   edges: Edge[],
+) {
+   const parentNodes = getIncomingNodes(currentSceneNodeID, nodes, edges);
+
+   for (const node of parentNodes) {
+      if (node.type === 'scene') {
+         return node as SceneNode;
+      }
+   }
+
+   return false;
+}
+
+export function canExtendScene(
+   currentSceneNodeID: string,
+   nodes: AppNode[],
+   edges: Edge[],
+) {
+   const previousSceneNode: SceneNode | boolean = getPreviousSceneNode(
+      currentSceneNodeID,
+      nodes,
+      edges,
+   );
+
+   if (!previousSceneNode) {
+      return false;
+   }
+
+   // checks if the previous scene is done generating --> also checks if we got the operation name to use in google
+   if (
+      previousSceneNode.data.status === 'READY' &&
+      previousSceneNode.data.lastOperationName
+   ) {
+      return true;
+   }
 }

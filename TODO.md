@@ -2,6 +2,10 @@
 
 ### Tasks / Ideas
 
+- [ ] Limit only 1 source sceneNode
+   - [ ] A sceneNode should ONLY accept 1 sceneNode as a source
+   - [ ] BUT they can have multiple targets (they can be the source of many sceneNodes)
+
 - [ ] Video Extension
    - [ ] Add a new "extend" property to the sceneNode parameters
    - [ ] Add a new "extend" property to the schema for sending to the server
@@ -26,8 +30,9 @@
 - [ ] Improve the initial nodes & introduce a simple tutorial!
    - [ ] Barry the chicken with proper spelling
    - [ ] Shadcn tutorial?
-  
+
 ### Studio Tasks
+
 - [ ] SceneNode --> choose own colour (not purple)
 
 - [ ] Undo & Redo functionality
