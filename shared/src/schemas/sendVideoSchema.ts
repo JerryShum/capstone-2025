@@ -12,7 +12,7 @@ export const sendVideoSchema = z.object({
    engine: z.string(),
    cinematicPreset: z.string(),
    negativePrompt: z.string(),
-   previousOperationName: z.string().optional(),
+   previousSceneOperationName: z.string().optional(),
 });
 
 //@ the wanted structure of data that someone POSTS:
