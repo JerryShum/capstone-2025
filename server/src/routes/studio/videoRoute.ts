@@ -45,11 +45,39 @@ export const videoRoute = new Hono()
       //---------------------------------------------------------
       //@ Gemini api call
       try {
+         // handle video extension logic:
+         let previousVideo: any = undefined;
+
+         //@ if our data comes with previousSceneOperationName --> extend
+         if (data.previousSceneOperationName) {
+            console.log('--- ATTEMPTING VIDEO EXTENSION ---');
+            const operationBuild = new GenerateVideosOperation();
+            operationBuild.name = data.previousSceneOperationName;
+
+            // get the previous sceneNode's generated video
+            try {
+               const previousOperation =
+                  await genAI.operations.getVideosOperation({
+                     operation: operationBuild,
+                  });
+               previousVideo =
+                  previousOperation.response?.generatedVideos?.[0]?.video;
+               console.log('--- PREVIOUS VIDEO OBJECT RETRIEVED ---');
+            } catch (error) {
+               console.error(
+                  'ERROR when trying to extend video (operationName failed)',
+                  error,
+               );
+            }
+         }
+
          // make a request to gemini API --> get an operationID / ticket
          const operation = await genAI.models.generateVideos({
-            model: 'veo-3.1-fast-generate-preview',
+            model: 'veo-3.1-generate-preview',
+            video: previousVideo,
             prompt: masterPrompt,
             config: {
+               resolution: '720p',
                durationSeconds: 8,
             },
          });

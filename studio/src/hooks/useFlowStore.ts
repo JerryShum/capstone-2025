@@ -1,4 +1,7 @@
-import { gatherSceneContext } from '@/lib/functions/graphUtils';
+import {
+   gatherSceneContext,
+   getPreviousSceneNode,
+} from '@/lib/functions/graphUtils';
 import { nodeBlueprint } from '@/lib/nodeBlueprint';
 import type { AppNode, FlowState, SceneNode } from '@shared';
 import { initialEdges, initialNodes } from '@shared';
@@ -157,6 +160,26 @@ const useFlowStore = create<FlowState>()(
             // calling graphUtils.ts functions --> gets the info from parent nodes
             const nodeContext = gatherSceneContext(id, nodes, edges);
 
+            //---------------------------------------------------------
+
+            //@ Check if sceneNode --> extend = true or flase
+            const isExtend = sceneNode.data.extend;
+
+            // logic for video extension
+            let previousSceneOperationName: string | undefined = undefined;
+
+            if (isExtend) {
+               const previousScene = getPreviousSceneNode(id, nodes, edges);
+               if (previousScene && previousScene.data.lastOperationName) {
+                  previousSceneOperationName =
+                     previousScene.data.lastOperationName;
+               }
+
+               console.log(previousSceneOperationName);
+            }
+
+            //---------------------------------------------------------
+
             try {
                // send request to server --> we get an "operationName" --> polling name / ticket number
                const response = await api.studio.video.generate.$post({
@@ -170,6 +193,7 @@ const useFlowStore = create<FlowState>()(
                      cinematicPreset: projectState.cinematicPreset,
                      negativePrompt: projectState.globalNegativePrompt,
                      imageBase64: '', // We can leave this empty for now
+                     previousSceneOperationName: previousSceneOperationName,
                   },
                });
 

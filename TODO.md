@@ -2,15 +2,18 @@
 
 ### Tasks / Ideas
 
+- [ ] Music Node
+   - [ ] Describes the background sounds / environment of the video
+
 - [ ] Limit only 1 source sceneNode
    - [ ] A sceneNode should ONLY accept 1 sceneNode as a source
    - [ ] BUT they can have multiple targets (they can be the source of many sceneNodes)
 
 - [ ] Video Extension
-   - [ ] Add a new "extend" property to the sceneNode parameters
-   - [ ] Add a new "extend" property to the schema for sending to the server
-   - [ ] GraphUtils --> add a fucnction to check if sceneNode can be extended (if there is a previous scene)
-   - [ ] Generate Video Button / function --> use graphutils extendcheck --> returns true --> we can set extend to true
+   - [x] Add a new "extend" property to the sceneNode parameters
+   - [x] Add a new "extend" property to the schema for sending to the server
+   - [x] GraphUtils --> add a fucnction to check if sceneNode can be extended (if there is a previous scene)
+   - [x] Generate Video Button / function --> use graphutils extendcheck --> returns true --> we can set extend to true
    - [ ] Use the current /studio/video/generate endpoint
       - [ ] If extend is false --> use the normal one
       - [ ] If extend is true --> add the previous scene to the prompt --> use a different generation request to VEO

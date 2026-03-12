@@ -42,8 +42,8 @@ export type SceneNodeData = {
    status: 'IDLE' | 'PROCESSING' | 'READY' | 'ERROR';
    videoURL: string;
    thumbnailURL: httpsURL;
-   lastOperationName?: string;
    locked?: boolean;
+   lastOperationName?: string;
    extend: boolean;
 };
 export type SceneNode = Node<SceneNodeData, 'scene'>;
@@ -60,23 +60,26 @@ export type EnvironmentNodeData = {
 };
 
 export type EnvironmentNode = Node<EnvironmentNodeData, 'environment'>;
- 
- //# Project Settings Node
- export type ProjectSettingsNodeData = {
-    type: 'projectSettings';
-    title: string;
-    aspectRatio: '16:9' | '9:16';
-    targetEngine: 'Google Veo' | 'OpenAI Sora';
-    negativePrompt: string;
-    seed: number;
-    guidanceScale: number;
-    motionIntensity: number;
-    styleReference: httpsURL;
-    cinematicPreset: string;
-    summary: string;
-    locked?: boolean;
- };
- export type ProjectSettingsNode = Node<ProjectSettingsNodeData, 'projectSettings'>;
+
+//# Project Settings Node
+export type ProjectSettingsNodeData = {
+   type: 'projectSettings';
+   title: string;
+   aspectRatio: '16:9' | '9:16';
+   targetEngine: 'Google Veo' | 'OpenAI Sora';
+   negativePrompt: string;
+   seed: number;
+   guidanceScale: number;
+   motionIntensity: number;
+   styleReference: httpsURL;
+   cinematicPreset: string;
+   summary: string;
+   locked?: boolean;
+};
+export type ProjectSettingsNode = Node<
+   ProjectSettingsNodeData,
+   'projectSettings'
+>;
 
 //@ General App Node (encapsulates all nodes)
 type AppNodeData =
@@ -88,11 +91,7 @@ export type AppNode = Node<AppNodeData>; // this appnode tells reactflow that th
 
 //---------------------------------------------------------
 
-type NodeTypes =
-   | 'script'
-   | 'character'
-   | 'scene'
-   | 'environment';
+type NodeTypes = 'script' | 'character' | 'scene' | 'environment';
 
 //! To be used by zustand store --> this is an interface of the entire reactflow state
 export type FlowState = {
