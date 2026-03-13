@@ -40,6 +40,7 @@ export type SceneNodeData = {
    shotType: 'Wide' | 'Medium' | 'Close-up' | 'Over-the-shoulder';
    cameraMovement: 'Static' | 'Pan' | 'Tilt' | 'Zoom' | 'Dolly';
    status: 'IDLE' | 'PROCESSING' | 'READY' | 'ERROR';
+   errorMessage?: string;
    videoURL: string;
    thumbnailURL: httpsURL;
    lastOperationName?: string;
@@ -70,6 +71,11 @@ export type AppNode = Node<AppNodeData>; // this appnode tells reactflow that th
 
 //---------------------------------------------------------
 
+export type HistoryItem = {
+   nodes: AppNode[];
+   edges: Edge[];
+};
+
 type NodeTypes = 'script' | 'character' | 'scene' | 'environment';
 
 //! To be used by zustand store --> this is an interface of the entire reactflow state
@@ -90,4 +96,11 @@ export type FlowState = {
    generateVideo: (nodeID: string) => Promise<void>;
    pollVideoStatus: (nodeID: string, operationName: string) => Promise<void>;
    resumeVideoPoll: () => void;
+
+   // Undo/Redo
+   past: HistoryItem[];
+   future: HistoryItem[];
+   undo: () => void;
+   redo: () => void;
+   takeSnapshot: () => void;
 };

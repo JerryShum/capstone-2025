@@ -10,12 +10,14 @@ interface NodeButtonProps {
    tooltiptext: string;
    Icon: LucideIcon;
    onClickFunction: () => void;
+   disabled?: boolean;
 }
 
 export default function NodeButton({
    tooltiptext,
    Icon,
    onClickFunction,
+   disabled = false,
 }: NodeButtonProps) {
    return (
       <Tooltip>
@@ -23,8 +25,9 @@ export default function NodeButton({
             <Button
                variant={'ghost'}
                size={'icon'}
-               className="hover:cursor-pointer p-0 [&_svg]:size-6"
+               className="hover:cursor-pointer p-0 [&_svg]:size-6 disabled:opacity-30 disabled:cursor-not-allowed"
                onClick={onClickFunction}
+               disabled={disabled}
             >
                <Icon className="size-5" />
             </Button>

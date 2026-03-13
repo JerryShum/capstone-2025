@@ -14,6 +14,8 @@ const useFlowStore = create<FlowState>()(
       devtools((set, get) => ({
          nodes: initialNodes,
          edges: initialEdges,
+         past: [],
+         future: [],
          onNodesChange: (changes) => {
             set({
                nodes: applyNodeChanges(changes, get().nodes),
@@ -25,6 +27,7 @@ const useFlowStore = create<FlowState>()(
             });
          },
          onConnect: (connection) => {
+            get().takeSnapshot();
             set({
                edges: addEdge(connection, get().edges),
             });
@@ -35,7 +38,46 @@ const useFlowStore = create<FlowState>()(
          setEdges: (edges) => {
             set({ edges });
          },
+         takeSnapshot: () => {
+            const { nodes, edges, past } = get();
+            const maxHistorySize = 100;
+
+            set({
+               past: [
+                  ...past.slice(Math.max(0, past.length - maxHistorySize + 1)),
+                  { nodes, edges },
+               ],
+               future: [],
+            });
+         },
+         undo: () => {
+            const { past, future, nodes, edges } = get();
+            const pastState = past[past.length - 1];
+
+            if (pastState) {
+               set({
+                  past: past.slice(0, past.length - 1),
+                  future: [...future, { nodes, edges }],
+                  nodes: pastState.nodes,
+                  edges: pastState.edges,
+               });
+            }
+         },
+         redo: () => {
+            const { past, future, nodes, edges } = get();
+            const futureState = future[future.length - 1];
+
+            if (futureState) {
+               set({
+                  future: future.slice(0, future.length - 1),
+                  past: [...past, { nodes, edges }],
+                  nodes: futureState.nodes,
+                  edges: futureState.edges,
+               });
+            }
+         },
          addNode: (type, position) => {
+            get().takeSnapshot();
             console.log('addNode');
             // use the blueprint to create a "default" node based on the type
             // character | scene | projectSettings | script
@@ -56,6 +98,8 @@ const useFlowStore = create<FlowState>()(
          },
          updateNode: (id, data) => {
             // filter out all the nodes and find the one we need to update using id
+            // snapshot taken before update
+            get().takeSnapshot();
             set({
                nodes: get().nodes.map((node) => {
                   if (node.id === id) {
@@ -76,6 +120,7 @@ const useFlowStore = create<FlowState>()(
             });
          },
          deleteNode: (id) => {
+            get().takeSnapshot();
             set({
                //@ Only kepe the nodes with IDS that DO NOT match the input
                nodes: get().nodes.filter((node) => !(node.id == id)),
@@ -86,6 +131,7 @@ const useFlowStore = create<FlowState>()(
             });
          },
          duplicateNode: (id) => {
+            get().takeSnapshot();
             const nodesArray = get().nodes;
 
             const originalNode = nodesArray.find((node) => {
@@ -113,6 +159,7 @@ const useFlowStore = create<FlowState>()(
             });
          },
          toggleNodeLock: (id) => {
+            get().takeSnapshot();
             const nodesArray = get().nodes;
             const originalNode = nodesArray.find((node) => node.id === id);
 
@@ -186,16 +233,32 @@ const useFlowStore = create<FlowState>()(
 
                const { operationName } = responseData;
 
+               if (!operationName) {
+                  updateNode(id, {
+                     status: 'ERROR',
+                     errorMessage: 'Server failed to provide an operation ID.',
+                  });
+                  return;
+               }
+
                // set sceneNode state --> save the operationname within the scenenode (to be used later)
                updateNode(id, {
                   lastOperationName: operationName,
                   status: 'PROCESSING',
+                  errorMessage: undefined,
                });
 
                // start polling the server to get the video
                get().pollVideoStatus(id, operationName);
             } catch (error) {
-               console.log('ERROR', error);
+               console.error('ERROR during video generation:', error);
+               updateNode(id, {
+                  status: 'ERROR',
+                  errorMessage:
+                     error instanceof Error
+                        ? error.message
+                        : 'An unexpected error occurred.',
+               });
             }
          },
          pollVideoStatus: async (nodeID, operationName) => {
@@ -207,40 +270,57 @@ const useFlowStore = create<FlowState>()(
                await new Promise((resolve) => setTimeout(resolve, 3000));
                // TODO: Use operationName to poll for video generation status
 
-               try {
-                  //ask API for the status of the video
-                  const videoStatusResponse = await api.studio.video.status[
-                     ':name{.+}'
-                  ].$get({ param: { name: operationName } });
+                try {
+                   //ask API for the status of the video
+                   const videoStatusResponse = await api.studio.video.status[
+                      ':name{.+}'
+                   ].$get({ param: { name: operationName } });
 
-                  const { status, videosURL } =
-                     (await videoStatusResponse.json()) as {
-                        status: string;
-                        videosURL?: string;
-                     };
+                   if (!videoStatusResponse.ok) {
+                      throw new Error(
+                         `Status check failed: ${videoStatusResponse.statusText}`,
+                      );
+                   }
 
-                  //@ React to the status:
-                  if (status === 'READY_TO_DOWNLOAD') {
-                     // video is in the DB and has been downloaded --> the URL is good and we can use it!
-                     updateNode(nodeID, {
-                        status: 'READY',
-                        videoURL: videosURL,
-                     });
+                   const responseData = await videoStatusResponse.json();
+                   const { status, videosURL, message } = responseData as {
+                      status: string;
+                      videosURL?: string;
+                      message?: string;
+                   };
 
-                     isDone = true;
-                  } else if (status === 'ERROR') {
-                     // something happened and NO video could be generated.
-                     updateNode(nodeID, {
-                        status: 'ERROR',
-                     });
-                     isDone = true;
-                  }
-               } catch (error) {
-                  console.error(
-                     'Polling Error. Was unable to retrieve video:',
-                     error,
-                  );
-               }
+                   //@ React to the status:
+                   if (status === 'READY_TO_DOWNLOAD') {
+                      // video is in the DB and has been downloaded --> the URL is good and we can use it!
+                      updateNode(nodeID, {
+                         status: 'READY',
+                         videoURL: videosURL,
+                         errorMessage: undefined,
+                      });
+
+                      isDone = true;
+                   } else if (status === 'ERROR') {
+                      // something happened and NO video could be generated.
+                      updateNode(nodeID, {
+                         status: 'ERROR',
+                         errorMessage: message || 'Video generation failed.',
+                      });
+                      isDone = true;
+                   }
+                } catch (error) {
+                   console.error(
+                      'Polling Error. Was unable to retrieve video:',
+                      error,
+                   );
+                   updateNode(nodeID, {
+                      status: 'ERROR',
+                      errorMessage:
+                         error instanceof Error
+                            ? error.message
+                            : 'Connection error during status check.',
+                   });
+                   isDone = true; // Break loop on error
+                }
 
                // status == processing --> loop restarts
             }
