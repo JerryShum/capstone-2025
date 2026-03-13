@@ -1,4 +1,5 @@
 import useFlowStore from '@/hooks/useFlowStore';
+import { canExtendScene } from '@/lib/functions/graphUtils';
 import type { SceneNode } from '@shared';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import {
@@ -13,11 +14,27 @@ import {
    Play,
    Type,
    Lock,
+   Layers,
 } from 'lucide-react';
+import { useEffect } from 'react';
 
 export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
    const updateNode = useFlowStore((state) => state.updateNode);
    const generateVideo = useFlowStore((state) => state.generateVideo);
+   const nodes = useFlowStore((state) => state.nodes);
+   const edges = useFlowStore((state) => state.edges);
+   //---------------------------------------------------------'
+
+   // canExtend --> derived state by calling the canExtendScene() function from graphUtils.ts
+   const canExtend = canExtendScene(id, nodes, edges);
+
+   // useEffect --> checks on mount / re-render if the data.canExtend state is actually differnt from the derived canExtend function state
+   // this might happen if the user disconnects the parentSceneNode and can't toggle the button
+   useEffect(() => {
+      if (!canExtend && data.canExtend) {
+         updateNode(id, { canExtend: false });
+      }
+   }, [canExtend, data.canExtend, id, updateNode]);
 
    const getStatusIcon = () => {
       switch (data.status) {
@@ -137,18 +154,55 @@ export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
                   <option value="Pan">Pan</option>
                   <option value="Tilt">Tilt</option>
                   <option value="Zoom">Zoom</option>
-               <option value="Dolly">Dolly</option>
-            </select>
-         </div>
-
-         {data.status === 'ERROR' && data.errorMessage && (
-            <div className="flex items-start gap-2 p-2 bg-red-50 border border-red-100 rounded-lg">
-               <AlertCircle size={14} className="text-red-500 shrink-0 mt-0.5" />
-               <p className="text-[10px] text-red-600 font-medium leading-relaxed">
-                  {data.errorMessage}
-               </p>
+                  <option value="Dolly">Dolly</option>
+               </select>
             </div>
-         )}
+
+            {/* Extend Previous Scene Toggle */}
+            <div className="flex items-center justify-between p-2 bg-slate-50 rounded-lg border-2 border-slate-100 mt-1">
+               <div className="flex items-center gap-2">
+                  <Layers
+                     size={14}
+                     className={
+                        canExtend ? 'text-purple-500' : 'text-slate-300'
+                     }
+                  />
+                  <span
+                     className={`text-[10px] font-bold uppercase ${canExtend ? 'text-slate-700' : 'text-slate-300'}`}
+                  >
+                     Extend Previous Scene
+                  </span>
+               </div>
+               <button
+                  disabled={!canExtend}
+                  onClick={() => updateNode(id, { canExtend: !data.canExtend })}
+                  className={`w-10 h-5 rounded-full relative transition-colors ${
+                     !canExtend
+                        ? 'bg-slate-200 cursor-not-allowed'
+                        : data.canExtend
+                          ? 'bg-purple-600'
+                          : 'bg-slate-300'
+                  }`}
+               >
+                  <div
+                     className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${
+                        data.canExtend ? 'left-6' : 'left-1'
+                     }`}
+                  />
+               </button>
+            </div>
+
+            {data.status === 'ERROR' && data.errorMessage && (
+               <div className="flex items-start gap-2 p-2 bg-red-50 border border-red-100 rounded-lg">
+                  <AlertCircle
+                     size={14}
+                     className="text-red-500 shrink-0 mt-0.5"
+                  />
+                  <p className="text-[10px] text-red-600 font-medium leading-relaxed">
+                     {data.errorMessage}
+                  </p>
+               </div>
+            )}
 
             {/* Media Display */}
             <div className="flex flex-col gap-1">

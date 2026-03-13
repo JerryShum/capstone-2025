@@ -45,6 +45,7 @@ export type SceneNodeData = {
    thumbnailURL: httpsURL;
    lastOperationName?: string;
    locked?: boolean;
+   canExtend: boolean;
 };
 export type SceneNode = Node<SceneNodeData, 'scene'>;
 
