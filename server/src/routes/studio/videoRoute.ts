@@ -50,7 +50,8 @@ export const videoRoute = new Hono()
             model: 'veo-3.1-fast-generate-preview',
             prompt: masterPrompt,
             config: {
-               durationSeconds: 8,
+               durationSeconds: 4,
+               resolution: '720p',
             },
          });
 
@@ -121,7 +122,8 @@ export const videoRoute = new Hono()
          console.error('Gemini Operation Error:', operation.error);
          return c.json({
             status: 'ERROR',
-            message: operation.error.message || 'Gemini failed to generate video.',
+            message:
+               operation.error.message || 'Gemini failed to generate video.',
             videosURL: undefined,
          });
       }
