@@ -14,6 +14,8 @@ const useFlowStore = create<FlowState>()(
       devtools((set, get) => ({
          nodes: initialNodes,
          edges: initialEdges,
+         past: [],
+         future: [],
          onNodesChange: (changes) => {
             set({
                nodes: applyNodeChanges(changes, get().nodes),
@@ -25,6 +27,7 @@ const useFlowStore = create<FlowState>()(
             });
          },
          onConnect: (connection) => {
+            get().takeSnapshot();
             set({
                edges: addEdge(connection, get().edges),
             });
@@ -35,7 +38,46 @@ const useFlowStore = create<FlowState>()(
          setEdges: (edges) => {
             set({ edges });
          },
+         takeSnapshot: () => {
+            const { nodes, edges, past } = get();
+            const maxHistorySize = 100;
+
+            set({
+               past: [
+                  ...past.slice(Math.max(0, past.length - maxHistorySize + 1)),
+                  { nodes, edges },
+               ],
+               future: [],
+            });
+         },
+         undo: () => {
+            const { past, future, nodes, edges } = get();
+            const pastState = past[past.length - 1];
+
+            if (pastState) {
+               set({
+                  past: past.slice(0, past.length - 1),
+                  future: [...future, { nodes, edges }],
+                  nodes: pastState.nodes,
+                  edges: pastState.edges,
+               });
+            }
+         },
+         redo: () => {
+            const { past, future, nodes, edges } = get();
+            const futureState = future[future.length - 1];
+
+            if (futureState) {
+               set({
+                  future: future.slice(0, future.length - 1),
+                  past: [...past, { nodes, edges }],
+                  nodes: futureState.nodes,
+                  edges: futureState.edges,
+               });
+            }
+         },
          addNode: (type, position) => {
+            get().takeSnapshot();
             console.log('addNode');
             // use the blueprint to create a "default" node based on the type
             // character | scene | projectSettings | script
@@ -56,6 +98,8 @@ const useFlowStore = create<FlowState>()(
          },
          updateNode: (id, data) => {
             // filter out all the nodes and find the one we need to update using id
+            // snapshot taken before update
+            get().takeSnapshot();
             set({
                nodes: get().nodes.map((node) => {
                   if (node.id === id) {
@@ -76,6 +120,7 @@ const useFlowStore = create<FlowState>()(
             });
          },
          deleteNode: (id) => {
+            get().takeSnapshot();
             set({
                //@ Only kepe the nodes with IDS that DO NOT match the input
                nodes: get().nodes.filter((node) => !(node.id == id)),
@@ -86,6 +131,7 @@ const useFlowStore = create<FlowState>()(
             });
          },
          duplicateNode: (id) => {
+            get().takeSnapshot();
             const nodesArray = get().nodes;
 
             const originalNode = nodesArray.find((node) => {
@@ -113,6 +159,7 @@ const useFlowStore = create<FlowState>()(
             });
          },
          toggleNodeLock: (id) => {
+            get().takeSnapshot();
             const nodesArray = get().nodes;
             const originalNode = nodesArray.find((node) => node.id === id);
 
