@@ -1,6 +1,7 @@
 import PromptNode from '@/components/reactflow/customnodes/PromptNode';
 import useFlowStore from '@/hooks/useFlowStore';
 import { calcPosition } from '@/lib/functions/calcPosition';
+import type { AppNode } from '@shared';
 import {
    Background,
    BackgroundVariant,
@@ -11,24 +12,18 @@ import {
    useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import {
-   Clapperboard,
-   ScrollText,
-   Settings2,
-   Trees,
-   UserStar,
-} from 'lucide-react';
+import { Clapperboard, ScrollText, Trees, UserStar } from 'lucide-react';
 import { useShallow } from 'zustand/shallow';
 import CharacterNode from './customnodes/CharacterNode';
 import EnvironmentNode from './customnodes/EnvironmentNode';
 import SceneNode from './customnodes/SceneNode';
 import ScriptNode from './customnodes/ScriptNode';
+import useUndoRedo from '@/hooks/useUndoRedo';
 import IconMenu from './panels/PanelMenu';
 import NodeButton from './panels/NodeButton';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ContextMenu from './contextmenu/ContextMenu';
-
-import { unsub, unsub2 } from '@/lib/persistence';
+import UndoRedoPanel from './panels/UndoRedoPanel';
 
 export default function Flow() {
    //! USING ZUSTAND STORE TO GET NODES, STATE, FUNCTIONS, ETC.
@@ -41,6 +36,7 @@ export default function Flow() {
       onConnect,
       addNode,
       resumeVideoPoll,
+      takeSnapshot,
    } = useFlowStore(
       useShallow((state) => ({
          nodes: state.nodes,
@@ -50,8 +46,11 @@ export default function Flow() {
          onConnect: state.onConnect,
          addNode: state.addNode,
          resumeVideoPoll: state.resumeVideoPoll,
+         takeSnapshot: state.takeSnapshot,
       })),
    );
+
+   useUndoRedo();
 
    //! THIS DEFINES ALL THE TYPES OF NDOES THAT RF EXPECTS --> if there is a node that ISN'T one of these types --> revert to default node
    const nodeTypes = {
@@ -92,7 +91,7 @@ export default function Flow() {
 
    //# Right click node event
    const onNodeContextMenu = useCallback(
-      (event, node) => {
+      (event: React.MouseEvent, node: AppNode) => {
          // Prevent native context menu from showing
          event.preventDefault();
          setMenu({
@@ -146,6 +145,8 @@ export default function Flow() {
             // onPaneContextMenu={onPaneContextMenu}
             onPaneClick={onPaneClick}
             onMoveStart={onPaneClick}
+            onNodeDragStart={() => takeSnapshot()}
+            onSelectionDragStart={() => takeSnapshot()}
          >
             {/* Background */}
             <Background
@@ -161,6 +162,9 @@ export default function Flow() {
             {menu && <ContextMenu {...menu} onClick={onPaneClick} />}
 
             {/* --------------------Panels------------------------ */}
+            <Panel position="top-right">
+               <UndoRedoPanel />
+            </Panel>
             <Panel position="top-left">
                <IconMenu />
             </Panel>
