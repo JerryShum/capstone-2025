@@ -3,11 +3,12 @@ import { Hono } from 'hono';
 import type { ApiResponse } from '@shared';
 import { updateProjectSchema } from '@shared/schemas/updateProjectSchema';
 import { db } from '@server/db';
-import { projectsTable } from '@server/db/schemas/schema';
+import { projectsTable, user } from '@server/db/schemas/schema';
 import { initialNodes, initialEdges } from '@shared';
 import { desc, eq } from 'drizzle-orm';
+import type { Env } from '@server/lib/auth';
 
-export const studioRoute = new Hono()
+export const studioRoute = new Hono<Env>()
    .get('/hello', async (c) => {
       const data: ApiResponse = {
          message: 'hello',
@@ -18,9 +19,12 @@ export const studioRoute = new Hono()
    })
    .get('/list', async (c) => {
       //! This route is for getting all of the user's projects
+      const user = c.get('user');
+
       const projects = await db
          .select()
          .from(projectsTable)
+         .where(eq(projectsTable.userID, user.id))
          .orderBy(desc(projectsTable.updatedAt));
 
       if (!projects) {

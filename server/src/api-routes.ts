@@ -14,8 +14,11 @@ import { videoRoute } from './routes/studio/videoRoute';
 import { loginRoute } from './routes/account/loginRoute';
 import { adminRoute } from './routes/account/adminRoute';
 import { auth } from './lib/auth';
+import { authMiddleware } from './lib/middleware';
 
-export const apiRoutes = new Hono()
+import type { Env } from './lib/auth';
+
+export const apiRoutes = new Hono<Env>()
    .on(['POST', 'GET'], '/auth/*', (c) => auth.handler(c.req.raw))
    .get('/hello', async (c) => {
       const data: ApiResponse = {
