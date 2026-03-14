@@ -7,16 +7,13 @@ import {
    text,
 } from 'drizzle-orm/pg-core';
 
-export const usersTable = pgTable('users', {
-   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-   name: varchar({ length: 255 }).notNull(),
-   age: integer().notNull(),
-   email: varchar({ length: 255 }).notNull().unique(),
-   password: varchar({length: 255}).notNull(),
-});
+import { user } from './auth-schema';
 
 export const projectsTable = pgTable('projects', {
    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+   userID: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
    projectTitle: varchar({ length: 255 }).notNull().default('Untitled Project'),
    aspectRatio: varchar({ length: 10 }).notNull().default('16:9'),
    engine: varchar({ length: 50 }).notNull().default('veo'),
@@ -29,7 +26,12 @@ export const projectsTable = pgTable('projects', {
 
 export const videoOperationsTable = pgTable('videoOperations', {
    name: varchar({ length: 255 }).primaryKey(),
+   userID: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
    status: varchar({ length: 50 }).notNull().default('PROCESSING'),
    videosURL: varchar({ length: 2048 }),
    createdAt: timestamp('created_at').defaultNow(),
 });
+
+export * from './auth-schema';
