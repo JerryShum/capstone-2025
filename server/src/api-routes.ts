@@ -11,8 +11,6 @@ import { createScriptImageRoute } from './routes/create/createScriptImageRoute';
 import { createVideoRoute } from './routes/create/createVideoRoute';
 import { studioRoute } from './routes/studio/studio';
 import { videoRoute } from './routes/studio/videoRoute';
-import { loginRoute } from './routes/account/loginRoute';
-import { adminRoute } from './routes/account/adminRoute';
 import { auth } from './lib/auth';
 import { authMiddleware } from './lib/middleware';
 
