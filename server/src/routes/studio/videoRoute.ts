@@ -8,6 +8,7 @@ import { db } from '@server/db';
 import { eq } from 'drizzle-orm';
 import { storeAndShowVideo } from '@server/functions/video/storeAndShowVideo';
 import { Storage } from '@google-cloud/storage';
+import type { Env } from '@server/lib/auth';
 
 //---------------------------------------------------------
 
@@ -30,10 +31,11 @@ const bucket = storage.bucket(GCS_BUCKET_NAME!);
 
 //---------------------------------------------------------
 
-export const videoRoute = new Hono()
+export const videoRoute = new Hono<Env>()
    .post('/generate', zValidator('json', postVideoSchema), async (c) => {
       // get validated data from validator
       const data = c.req.valid('json');
+      const user = c.get('user');
 
       //---------------------------------------------------------
       // create master prompt using prompt builder function:
@@ -65,6 +67,8 @@ export const videoRoute = new Hono()
          // saving the operationName / ticket to DB
          await db.insert(videoOperationsTable).values({
             name: operation.name as string,
+            userID: user.id,
+            projectID: data.projectId,
             status: 'PROCESSING',
          });
 
@@ -121,7 +125,8 @@ export const videoRoute = new Hono()
          console.error('Gemini Operation Error:', operation.error);
          return c.json({
             status: 'ERROR',
-            message: operation.error.message || 'Gemini failed to generate video.',
+            message:
+               operation.error.message || 'Gemini failed to generate video.',
             videosURL: undefined,
          });
       }

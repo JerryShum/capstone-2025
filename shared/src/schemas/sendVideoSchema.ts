@@ -15,5 +15,7 @@ export const sendVideoSchema = z.object({
 });
 
 //@ the wanted structure of data that someone POSTS:
-export const postVideoSchema = sendVideoSchema.omit({ id: true });
+export const postVideoSchema = sendVideoSchema.extend({
+   projectId: z.number().int().positive() 
+}).omit({ id: true });
 export type postVideoSchemaType = z.infer<typeof postVideoSchema>;

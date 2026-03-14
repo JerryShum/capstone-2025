@@ -29,6 +29,9 @@ export const videoOperationsTable = pgTable('videoOperations', {
    userID: text('user_id')
       .notNull()
       .references(() => user.id, { onDelete: 'cascade' }),
+   projectID: integer('project_id')
+      .notNull()
+      .references(() => projectsTable.id, { onDelete: 'cascade' }),
    status: varchar({ length: 50 }).notNull().default('PROCESSING'),
    videosURL: varchar({ length: 2048 }),
    createdAt: timestamp('created_at').defaultNow(),
