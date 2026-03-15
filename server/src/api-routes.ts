@@ -11,10 +11,13 @@ import { createScriptImageRoute } from './routes/create/createScriptImageRoute';
 import { createVideoRoute } from './routes/create/createVideoRoute';
 import { studioRoute } from './routes/studio/studio';
 import { videoRoute } from './routes/studio/videoRoute';
-import { loginRoute } from './routes/account/loginRoute';
-import { adminRoute } from './routes/account/adminRoute';
+import { auth } from './lib/auth';
+import { authMiddleware } from './lib/middleware';
 
-export const apiRoutes = new Hono()
+import type { Env } from './lib/auth';
+
+export const apiRoutes = new Hono<Env>()
+   .on(['POST', 'GET'], '/auth/*', (c) => auth.handler(c.req.raw))
    .get('/hello', async (c) => {
       const data: ApiResponse = {
          message: 'hello',
@@ -26,8 +29,10 @@ export const apiRoutes = new Hono()
    .route('/create', createScriptImageRoute)
    .route('/create', createVideoRoute)
    .route('/studio', studioRoute)
-   .route('/studio/video', videoRoute)
-   .route('/login', loginRoute)
-   .route('/admin', adminRoute);
+   .route('/studio/video', videoRoute);
+
+// unused auth routes
+// .route('/login', loginRoute)
+// .route('/admin', adminRoute);
 
 export type ApiRoutes = typeof apiRoutes;

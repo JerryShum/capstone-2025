@@ -2,42 +2,51 @@
 
 ### Tasks / Ideas
 
+- [ ] Add a chatbot to help users understand and work with the studio
+   - [ ] Add a panel to the right side --> triggers a chat bot view
+
 ---
 
 ### Client / Server Tasks
 
-- [ ] Authentication
+- [ ] Authentication !!!!!!
    - [ ] Ensure users can login with google, etc.
-   - [ ] Automatically route them to the studio dashboard
-   - [ ] Edit server DB schema to include a users table --> links to projects & videos table
-   - [ ] Edit projects & videos table to make them link to users properly
-   - [ ] Edit server queries to account for users
+   - [x] Automatically route them to the studio dashboard
+   - [x] Edit server DB schema to include a users table --> links to projects & videos table
+   - [x] Edit projects & videos table to make them link to users properly
+   - [x] Edit server queries to account for users
+
+- [ ] Login / Signup improvement
+   - [ ] Use tanstack form / query for requests
+   - [ ] Use Zod validation to ensure that the email and password fields are sufficient
+
+- [ ] Studio --> refactor the graphutils functions to allow understanding of previous scenes and what happened.
+   - [ ] --> maybe we need to incorporate some "thumbnail" / last frame system to give reference images to the video generation.
+   - [ ] Scene Node --> add a "previous scene" reference toggle --> if toggled on, add the previous scene to the prompt.
+   - [ ] Extension Video capability --> use the toggles and graphutils from the other branch (extension eligibility)
+   - [ ] Instead of retrieving the video, we can take the image / last frame from the `<video>` component and then send that to google
 
 - [ ] SceneNode --> choose own colour (not purple)
 
 - [ ] Improve the initial nodes & introduce a simple tutorial!
    - [ ] Barry the chicken with proper spelling
    - [ ] Shadcn tutorial?
-  
-### Studio Tasks
 
-- [ ] Undo & Redo functionality
-   - [ ] Look into useUndoRedo hook & helpers
-   - [ ] --> this is a custom hook that we have to create
-      - [ ] snapshot() whenever we call undo or redo --> take a snapshot() of the current state
-   - [ ] Every time they call that hook, check if its saving to the DB
+### Studio Tasks
 
 - [ ] Allow users to view their generated clips with an overview?
    - [ ] "view videos" page in the dashboard
    - [ ] Custom video view component in the dashboard
 
-- [ ] Studio --> refactor the graphutils functions to allow understanding of previous scenes and what happened.
-   - [ ] --> maybe we need to incorporate some "thumbnail" / last frame system to give reference images to the video generation.
-   - [ ] Scene Node --> add a "previous scene" reference toggle --> if toggled on, add the previous scene to the prompt.
-
 ### Completed Tasks ✓
 
-~- [ ] Incorporate local storage using zustand middleware (persist)~
+- [x] Undo & Redo functionality
+   - [x] Look into useUndoRedo hook & helpers
+   - [x] --> this is a custom hook that we have to create
+      - [x] snapshot() whenever we call undo or redo --> take a snapshot() of the current state
+   - [x] Every time they call that hook, check if its saving to the DB
+
+~- [x] Incorporate local storage using zustand middleware (persist)~
 
 - [x] Dashboard page --> retrieve list of projects from DB
    - [x] Tanstack query to manage requests (maybe)

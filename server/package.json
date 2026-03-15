@@ -8,9 +8,11 @@
     "dev": "bun --watch run src/index.ts"
   },
   "dependencies": {
+    "@better-auth/drizzle-adapter": "^1.5.5",
     "@google-cloud/storage": "^7.17.2",
     "@google/genai": "^1.24.0",
     "@hono/zod-validator": "^0.7.4",
+    "better-auth": "^1.5.5",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.7",
     "hono": "^4.7.11",

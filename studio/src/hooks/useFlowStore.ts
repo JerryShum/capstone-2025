@@ -208,6 +208,7 @@ const useFlowStore = create<FlowState>()(
                // send request to server --> we get an "operationName" --> polling name / ticket number
                const response = await api.studio.video.generate.$post({
                   json: {
+                     projectId: projectState.id,
                      prompt: sceneNode.data.scenePrompt,
                      characters: nodeContext.characters,
                      environments: nodeContext.environments,

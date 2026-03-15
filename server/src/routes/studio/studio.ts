@@ -3,11 +3,12 @@ import { Hono } from 'hono';
 import type { ApiResponse } from '@shared';
 import { updateProjectSchema } from '@shared/schemas/updateProjectSchema';
 import { db } from '@server/db';
-import { projectsTable } from '@server/db/schemas/schema';
+import { projectsTable, user } from '@server/db/schemas/schema';
 import { initialNodes, initialEdges } from '@shared';
-import { desc, eq } from 'drizzle-orm';
+import { desc, eq, and } from 'drizzle-orm';
+import type { Env } from '@server/lib/auth';
 
-export const studioRoute = new Hono()
+export const studioRoute = new Hono<Env>()
    .get('/hello', async (c) => {
       const data: ApiResponse = {
          message: 'hello',
@@ -18,9 +19,12 @@ export const studioRoute = new Hono()
    })
    .get('/list', async (c) => {
       //! This route is for getting all of the user's projects
+      const user = c.get('user');
+
       const projects = await db
          .select()
          .from(projectsTable)
+         .where(eq(projectsTable.userID, user.id))
          .orderBy(desc(projectsTable.updatedAt));
 
       if (!projects) {
@@ -32,10 +36,13 @@ export const studioRoute = new Hono()
    .post('/create', async (c) => {
       //! This route is for creating a new project
 
+      const user = c.get('user');
+
       //@ get validated data from zValidator
       const [newProject] = await db
          .insert(projectsTable)
          .values({
+            userID: user.id,
             projectTitle: 'Untitled Project',
             flowData: { nodes: initialNodes, edges: initialEdges },
             executiveSummary:
@@ -48,11 +55,15 @@ export const studioRoute = new Hono()
    .get('/:id', async (c) => {
       //! This route is for loading/getting a single project (whenever the user clicks on a project card from the dashboard)
       const projectID = parseInt(c.req.param('id'), 10);
+      const user = c.get('user');
 
       const [project] = await db
          .select()
          .from(projectsTable)
-         .where(eq(projectsTable.id, projectID));
+         .where(and(
+            eq(projectsTable.id, projectID),
+            eq(projectsTable.userID, user.id)
+         ));
 
       if (!project) {
          return c.json({ error: 'Project not found' }, 404);
@@ -64,6 +75,7 @@ export const studioRoute = new Hono()
       //! This route is for updating/saving a pre-existing project
 
       const projectID = parseInt(c.req.param('id'), 10);
+      const user = c.get('user');
       const validatedData = c.req.valid('json');
       const {
          projectTitle,
@@ -87,7 +99,10 @@ export const studioRoute = new Hono()
             cinematicPreset,
             updatedAt: new Date(),
          })
-         .where(eq(projectsTable.id, projectID));
+         .where(and(
+            eq(projectsTable.id, projectID),
+            eq(projectsTable.userID, user.id)
+         ));
 
       return c.json({ message: 'success' }, 200);
    });
