@@ -2,6 +2,7 @@ import { zValidator } from '@hono/zod-validator';
 import { postVideoSchema } from '@shared/schemas/sendVideoSchema';
 import { Hono } from 'hono';
 import { buildGCPVideoPrompt } from '@server/functions/video/buildGCPVideoPrompt';
+import { extractLastFrame } from '@server/functions/video/extractLastFrame';
 import { GenerateVideosOperation, GoogleGenAI } from '@google/genai';
 import { videoOperationsTable } from '@server/db/schemas/schema';
 import { db } from '@server/db';
@@ -9,6 +10,7 @@ import { eq } from 'drizzle-orm';
 import { storeAndShowVideo } from '@server/functions/video/storeAndShowVideo';
 import { Storage } from '@google-cloud/storage';
 import type { Env } from '@server/lib/auth';
+import { z } from 'zod';
 
 //---------------------------------------------------------
 
@@ -23,7 +25,7 @@ const genAI = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 //---------------------------------------------------------
 
 //! GCS bucket name and credentials
-const GCS_BUCKET_NAME = process.env.GCS_BUCKET_NAME; // Add this to your .env!
+const GCS_BUCKET_NAME = process.env.GCS_BUCKET_NAME;
 
 // Connecting to GCS
 const storage = new Storage();
@@ -44,17 +46,39 @@ export const videoRoute = new Hono<Env>()
       console.log(masterPrompt);
       console.log('---------------------------');
 
+      const { lastFrameBase64 } = data;
+
       //---------------------------------------------------------
       //@ Gemini api call
       try {
-         // make a request to gemini API --> get an operationID / ticket
-         const operation = await genAI.models.generateVideos({
-            model: 'veo-3.1-fast-generate-preview',
-            prompt: masterPrompt,
-            config: {
-               durationSeconds: 8,
-            },
-         });
+         let operation;
+
+         if (lastFrameBase64) {
+            //@ PATH 1: Frame-based continuation — use the last frame of the previous clip
+            // Note: native Veo video extension (video.uri) is Vertex AI only, not supported by the Gemini API.
+            console.log(`[generate] Frame continuation (image-to-video).`);
+            operation = await genAI.models.generateVideos({
+               model: 'veo-3.1-generate-preview',
+               prompt: masterPrompt,
+               image: {
+                  imageBytes: lastFrameBase64,
+                  mimeType: 'image/png',
+               },
+               config: {
+                  durationSeconds: 8,
+                  resolution: '720p',
+               },
+            });
+         } else {
+            //@ PATH 2: Standard text-to-video
+            operation = await genAI.models.generateVideos({
+               model: 'veo-3.1-fast-generate-preview',
+               prompt: masterPrompt,
+               config: {
+                  durationSeconds: 8,
+               },
+            });
+         }
 
          if (!operation) {
             throw new Error('SERVER: Failed to start video generation.');
@@ -88,6 +112,32 @@ export const videoRoute = new Hono<Env>()
          );
       }
    })
+   .get(
+      '/extract-frame',
+      zValidator('query', z.object({ videoURL: z.string().url() })),
+      async (c) => {
+         //@ Fallback endpoint: extracts the last frame of a GCS video as base64 PNG
+         // Only called from the studio when the previous clip is older than 48h.
+         const { videoURL } = c.req.valid('query');
+
+         try {
+            console.log(`[extract-frame] Extracting last frame from: ${videoURL}`);
+            const frameBase64 = await extractLastFrame(videoURL);
+            return c.json({ frameBase64 });
+         } catch (error: unknown) {
+            console.error('[extract-frame] Error extracting frame:', error);
+            return c.json(
+               {
+                  message:
+                     error instanceof Error
+                        ? error.message
+                        : 'Failed to extract last frame.',
+               },
+               500,
+            );
+         }
+      },
+   )
    .get('/status/:name{.+}', async (c) => {
       // get the operationName from the URL
       const operationName = c.req.param('name');
@@ -100,10 +150,10 @@ export const videoRoute = new Hono<Env>()
 
       if (dbRecord && dbRecord.status == 'DONE') {
          // we already have the video --> inside GCP bucket --> WE DO NOT WANT TO DOWNLOAD IT AGAIN
-         // return URL to the video
          return c.json({
             status: 'READY_TO_DOWNLOAD',
             videosURL: dbRecord.videosURL,
+            geminiVideoUri: dbRecord.geminiVideoUri ?? undefined,
          });
       }
 
@@ -152,15 +202,18 @@ export const videoRoute = new Hono<Env>()
          });
       }
 
+      // Capture the Gemini Files API URI – valid for ~48h, enables native Veo extension
+      const geminiVideoUri = video.uri;
+
       // call storeAndShowVideo() --> returns public URL from GCP
       const videoURL = await storeAndShowVideo(video, bucket, genAI);
 
-      // save URL to DB
+      // save URL + gemini URI to DB
       await db
          .update(videoOperationsTable)
-         .set({ status: 'DONE', videosURL: videoURL })
+         .set({ status: 'DONE', videosURL: videoURL, geminiVideoUri })
          .where(eq(videoOperationsTable.name, operationName));
 
-      // return the URL back to the studio
-      return c.json({ status: 'READY_TO_DOWNLOAD', videosURL: videoURL });
+      // return both URLs back to the studio
+      return c.json({ status: 'READY_TO_DOWNLOAD', videosURL: videoURL, geminiVideoUri });
    });

@@ -45,6 +45,12 @@ export type SceneNodeData = {
    thumbnailURL: httpsURL;
    lastOperationName?: string;
    locked?: boolean;
+   canExtend: boolean;
+   /** Unix ms timestamp of when the video finished generating — used for the 48h Gemini file expiry check. */
+   videoGeneratedAt?: number;
+   /** Gemini Files API URI of the generated video (e.g. https://generativelanguage.googleapis.com/v1beta/files/...).
+    *  Only valid for ~48h after generation. Used for native Veo video extension. */
+   geminiVideoUri?: string;
 };
 export type SceneNode = Node<SceneNodeData, 'scene'>;
 

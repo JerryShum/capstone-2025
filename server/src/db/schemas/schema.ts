@@ -34,6 +34,7 @@ export const videoOperationsTable = pgTable('videoOperations', {
       .references(() => projectsTable.id, { onDelete: 'cascade' }),
    status: varchar({ length: 50 }).notNull().default('PROCESSING'),
    videosURL: varchar({ length: 2048 }),
+   geminiVideoUri: varchar({ length: 2048 }),  // Gemini Files API URI — used for native Veo extension (<48h)
    createdAt: timestamp('created_at').defaultNow(),
 });
 

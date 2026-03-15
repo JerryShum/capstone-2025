@@ -3,6 +3,7 @@ import type {
    CharacterNode,
    EnvironmentNode,
    ScriptNode,
+   SceneNode,
 } from '@shared/types';
 import type { Edge } from '@xyflow/react';
 
@@ -48,4 +49,43 @@ export function gatherSceneContext(
          .filter((node): node is ScriptNode => node.type === 'script')
          .map((node) => node.data),
    };
+}
+
+/**
+ * Returns the immediately preceding SceneNode in the graph, i.e. the SceneNode
+ * that has a direct edge pointing TO the given scene node.
+ * Returns undefined if there is no such predecessor or if it is not a scene node.
+ */
+export function getPreviousSceneNode(
+   sceneNodeID: string,
+   nodes: AppNode[],
+   edges: Edge[],
+): SceneNode | undefined {
+   const parentEdges = edges.filter((edge) => edge.target === sceneNodeID);
+   for (const edge of parentEdges) {
+      const parentNode = nodes.find((n) => n.id === edge.source);
+      if (parentNode && parentNode.type === 'scene') {
+         return parentNode as SceneNode;
+      }
+   }
+   return undefined;
+}
+
+/**
+ * Returns true if the immediately preceding SceneNode is READY and has a
+ * valid video URL — meaning this scene can attempt video continuation/extension.
+ */
+export function canExtendScene(
+   sceneNodeID: string,
+   nodes: AppNode[],
+   edges: Edge[],
+): boolean {
+   const prev = getPreviousSceneNode(sceneNodeID, nodes, edges);
+   return (
+      prev !== undefined &&
+      prev.data.status === 'READY' &&
+      !!prev.data.videoURL &&
+      prev.data.videoURL !== 'https://' &&
+      prev.data.videoURL !== 'https://...'
+   );
 }

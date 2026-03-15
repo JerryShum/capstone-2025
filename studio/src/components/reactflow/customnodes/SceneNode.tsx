@@ -1,4 +1,5 @@
 import useFlowStore from '@/hooks/useFlowStore';
+import { canExtendScene } from '@/lib/functions/graphUtils';
 import type { SceneNode } from '@shared';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import {
@@ -7,6 +8,7 @@ import {
    CheckCircle2,
    Clapperboard,
    Clock,
+   GitMerge,
    Image as ImageIcon,
    Loader2,
    Move,
@@ -18,6 +20,11 @@ import {
 export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
    const updateNode = useFlowStore((state) => state.updateNode);
    const generateVideo = useFlowStore((state) => state.generateVideo);
+   const nodes = useFlowStore((state) => state.nodes);
+   const edges = useFlowStore((state) => state.edges);
+
+   // Is the previous scene READY with a real video? If so, extension is available.
+   const extensionEligible = canExtendScene(id, nodes, edges);
 
    const getStatusIcon = () => {
       switch (data.status) {
@@ -140,6 +147,34 @@ export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
                <option value="Dolly">Dolly</option>
             </select>
          </div>
+
+            {/* Extend Previous Scene toggle */}
+            {(extensionEligible || data.canExtend) && (
+               <div className="flex items-center justify-between p-2 bg-purple-50 border-2 border-purple-100 rounded-lg">
+                  <label className="text-[10px] font-bold text-purple-600 uppercase flex items-center gap-1.5">
+                     <GitMerge size={11} />
+                     Extend Previous Scene
+                  </label>
+                  <button
+                     onClick={() => updateNode(id, { canExtend: !data.canExtend })}
+                     disabled={!extensionEligible && !data.canExtend}
+                     className={`relative w-9 h-5 rounded-full border-2 border-slate-900 transition-colors ${
+                        data.canExtend ? 'bg-purple-600' : 'bg-slate-200'
+                     } disabled:opacity-40 disabled:cursor-not-allowed`}
+                     title={
+                        extensionEligible
+                           ? 'Toggle video continuation from previous scene'
+                           : 'Previous scene must have a generated video'
+                     }
+                  >
+                     <span
+                        className={`absolute top-0.5 w-3 h-3 rounded-full bg-white border border-slate-400 transition-transform ${
+                           data.canExtend ? 'translate-x-4' : 'translate-x-0.5'
+                        }`}
+                     />
+                  </button>
+               </div>
+            )}
 
          {data.status === 'ERROR' && data.errorMessage && (
             <div className="flex items-start gap-2 p-2 bg-red-50 border border-red-100 rounded-lg">

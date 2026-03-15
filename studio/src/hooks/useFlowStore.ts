@@ -1,4 +1,4 @@
-import { gatherSceneContext } from '@/lib/functions/graphUtils';
+import { gatherSceneContext, getPreviousSceneNode } from '@/lib/functions/graphUtils';
 import { nodeBlueprint } from '@/lib/nodeBlueprint';
 import type { AppNode, FlowState, SceneNode } from '@shared';
 import { initialEdges, initialNodes } from '@shared';
@@ -204,6 +204,37 @@ const useFlowStore = create<FlowState>()(
             // calling graphUtils.ts functions --> gets the info from parent nodes
             const nodeContext = gatherSceneContext(id, nodes, edges);
 
+            //---------------------------------------------------------
+            //@ Video continuation: extract the last frame of the previous clip as a reference image
+            let lastFrameBase64: string | undefined;
+
+            if (sceneNode.data.canExtend) {
+               const prevScene = getPreviousSceneNode(id, nodes, edges);
+               const prevVideoURL = prevScene && prevScene.data.videoURL;
+               const isRealURL = prevVideoURL && prevVideoURL !== 'https://' && prevVideoURL !== 'https://...';
+
+               if (isRealURL) {
+                  console.log('[generateVideo] Extracting last frame for continuation...');
+                  try {
+                     const frameRes = await api.studio.video['extract-frame'].$get({
+                        query: { videoURL: prevVideoURL },
+                     });
+                     if (frameRes.ok) {
+                        const frameData = await frameRes.json();
+                        if ('frameBase64' in frameData && frameData.frameBase64) {
+                           lastFrameBase64 = frameData.frameBase64 as string;
+                           console.log('[generateVideo] Last frame extracted successfully.');
+                        }
+                     } else {
+                        console.warn('[generateVideo] Frame extraction failed, falling back to text-to-video.');
+                     }
+                  } catch (frameError) {
+                     console.warn('[generateVideo] Frame extraction error, falling back to text-to-video:', frameError);
+                  }
+               }
+            }
+            //---------------------------------------------------------
+
             try {
                // send request to server --> we get an "operationName" --> polling name / ticket number
                const response = await api.studio.video.generate.$post({
@@ -212,12 +243,13 @@ const useFlowStore = create<FlowState>()(
                      prompt: sceneNode.data.scenePrompt,
                      characters: nodeContext.characters,
                      environments: nodeContext.environments,
-                     scripts: nodeContext.scripts, // <-- Watch out for the 's'!
+                     scripts: nodeContext.scripts,
                      aspectRatio: projectState.aspectRatio,
                      engine: projectState.engine,
                      cinematicPreset: projectState.cinematicPreset,
                      negativePrompt: projectState.globalNegativePrompt,
-                     imageBase64: '', // We can leave this empty for now
+                     imageBase64: '',
+                     lastFrameBase64,
                   },
                });
 
@@ -292,11 +324,19 @@ const useFlowStore = create<FlowState>()(
 
                    //@ React to the status:
                    if (status === 'READY_TO_DOWNLOAD') {
-                      // video is in the DB and has been downloaded --> the URL is good and we can use it!
+                      const fullData = responseData as {
+                         status: string;
+                         videosURL?: string;
+                         message?: string;
+                         geminiVideoUri?: string;
+                      };
+                      // video is in the DB and has been downloaded --> the URL is good!
                       updateNode(nodeID, {
                          status: 'READY',
                          videoURL: videosURL,
                          errorMessage: undefined,
+                         videoGeneratedAt: Date.now(),
+                         geminiVideoUri: fullData.geminiVideoUri,
                       });
 
                       isDone = true;
