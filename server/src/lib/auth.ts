@@ -12,22 +12,22 @@ export const auth = betterAuth({
       enabled: true,
    },
    trustedOrigins: [
-      'http://localhost:5173', 
+      'http://localhost:5173',
       'http://localhost:5174',
       'http://127.0.0.1:5173',
-      'http://127.0.0.1:5174'
+      'http://127.0.0.1:5174',
    ],
-   //    socialProviders: {
-   //       github: {
-   //          clientId: process.env.GITHUB_CLIENT_ID as string,
-   //          clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-   //       },
-   //    },
+   socialProviders: {
+      github: {
+         clientId: process.env.GITHUB_CLIENT_ID as string,
+         clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      },
+   },
 });
 
 export type Env = {
-  Variables: {
-    user: typeof auth.$Infer.Session.user;
-    session: typeof auth.$Infer.Session.session;
-  };
+   Variables: {
+      user: typeof auth.$Infer.Session.user;
+      session: typeof auth.$Infer.Session.session;
+   };
 };

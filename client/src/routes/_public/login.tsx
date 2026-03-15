@@ -50,6 +50,24 @@ function RouteComponent() {
     setLoading(false);
   };
 
+  const handleGithubLogin = async () => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const redirectUrl = searchParams.get("redirect");
+    const callbackURL = redirectUrl || window.location.origin;
+
+    await authClient.signIn.social(
+      {
+        provider: "github",
+        callbackURL: callbackURL,
+      },
+      {
+        onError: (ctx) => {
+          setError(ctx.error.message || "GitHub login failed");
+        },
+      },
+    );
+  };
+
   return (
     <div className="relative flex min-h-[calc(100vh-4rem)] w-full flex-col items-center justify-center overflow-x-hidden px-4 py-16">
       {/* Particles Background */}
@@ -92,6 +110,7 @@ function RouteComponent() {
               variant="outline"
               size="lg"
               className="text-foreground w-full rounded-xl border-black/10 bg-black/5 font-medium transition-all hover:bg-black/10 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
+              onClick={handleGithubLogin}
             >
               <Cat className="mr-2 h-4 w-4" /> Continue with GitHub
             </Button>
