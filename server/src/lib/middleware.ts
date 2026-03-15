@@ -3,6 +3,11 @@ import { auth } from './auth';
 import type { Env } from './auth';
 
 export const authMiddleware = createMiddleware<Env>(async (c, next) => {
+   // Skip authentication check for auth routes like login, signup, and session
+   if (c.req.path.startsWith('/api/auth')) {
+      return next();
+   }
+
    const session = await auth.api.getSession({
       headers: c.req.raw.headers,
    });
