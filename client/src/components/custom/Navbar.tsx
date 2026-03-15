@@ -145,7 +145,6 @@ export default function Navbar() {
           {user ? (
             <div className="flex flex-col gap-4">
               <div className="border-border/50 mb-2 flex items-center gap-2 border-b pb-4">
-                <User className="text-primary h-5 w-5" />
                 <span className="text-base font-medium">
                   Hello, <span className="font-bold">{user.name}</span>
                 </span>
