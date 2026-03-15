@@ -9,16 +9,14 @@
 
 ### Client / Server Tasks
 
-- [ ] Authentication !!!!!!
-   - [ ] Ensure users can login with google, etc.
-   - [x] Automatically route them to the studio dashboard
-   - [x] Edit server DB schema to include a users table --> links to projects & videos table
-   - [x] Edit projects & videos table to make them link to users properly
-   - [x] Edit server queries to account for users
-
 - [ ] Login / Signup improvement
    - [ ] Use tanstack form / query for requests
    - [ ] Use Zod validation to ensure that the email and password fields are sufficient
+   - [ ] Routing from google & github is not consistent --> need to make it better
+
+- [ ] Auth testing:
+   - [ ] Test username and email form verification + zod + projects
+   - [ ] Test google and github routing --> projects and videos
 
 - [ ] Studio --> refactor the graphutils functions to allow understanding of previous scenes and what happened.
    - [ ] --> maybe we need to incorporate some "thumbnail" / last frame system to give reference images to the video generation.
@@ -39,6 +37,13 @@
    - [ ] Custom video view component in the dashboard
 
 ### Completed Tasks ✓
+
+- [x] Authentication !!!!!!
+   - [x] Ensure users can login with google, etc.
+   - [x] Automatically route them to the studio dashboard
+   - [x] Edit server DB schema to include a users table --> links to projects & videos table
+   - [x] Edit projects & videos table to make them link to users properly
+   - [x] Edit server queries to account for users
 
 - [x] Undo & Redo functionality
    - [x] Look into useUndoRedo hook & helpers
