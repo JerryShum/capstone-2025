@@ -30,7 +30,9 @@
         "JWT_SECRET",
         "GEMINI_API_KEY",
         "GCS_BUCKET_NAME",
-        "GOOGLE_APPLICATION_CREDENTIALS"
+        "GOOGLE_APPLICATION_CREDENTIALS",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET"
       ]
     },
     "dev": {
@@ -58,7 +60,9 @@
         "JWT_SECRET",
         "GEMINI_API_KEY",
         "GCS_BUCKET_NAME",
-        "GOOGLE_APPLICATION_CREDENTIALS"
+        "GOOGLE_APPLICATION_CREDENTIALS",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET"
       ]
     },
     "lint": {
