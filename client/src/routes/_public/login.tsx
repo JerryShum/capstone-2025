@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,6 @@ export const Route = createFileRoute("/_public/login")({
 });
 
 function RouteComponent() {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,7 +23,7 @@ function RouteComponent() {
     setLoading(true);
     setError(null);
 
-    const { data, error: authError } = await authClient.signIn.email(
+    await authClient.signIn.email(
       {
         email,
         password,
@@ -39,7 +38,7 @@ function RouteComponent() {
             window.location.href = redirectUrl;
           } else {
             // Default to the Studio dashboard
-            window.location.href = "http://localhost:5174";
+            window.location.href = import.meta.env.VITE_STUDIO_URL;
           }
         },
         onError: (ctx) => {
