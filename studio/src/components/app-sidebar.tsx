@@ -2,6 +2,7 @@ import * as React from "react";
 import { ChevronUp, GalleryVerticalEnd, User2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import logo from "/story_weaver_logo_2.svg";
+import { authClient } from "@/lib/auth-client";
 
 import {
   Sidebar,
@@ -57,6 +58,9 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+
   return (
     <Sidebar variant="floating" {...props} className="">
       <SidebarHeader className="h-20 border-b">
@@ -107,8 +111,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>{" "}
                     <div className="flex flex-col">
-                      <p className="text-[16px] font-bold">John Doe</p>
-                      <p>john@example.com</p>
+                      <p className="text-[16px] font-bold">{user?.name || "User"}</p>
+                      <p>{user?.email || "No email"}</p>
                     </div>
                   </div>
                   <ChevronUp className="ml-auto" />
@@ -124,7 +128,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <DropdownMenuItem>
                   <span>Billing</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => authClient.signOut({
+                  fetchOptions: {
+                    onSuccess: () => {
+                      window.location.href = "/login";
+                    }
+                  }
+                })}>
                   <span>Sign out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>

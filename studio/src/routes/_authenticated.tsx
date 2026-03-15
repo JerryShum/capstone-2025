@@ -1,14 +1,17 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
+import { authClient } from '../lib/auth-client';
 
 export const Route = createFileRoute('/_authenticated')({
+   beforeLoad: async ({ location }) => {
+      const { data: session } = await authClient.getSession();
+      if (!session) {
+         // Redirect to the main Client login page
+         // In development it's typically localhost:5173
+         window.location.href = `http://localhost:5173/login?redirect=${encodeURIComponent(location.href)}`;
+      }
+   },
    component: RouteComponent,
 });
-
-//! This is technically a LAYOUT route that acts as a layout for the _authenticated folder
-// We are going to use this as a form of pre-authentication and routing
-// - Check if the user is authenticated
-// - If yes, then we display the pages in the _authenticated route
-// - If no, then we take them to the login / signup pages and reroute them forcefully
 
 function RouteComponent() {
    return <Outlet />;
