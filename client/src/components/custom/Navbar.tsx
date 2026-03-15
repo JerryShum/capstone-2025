@@ -155,8 +155,8 @@ export default function Navbar() {
                   variant="outline"
                   className="w-full justify-center gap-2"
                 >
-                  <Sparkles className="text-primary h-4 w-4" />
-                  Studio Dashboard
+                  <Sparkles className="text-primary h-4 w-4 hover:cursor-pointer" />
+                  Dashboard
                 </Button>
               </a>
               <Button
