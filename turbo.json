@@ -19,7 +19,19 @@
         "index.html"
       ],
       "outputs": ["dist/**", "build/**", ".turbo/**"],
-      "env": ["NODE_ENV", "VITE_*"]
+      "env": [
+        "NODE_ENV",
+        "VITE_*",
+        "GITHUB_CLIENT_ID",
+        "GITHUB_CLIENT_SECRET",
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL",
+        "DATABASE_URL",
+        "JWT_SECRET",
+        "GEMINI_API_KEY",
+        "GCS_BUCKET_NAME",
+        "GOOGLE_APPLICATION_CREDENTIALS"
+      ]
     },
     "dev": {
       "cache": false,
@@ -34,7 +46,20 @@
         "vite.config.ts",
         "package.json"
       ],
-      "env": ["NODE_ENV", "PORT", "VITE_*"]
+      "env": [
+        "NODE_ENV",
+        "PORT",
+        "VITE_*",
+        "GITHUB_CLIENT_ID",
+        "GITHUB_CLIENT_SECRET",
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL",
+        "DATABASE_URL",
+        "JWT_SECRET",
+        "GEMINI_API_KEY",
+        "GCS_BUCKET_NAME",
+        "GOOGLE_APPLICATION_CREDENTIALS"
+      ]
     },
     "lint": {
       "dependsOn": ["^build"],
