@@ -11,10 +11,14 @@
 
 - [ ] Authentication !!!!!!
    - [ ] Ensure users can login with google, etc.
-   - [ ] Automatically route them to the studio dashboard
-   - [ ] Edit server DB schema to include a users table --> links to projects & videos table
-   - [ ] Edit projects & videos table to make them link to users properly
-   - [ ] Edit server queries to account for users
+   - [x] Automatically route them to the studio dashboard
+   - [x] Edit server DB schema to include a users table --> links to projects & videos table
+   - [x] Edit projects & videos table to make them link to users properly
+   - [x] Edit server queries to account for users
+
+- [ ] Login / Signup improvement
+   - [ ] Use tanstack form / query for requests
+   - [ ] Use Zod validation to ensure that the email and password fields are sufficient
 
 - [ ] Studio --> refactor the graphutils functions to allow understanding of previous scenes and what happened.
    - [ ] --> maybe we need to incorporate some "thumbnail" / last frame system to give reference images to the video generation.
