@@ -1,18 +1,12 @@
 import { Hono } from 'hono';
-import { zValidator } from '@hono/zod-validator';
-import { updateProjectSchema } from '@shared/schemas/updateProjectSchema';
-import { db } from '@server/db';
-import { projectsTable } from '@server/db/schemas/schema';
-import { initialNodes, initialEdges } from '@shared';
-import { desc, eq } from 'drizzle-orm';
 import type { ApiResponse } from '@shared';
 
 import { createScriptImageRoute } from './routes/create/createScriptImageRoute';
 import { createVideoRoute } from './routes/create/createVideoRoute';
 import { studioRoute } from './routes/studio/studio';
 import { videoRoute } from './routes/studio/videoRoute';
+import { stitchVideoRoute } from './routes/studio/stitchVideoRoute';
 import { auth } from './lib/auth';
-import { authMiddleware } from './lib/middleware';
 
 import type { Env } from './lib/auth';
 
@@ -29,7 +23,8 @@ export const apiRoutes = new Hono<Env>()
    .route('/create', createScriptImageRoute)
    .route('/create', createVideoRoute)
    .route('/studio', studioRoute)
-   .route('/studio/video', videoRoute);
+   .route('/studio/video', videoRoute)
+   .route('/studio', stitchVideoRoute);
 
 // unused auth routes
 // .route('/login', loginRoute)

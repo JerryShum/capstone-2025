@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChevronUp, GalleryVerticalEnd, User2 } from 'lucide-react';
+import { ChevronUp } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import logo from '/story_weaver_logo_2.svg';
 import { authClient } from '@/lib/auth-client';
@@ -28,7 +28,13 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 // This is sample data.
-const data = {
+const data: {
+   navMain: {
+      title: string;
+      url: string;
+      items?: { title: string; url: string; isActive?: boolean }[];
+   }[];
+} = {
    navMain: [
       {
          title: 'Home',

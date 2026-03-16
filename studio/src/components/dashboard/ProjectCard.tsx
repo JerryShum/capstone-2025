@@ -1,6 +1,5 @@
-import { Folder, Calendar, MoreVertical } from 'lucide-react';
+import { Calendar, MoreVertical } from 'lucide-react';
 import { ImageWithFallback } from './ProjectCardImage';
-import fallbackimage from '/backup.jpg';
 import { Link } from '@tanstack/react-router';
 import type { Project } from '@shared/types';
 
@@ -63,7 +62,7 @@ export function ProjectCard({ project, updatedAt }: ProjectCardProps) {
             <div className="flex items-center justify-between border-t border-gray-100 pt-3">
                <div className="flex items-center gap-1.5 text-xs text-gray-500">
                   <Calendar className="h-3 w-3" />
-                  <span>{formatDate(updatedAt)}</span>
+                  <span>{updatedAt ? formatDate(updatedAt) : 'N/A'}</span>
                </div>
 
                <div className="flex items-center gap-1">

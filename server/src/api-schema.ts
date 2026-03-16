@@ -3,6 +3,7 @@ import type { studioRoute } from './routes/studio/studio';
 import type { createScriptImageRoute } from './routes/create/createScriptImageRoute';
 import type { createVideoRoute } from './routes/create/createVideoRoute';
 import type { videoRoute } from './routes/studio/videoRoute';
+import type { stitchVideoRoute } from './routes/studio/stitchVideoRoute';
 
 // We define the type of our API without actually running any server logic.
 // We use 'new Hono()' for mocks because Hono needs a valid instance to
@@ -13,6 +14,7 @@ const app = new Hono()
    .route('/create', new Hono() as any as typeof createScriptImageRoute)
    .route('/create', new Hono() as any as typeof createVideoRoute)
    .route('/studio', new Hono() as any as typeof studioRoute)
-   .route('/studio/video', new Hono() as any as typeof videoRoute);
+   .route('/studio/video', new Hono() as any as typeof videoRoute)
+   .route('/studio', new Hono() as any as typeof stitchVideoRoute);
 
 export type ApiRoutes = typeof app;

@@ -1,4 +1,4 @@
-import { createFileRoute, useParams } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 
 import Flow from '@/components/reactflow/Flow';
 import { ReactFlowProvider } from '@xyflow/react';
@@ -19,7 +19,6 @@ export const Route = createFileRoute('/_authenticated/project/$projectID')({
 //@ ---------------------------------------------------
 
 function RouteComponent() {
-   const { projectID } = Route.useParams();
    return (
       <>
          <ReactFlowProvider>

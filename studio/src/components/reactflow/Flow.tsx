@@ -12,7 +12,7 @@ import {
    useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Clapperboard, ScrollText, Trees, UserStar } from 'lucide-react';
+import { Clapperboard, Film, ScrollText, Trees, UserStar } from 'lucide-react';
 import { useShallow } from 'zustand/shallow';
 import CharacterNode from './customnodes/CharacterNode';
 import EnvironmentNode from './customnodes/EnvironmentNode';
@@ -37,6 +37,7 @@ export default function Flow() {
       addNode,
       resumeVideoPoll,
       takeSnapshot,
+      stitchVideos,
    } = useFlowStore(
       useShallow((state) => ({
          nodes: state.nodes,
@@ -47,10 +48,30 @@ export default function Flow() {
          addNode: state.addNode,
          resumeVideoPoll: state.resumeVideoPoll,
          takeSnapshot: state.takeSnapshot,
+         stitchVideos: state.stitchVideos,
       })),
    );
 
    useUndoRedo();
+
+   // Stitch state
+   const [isStitching, setIsStitching] = useState(false);
+   const [stitchResult, setStitchResult] = useState<string | null>(null);
+
+   async function handleStitchVideos() {
+      setIsStitching(true);
+      setStitchResult(null);
+      try {
+         const url = await stitchVideos();
+         if (url) {
+            setStitchResult(url);
+         } else {
+            alert('Stitch failed — make sure all scenes have READY status and at least 2 are connected.');
+         }
+      } finally {
+         setIsStitching(false);
+      }
+   }
 
    //! THIS DEFINES ALL THE TYPES OF NDOES THAT RF EXPECTS --> if there is a node that ISN'T one of these types --> revert to default node
    const nodeTypes = {
@@ -201,7 +222,47 @@ export default function Flow() {
                   }}
                />
                <div className="w-px h-8 bg-border mx-1" />
+               {/* Stitch button */}
+               <button
+                  onClick={handleStitchVideos}
+                  disabled={isStitching}
+                  title="Stitch all READY clips into one video"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium bg-violet-600 hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-colors"
+               >
+                  <Film className="h-4 w-4" />
+                  {isStitching ? 'Stitching...' : 'Stitch Video'}
+               </button>
             </Panel>
+
+            {/* Stitch Result Dialog */}
+            {stitchResult && (
+               <Panel position="top-left" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 1000 }}>
+                  <div className="bg-background border border-border rounded-2xl shadow-2xl p-6 w-[480px]">
+                     <h2 className="text-lg font-bold mb-3">🎬 Stitched Video Ready</h2>
+                     <video
+                        src={stitchResult}
+                        controls
+                        className="w-full rounded-lg mb-4 max-h-64 object-contain bg-black"
+                     />
+                     <div className="flex gap-2">
+                        <a
+                           href={stitchResult}
+                           target="_blank"
+                           rel="noreferrer"
+                           className="flex-1 text-center py-2 px-4 rounded-lg bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium"
+                        >
+                           Open in New Tab
+                        </a>
+                        <button
+                           onClick={() => setStitchResult(null)}
+                           className="py-2 px-4 rounded-lg border border-border text-sm font-medium hover:bg-accent"
+                        >
+                           Close
+                        </button>
+                     </div>
+                  </div>
+               </Panel>
+            )}
             <Panel position="center-left">
                <div></div>
             </Panel>

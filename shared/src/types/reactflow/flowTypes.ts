@@ -102,6 +102,7 @@ export type FlowState = {
    generateVideo: (nodeID: string) => Promise<void>;
    pollVideoStatus: (nodeID: string, operationName: string) => Promise<void>;
    resumeVideoPoll: () => void;
+   stitchVideos: () => Promise<string | undefined>;
 
    // Undo/Redo
    past: HistoryItem[];

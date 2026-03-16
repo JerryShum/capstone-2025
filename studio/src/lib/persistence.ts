@@ -1,7 +1,7 @@
 import useFlowStore from '@/hooks/useFlowStore';
 import { useProjectStore } from '@/hooks/useProjectStore';
 import debounce from './functions/debounce';
-import type { Edge, Node } from '@xyflow/react';
+import type { Edge } from '@xyflow/react';
 import type { AppNode, CinematicPreset } from '@shared';
 import { api } from './api';
 import { queryClient } from '@/routes/__root';
@@ -10,13 +10,12 @@ import { queryClient } from '@/routes/__root';
 // the function runs whenever the store state is updated
 export const unsub = useFlowStore.subscribe(
    (state) => [state.nodes, state.edges] as const,
-   ([nodes, edges], prevState) => {
-      // call debounce function here --> sends the state to the server (after an amount of time after an action occurred)
+   () => {
       debouncedSaveProject();
    },
 );
 
-export const unsub2 = useProjectStore.subscribe((state, prevState) => {
+export const unsub2 = useProjectStore.subscribe(() => {
    debouncedSaveProject();
 });
 
@@ -122,7 +121,8 @@ export async function loadProject(id: number) {
          executiveSummary,
          cinematicPreset: cinematicPreset as CinematicPreset,
       });
-      useFlowStore.setState({ nodes: flowData.nodes, edges: flowData.edges });
+      const typedFlowData = flowData as { nodes: AppNode[]; edges: Edge[] } | null;
+      useFlowStore.setState({ nodes: typedFlowData?.nodes || [], edges: typedFlowData?.edges || [] });
    } catch (error) {
       console.error(`Encountered error when retrieving project:${id}. `, error);
    }

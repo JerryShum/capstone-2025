@@ -1,7 +1,7 @@
 import type { ProjectState } from '@shared';
 import { create } from 'zustand';
 
-export const useProjectStore = create<ProjectState>((set, get) => ({
+export const useProjectStore = create<ProjectState>((set) => ({
    id: 123,
    projectTitle: 'default',
    aspectRatio: '16:9',
