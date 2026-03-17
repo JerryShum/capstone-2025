@@ -69,7 +69,7 @@ export const stitchVideoRoute = new Hono<Env>()
 
       // Create a working tmp directory for this request
       const sessionId = uuidv4();
-      const tmpDir = path.join('./tmp', `stitch-${sessionId}`);
+      const tmpDir = path.resolve(process.cwd(), 'tmp', `stitch-${sessionId}`);
       fs.mkdirSync(tmpDir, { recursive: true });
 
       const downloadedFiles: string[] = [];
@@ -77,6 +77,7 @@ export const stitchVideoRoute = new Hono<Env>()
 
       try {
          console.log(`[stitch] Starting stitch for project ${projectId}: ${videoURLs.length} clips`);
+         console.log(`[stitch] Working directory: ${tmpDir}`);
 
          // 1. Download all videos in parallel
          await Promise.all(
