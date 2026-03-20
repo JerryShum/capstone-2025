@@ -1,4 +1,4 @@
-import { gatherSceneContext, getPreviousSceneNode } from '@/lib/functions/graphUtils';
+import { gatherSceneContext, getPreviousSceneNode, buildTimeline } from '@/lib/functions/graphUtils';
 import { nodeBlueprint } from '@/lib/nodeBlueprint';
 import type { AppNode, FlowState, SceneNode } from '@shared';
 import { initialEdges, initialNodes } from '@shared';
@@ -388,7 +388,60 @@ const useFlowStore = create<FlowState>()(
                      get().pollVideoStatus(node.id, lastOperationName);
                   }
                }
-            });
+               });
+         },
+         stitchVideos: async () => {
+            const { nodes, edges } = get();
+            const projectState = useProjectStore.getState();
+
+            // 1. Build ordered timeline
+            const timeline = buildTimeline(nodes, edges);
+
+            if (timeline.length < 2) {
+               console.warn('[stitchVideos] Need at least 2 scene clips to stitch.');
+               return undefined;
+            }
+
+            // 2. Validate all scenes in the timeline are READY with real URLs
+            const notReady = timeline.filter(
+               (n) =>
+                  n.data.status !== 'READY' ||
+                  !n.data.videoURL ||
+                  n.data.videoURL === 'https://' ||
+                  n.data.videoURL === 'https://...',
+            );
+
+            if (notReady.length > 0) {
+               const names = notReady.map((n) => n.id).join(', ');
+               console.warn(`[stitchVideos] Not all scenes are READY. Missing: ${names}`);
+               return undefined;
+            }
+
+            const videoURLs = timeline.map((n) => n.data.videoURL);
+
+            console.log(`[stitchVideos] Stitching ${videoURLs.length} clips in timeline order...`);
+
+            try {
+               const response = await api.studio.stitch.$post({
+                  json: {
+                     videoURLs,
+                     projectId: projectState.id,
+                  },
+               });
+
+               if (!response.ok) {
+                  const errData = (await response.json()) as { message?: string };
+                  console.error('[stitchVideos] Server error:', errData.message);
+                  return undefined;
+               }
+
+               const data = (await response.json()) as { stitchedVideoURL: string };
+               console.log('[stitchVideos] Success! URL:', data.stitchedVideoURL);
+               return data.stitchedVideoURL;
+            } catch (err) {
+               console.error('[stitchVideos] Request failed:', err);
+               return undefined;
+            }
          },
       })),
    ),

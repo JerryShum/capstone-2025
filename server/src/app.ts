@@ -3,7 +3,7 @@ import { cors } from 'hono/cors';
 import { serveStatic } from 'hono/bun';
 import { logger } from 'hono/logger';
 import { apiRoutes } from './api-routes';
-import type { auth, Env } from './lib/auth';
+import type { Env } from './lib/auth';
 import { authMiddleware } from './lib/middleware';
 
 const app = new Hono<Env>();

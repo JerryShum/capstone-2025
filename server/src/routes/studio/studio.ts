@@ -3,7 +3,7 @@ import { Hono } from 'hono';
 import type { ApiResponse } from '@shared';
 import { updateProjectSchema } from '@shared/schemas/updateProjectSchema';
 import { db } from '@server/db';
-import { projectsTable, user } from '@server/db/schemas/schema';
+import { projectsTable } from '@server/db/schemas/schema';
 import { initialNodes, initialEdges } from '@shared';
 import { desc, eq, and } from 'drizzle-orm';
 import type { Env } from '@server/lib/auth';

@@ -4,7 +4,6 @@
 import type {
    CharacterNodeData,
    EnvironmentNodeData,
-   ProjectSettingsNodeData,
    SceneNodeData,
    ScriptNodeData,
 } from '@shared';
@@ -31,6 +30,7 @@ export const nodeBlueprint = {
          status: 'IDLE',
          videoURL: 'https://...',
          thumbnailURL: 'https://...',
+         canExtend: false,
       } as SceneNodeData,
    },
    script: {
@@ -54,7 +54,7 @@ export const nodeBlueprint = {
          styleReference: 'https://...',
          cinematicPreset: 'Neo-Noir',
          summary: 'A brief overview of the project theme...',
-      } as ProjectSettingsNodeData,
+      } as unknown as object,
    },
    environment: {
       label: 'Add Environment Node',
