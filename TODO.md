@@ -2,14 +2,14 @@
 
 ### Tasks / Ideas
 
-- [ ] Add a chatbot to help users understand and work with the studio
+- [ ] Add a chatbot to help users understand and work with the studio!!!
    - [ ] Add a panel to the right side --> triggers a chat bot view
 
 ---
 
 ### Client / Server Tasks
 
-- [ ] Login / Signup improvement
+- [ ] Login / Signup improvement !!!!!!!!
    - [ ] Use tanstack form / query for requests
    - [ ] Use Zod validation to ensure that the email and password fields are sufficient
    - [ ] Routing from google & github is not consistent --> need to make it better
@@ -18,15 +18,15 @@
    - [ ] Test username and email form verification + zod + projects
    - [ ] Test google and github routing --> projects and videos
 
-- [ ] SceneNode --> choose own colour (not purple)
+- [ ] SceneNode --> choose own colour (not purple)!!!
 
-- [ ] Improve the initial nodes & introduce a simple tutorial!
+- [ ] Improve the initial nodes & introduce a simple tutorial!!!!
    - [ ] Barry the chicken with proper spelling
    - [ ] Shadcn tutorial?
 
 ### Studio Tasks
 
-- [ ] Allow users to view their generated clips with an overview?
+- [ ] Allow users to view their generated clips with an overview?!!!!!!!!!!
    - [ ] "view videos" page in the dashboard
    - [ ] Custom video view component in the dashboard
 
