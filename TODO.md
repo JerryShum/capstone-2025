@@ -18,12 +18,6 @@
    - [ ] Test username and email form verification + zod + projects
    - [ ] Test google and github routing --> projects and videos
 
-- [ ] Studio --> refactor the graphutils functions to allow understanding of previous scenes and what happened.
-   - [ ] --> maybe we need to incorporate some "thumbnail" / last frame system to give reference images to the video generation.
-   - [ ] Scene Node --> add a "previous scene" reference toggle --> if toggled on, add the previous scene to the prompt.
-   - [ ] Extension Video capability --> use the toggles and graphutils from the other branch (extension eligibility)
-   - [ ] Instead of retrieving the video, we can take the image / last frame from the `<video>` component and then send that to google
-
 - [ ] SceneNode --> choose own colour (not purple)
 
 - [ ] Improve the initial nodes & introduce a simple tutorial!
@@ -36,7 +30,15 @@
    - [ ] "view videos" page in the dashboard
    - [ ] Custom video view component in the dashboard
 
+---
+
 ### Completed Tasks ✓
+
+- [x] Studio --> refactor the graphutils functions to allow understanding of previous scenes and what happened.
+   - [x] --> maybe we need to incorporate some "thumbnail" / last frame system to give reference images to the video generation.
+   - [x] Scene Node --> add a "previous scene" reference toggle --> if toggled on, add the previous scene to the prompt.
+   - [x] Extension Video capability --> use the toggles and graphutils from the other branch (extension eligibility)
+   - [x] Instead of retrieving the video, we can take the image / last frame from the `<video>` component and then send that to google
 
 - [x] Authentication !!!!!!
    - [x] Ensure users can login with google, etc.
