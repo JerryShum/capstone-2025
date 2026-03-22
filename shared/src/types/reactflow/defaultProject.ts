@@ -5,8 +5,21 @@ import type {
    ScriptNode,
    EnvironmentNode,
 } from './flowTypes';
+import type { Project } from './projectTypes';
 
 import type { Edge } from '@xyflow/react';
+
+export const defaultProject: Project = {
+   id: Date.now(),
+   projectTitle: "Barry's Morning Adventure",
+   aspectRatio: '16:9',
+   engine: 'veo',
+   globalNegativePrompt:
+      'Low quality, blurry, distorted, static, watermark, text, signature',
+   executiveSummary:
+      'A heartwarming 3D animated short about a curious chicken named Barry who discovers a magical seed in his farmyard.',
+   cinematicPreset: 'Neo-Noir',
+};
 
 const initScriptNode: ScriptNode = {
    id: 'node-script-1',
@@ -54,7 +67,7 @@ const initSceneNode: SceneNode = {
       type: 'scene',
       scenePrompt:
          'Barry the chicken stands in the center of the sunshine farmyard, looking down at a small, glowing blue seed on the ground. He tilts his head curiously.',
-      duration: 8,
+      duration: 5,
       shotType: 'Medium',
       cameraMovement: 'Static',
       status: 'IDLE',
@@ -72,7 +85,7 @@ const initSceneNode2: SceneNode = {
       type: 'scene',
       scenePrompt:
          "Close up on Barry's face as his eyes widen in amazement. The blue glow of the seed reflects in his eyes. He looks extremely excited.",
-      duration: 8,
+      duration: 4,
       shotType: 'Close-up',
       cameraMovement: 'Zoom',
       status: 'IDLE',

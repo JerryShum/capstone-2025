@@ -1,14 +1,14 @@
-import type { ProjectState } from '@shared';
+import { defaultProject, type ProjectState } from '@shared';
 import { create } from 'zustand';
 
 export const useProjectStore = create<ProjectState>((set) => ({
-   id: 123,
-   projectTitle: 'default',
-   aspectRatio: '16:9',
-   engine: 'veo',
-   globalNegativePrompt: 'something here',
-   cinematicPreset: 'Neo-Noir',
-   executiveSummary: 'summary of your story goes here...',
+   id: defaultProject.id,
+   projectTitle: defaultProject.projectTitle,
+   aspectRatio: defaultProject.aspectRatio,
+   engine: defaultProject.engine,
+   globalNegativePrompt: defaultProject.globalNegativePrompt,
+   cinematicPreset: defaultProject.cinematicPreset,
+   executiveSummary: defaultProject.executiveSummary,
    updateProjectTitle: (title) => {
       set({
          projectTitle: title,
