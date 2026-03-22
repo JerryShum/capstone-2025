@@ -19,10 +19,6 @@
    - [ ] Test google and github routing --> projects and videos
 
 
-- [ ] Improve the initial nodes & introduce a simple tutorial!!!!
-   - [ ] Barry the chicken with proper spelling
-   - [ ] Shadcn tutorial?
-
 ### Studio Tasks
 
 - [ ] Allow users to view their generated clips with an overview?!!!!!!!!!!
@@ -32,6 +28,9 @@
 ---
 
 ### Completed Tasks ✓
+- [x] Improve the initial nodes & introduce a simple tutorial!!!!
+   - [x] Barry the chicken with proper spelling
+   - [x] Shadcn tutorial?
 - [x] SceneNode --> choose own colour (not purple)!!!
 
 - [x] Studio --> refactor the graphutils functions to allow understanding of previous scenes and what happened.
