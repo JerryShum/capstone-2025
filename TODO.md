@@ -18,7 +18,6 @@
    - [ ] Test username and email form verification + zod + projects
    - [ ] Test google and github routing --> projects and videos
 
-- [ ] SceneNode --> choose own colour (not purple)!!!
 
 - [ ] Improve the initial nodes & introduce a simple tutorial!!!!
    - [ ] Barry the chicken with proper spelling
@@ -33,6 +32,7 @@
 ---
 
 ### Completed Tasks ✓
+- [x] SceneNode --> choose own colour (not purple)!!!
 
 - [x] Studio --> refactor the graphutils functions to allow understanding of previous scenes and what happened.
    - [x] --> maybe we need to incorporate some "thumbnail" / last frame system to give reference images to the video generation.

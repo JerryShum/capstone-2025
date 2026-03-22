@@ -12,7 +12,7 @@ export default function ScriptNode({ data, id }: NodeProps) {
                <Lock size={14} />
             </div>
          )}
-         <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-purple-500">
+         <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-indigo-500">
             <ScrollText size={14} />
             <span>Script / Storyboard</span>
          </div>
@@ -23,7 +23,7 @@ export default function ScriptNode({ data, id }: NodeProps) {
                   <AlignLeft size={10} /> Content
                </label>
                <textarea
-                  className="w-full min-h-[100px] text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-purple-500 outline-none transition-colors resize-y font-mono"
+                  className="w-full min-h-[100px] text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-indigo-500 outline-none transition-colors resize-y font-mono"
                   placeholder="Enter your script or detailed prompt here..."
                   defaultValue={data?.content as string}
                   onChange={(e) => updateNode(id, { content: e.target.value })}
