@@ -29,6 +29,13 @@
       "when": 1773506356390,
       "tag": "0003_talented_bishop",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1774381057692,
+      "tag": "0004_numerous_whistler",
+      "breakpoints": true
     }
   ]
 }

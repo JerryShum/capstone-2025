@@ -21,6 +21,7 @@ export const projectsTable = pgTable('projects', {
    executiveSummary: text().notNull().default(''),
    cinematicPreset: varchar({ length: 100 }).notNull().default('None'),
    flowData: jsonb('flow_data').notNull(),
+   bannerUrl: varchar('banner_url', { length: 2048 }).notNull().default(''),
    updatedAt: timestamp('updated_at').defaultNow(),
 });
 
