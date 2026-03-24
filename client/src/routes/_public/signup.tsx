@@ -2,11 +2,14 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Sparkles } from "lucide-react";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { Particles } from "@/components/ui/particles";
+import { useForm } from "@tanstack/react-form";
+import type { ValidationError } from "@tanstack/react-form";
+import { signupSchema } from "@shared/schemas/signupSchema";
 
 export const Route = createFileRoute("/_public/signup")({
   component: RouteComponent,
@@ -14,35 +17,8 @@ export const Route = createFileRoute("/_public/signup")({
 
 function RouteComponent() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    await authClient.signUp.email(
-      {
-        email,
-        password,
-        name,
-      },
-      {
-        onSuccess: () => {
-          navigate({ to: "/login" });
-        },
-        onError: (ctx) => {
-          setError(ctx.error.message || "Signup failed");
-        },
-      },
-    );
-
-    setLoading(false);
-  };
 
   const handleGithubSignup = async () => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -79,6 +55,39 @@ function RouteComponent() {
       },
     );
   };
+
+  const form = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+    validators: {
+      onChange: signupSchema,
+    },
+    onSubmit: async ({ value }) => {
+      setLoading(true);
+      setError(null);
+
+      await authClient.signUp.email(
+        {
+          email: value.email,
+          password: value.password,
+          name: value.name,
+        },
+        {
+          onSuccess: () => {
+            navigate({ to: "/login" });
+          },
+          onError: (ctx) => {
+            setError(ctx.error.message || "Signup failed");
+          },
+        },
+      );
+
+      setLoading(false);
+    },
+  });
 
   return (
     <div className="relative flex min-h-[calc(100vh-4rem)] w-full flex-col items-center justify-center overflow-x-hidden px-4 py-16">
@@ -178,50 +187,131 @@ function RouteComponent() {
           </div>
 
           {/* Fields */}
-          <form onSubmit={handleSignup}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              form.handleSubmit();
+            }}
+          >
             <div className="flex flex-col gap-4">
-              <Field className="gap-1.5">
-                <FieldLabel htmlFor="name" className="text-sm font-medium">
-                  Name
-                </FieldLabel>
-                <Input
-                  id="name"
-                  name="name"
-                  placeholder="John Doe"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="h-11 rounded-xl border-black/10 bg-black/5 focus:ring-2 focus:ring-blue-500/30 dark:border-white/10 dark:bg-white/5"
-                />
-              </Field>
-              <Field className="gap-1.5">
-                <FieldLabel htmlFor="email" className="text-sm font-medium">
-                  Email
-                </FieldLabel>
-                <Input
-                  id="email"
-                  name="email"
-                  placeholder="you@example.com"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-11 rounded-xl border-black/10 bg-black/5 focus:ring-2 focus:ring-blue-500/30 dark:border-white/10 dark:bg-white/5"
-                />
-              </Field>
-              <Field className="gap-1.5">
-                <FieldLabel htmlFor="password" className="text-sm font-medium">
-                  Password
-                </FieldLabel>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="h-11 rounded-xl border-black/10 bg-black/5 focus:ring-2 focus:ring-blue-500/30 dark:border-white/10 dark:bg-white/5"
-                />
-              </Field>
+              <form.Field
+                name="name"
+                children={(field) => {
+                  return (
+                    <Field className="gap-1.5">
+                      <FieldLabel
+                        htmlFor="name"
+                        className="text-sm font-medium"
+                      >
+                        Name
+                      </FieldLabel>
+                      <Input
+                        id="name"
+                        name="name"
+                        placeholder="John Doe"
+                        type="text"
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="h-11 rounded-xl border-black/10 bg-black/5 focus:ring-2 focus:ring-blue-500/30 dark:border-white/10 dark:bg-white/5"
+                      />
+                      <FieldError>
+                        {field.state.meta.errors ? (
+                          <p className="text-red-500">
+                            {field.state.meta.errors
+                              .map((err: ValidationError) =>
+                                typeof err === "object" &&
+                                err !== null &&
+                                "message" in err
+                                  ? err.message
+                                  : err,
+                              )
+                              .join(", ")}
+                          </p>
+                        ) : null}
+                      </FieldError>
+                    </Field>
+                  );
+                }}
+              />
+              <form.Field
+                name="email"
+                children={(field) => {
+                  return (
+                    <Field className="gap-1.5">
+                      <FieldLabel
+                        htmlFor="email"
+                        className="text-sm font-medium"
+                      >
+                        Email
+                      </FieldLabel>
+                      <Input
+                        id="email"
+                        name="email"
+                        placeholder="you@example.com"
+                        type="email"
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="h-11 rounded-xl border-black/10 bg-black/5 focus:ring-2 focus:ring-blue-500/30 dark:border-white/10 dark:bg-white/5"
+                      />
+                      <FieldError>
+                        {field.state.meta.errors ? (
+                          <p className="text-red-500">
+                            {field.state.meta.errors
+                              .map((err: ValidationError) =>
+                                typeof err === "object" &&
+                                err !== null &&
+                                "message" in err
+                                  ? err.message
+                                  : err,
+                              )
+                              .join(", ")}
+                          </p>
+                        ) : null}
+                      </FieldError>
+                    </Field>
+                  );
+                }}
+              />
+              <form.Field
+                name="password"
+                children={(field) => {
+                  return (
+                    <Field className="gap-1.5">
+                      <FieldLabel
+                        htmlFor="password"
+                        className="text-sm font-medium"
+                      >
+                        Password
+                      </FieldLabel>
+                      <Input
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder="••••••••"
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="h-11 rounded-xl border-black/10 bg-black/5 focus:ring-2 focus:ring-blue-500/30 dark:border-white/10 dark:bg-white/5"
+                      />
+                      <FieldError>
+                        {field.state.meta.errors ? (
+                          <p className="text-red-500">
+                            {field.state.meta.errors
+                              .map((err: ValidationError) =>
+                                typeof err === "object" &&
+                                err !== null &&
+                                "message" in err
+                                  ? err.message
+                                  : err,
+                              )
+                              .join(", ")}
+                          </p>
+                        ) : null}
+                      </FieldError>
+                    </Field>
+                  );
+                }}
+              />
             </div>
 
             {error && (

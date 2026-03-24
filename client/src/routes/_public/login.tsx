@@ -8,59 +8,56 @@ import { Sparkles } from "lucide-react";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { Particles } from "@/components/ui/particles";
 import { useForm } from "@tanstack/react-form";
-import { loginSchema } from '@shared/schemas/loginSchema'
+import type { ValidationError } from "@tanstack/react-form";
+import { loginSchema } from "@shared/schemas/loginSchema";
 
 export const Route = createFileRoute("/_public/login")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const form = useForm({
     defaultValues: {
       email: "",
-      password: ""
+      password: "",
     },
     validators: {
       onChange: loginSchema,
     },
-  })
+    onSubmit: async ({ value }) => {
+      setLoading(true);
+      setError(null);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    await authClient.signIn.email(
-      {
-        email,
-        password,
-      },
-      {
-        onSuccess: () => {
-          // Check if there's a redirect query parameter
-          const searchParams = new URLSearchParams(window.location.search);
-          const redirectUrl = searchParams.get("redirect");
-
-          if (redirectUrl) {
-            window.location.href = redirectUrl;
-          } else {
-            // Default to the Studio dashboard
-            window.location.href = import.meta.env.VITE_STUDIO_URL;
-          }
+      await authClient.signIn.email(
+        {
+          email: value.email,
+          password: value.password,
         },
-        onError: (ctx) => {
-          setError(ctx.error.message || "Login failed");
-        },
-      },
-    );
+        {
+          onSuccess: () => {
+            // Check if there's a redirect query parameter
+            const searchParams = new URLSearchParams(window.location.search);
+            const redirectUrl = searchParams.get("redirect");
 
-    setLoading(false);
-  };
+            if (redirectUrl) {
+              window.location.href = redirectUrl;
+            } else {
+              // Default to the Studio dashboard
+              window.location.href = import.meta.env.VITE_STUDIO_URL;
+            }
+          },
+          onError: (ctx) => {
+            setError(ctx.error.message || "Login failed");
+          },
+        },
+      );
+
+      setLoading(false);
+    },
+  });
 
   const handleGithubLogin = async () => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -196,38 +193,62 @@ function RouteComponent() {
           </div>
 
           {/* Fields */}
-          <form onSubmit={handleLogin}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              form.handleSubmit();
+            }}
+          >
             <div className="flex flex-col gap-4">
               <form.Field
                 name="email"
                 children={(field) => {
-                  return <Field className="gap-1.5">
-                    <FieldLabel htmlFor="email" className="text-sm font-medium">
-                      Email
-                    </FieldLabel>
-                    <Input
-                      id="email"
-                      placeholder="you@example.com"
-                      type="email"
-                      name="email"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      className="h-11 rounded-xl border-black/10 bg-black/5 focus:ring-2 focus:ring-purple-500/30 dark:border-white/10 dark:bg-white/5"
-                    />
-                    <FieldError>
-                      {field.state.meta.errors ? <p className="text-red-500">{field.state.meta.errors.join(",")}</p> : null}
-                    </FieldError>
-                  </Field>
-                }}>
-
-
-              </form.Field>
+                  return (
+                    <Field className="gap-1.5">
+                      <FieldLabel
+                        htmlFor="email"
+                        className="text-sm font-medium"
+                      >
+                        Email
+                      </FieldLabel>
+                      <Input
+                        id="email"
+                        placeholder="you@example.com"
+                        type="email"
+                        name="email"
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="h-11 rounded-xl border-black/10 bg-black/5 focus:ring-2 focus:ring-purple-500/30 dark:border-white/10 dark:bg-white/5"
+                      />
+                      <FieldError>
+                        {field.state.meta.errors ? (
+                          <p className="text-red-500">
+                            {field.state.meta.errors
+                              .map((err: ValidationError) =>
+                                typeof err === "object" &&
+                                err !== null &&
+                                "message" in err
+                                  ? err.message
+                                  : err,
+                              )
+                              .join(", ")}
+                          </p>
+                        ) : null}
+                      </FieldError>
+                    </Field>
+                  );
+                }}
+              ></form.Field>
               <form.Field
                 name="password"
                 children={(field) => {
                   return (
                     <Field className="gap-1.5">
-                      <FieldLabel htmlFor="password" className="text-sm font-medium">
+                      <FieldLabel
+                        htmlFor="password"
+                        className="text-sm font-medium"
+                      >
                         Password
                       </FieldLabel>
                       <Input
@@ -240,13 +261,24 @@ function RouteComponent() {
                         className="h-11 rounded-xl border-black/10 bg-black/5 focus:ring-2 focus:ring-purple-500/30 dark:border-white/10 dark:bg-white/5"
                       />
                       <FieldError>
-                        {field.state.meta.errors ? <p className="text-red-500">{field.state.meta.errors.join(",")}</p> : null}
+                        {field.state.meta.errors ? (
+                          <p className="text-red-500">
+                            {field.state.meta.errors
+                              .map((err: ValidationError) =>
+                                typeof err === "object" &&
+                                err !== null &&
+                                "message" in err
+                                  ? err.message
+                                  : err,
+                              )
+                              .join(", ")}
+                          </p>
+                        ) : null}
                       </FieldError>
                     </Field>
-                  )
-                }}>
-
-              </form.Field>
+                  );
+                }}
+              ></form.Field>
             </div>
 
             {error && (
