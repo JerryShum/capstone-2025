@@ -114,4 +114,20 @@ export const studioRoute = new Hono<Env>()
          );
 
       return c.json({ message: 'success' }, 200);
+   })
+   .delete('/:id', async (c) => {
+      //! This route is for deleting a pre-existing project
+      const projectID = parseInt(c.req.param('id'), 10);
+      const user = c.get('user');
+
+      await db
+         .delete(projectsTable)
+         .where(
+            and(
+               eq(projectsTable.id, projectID),
+               eq(projectsTable.userID, user.id),
+            ),
+         );
+
+      return c.json({ message: 'Project deleted successfully' }, 200);
    });

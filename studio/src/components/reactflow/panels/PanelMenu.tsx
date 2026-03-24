@@ -61,11 +61,27 @@ export default function IconMenu() {
 
          <div className="w-px h-4 bg-border/60 mx-0.5" />
 
-         <Input
-            value={projectTitle}
-            onChange={(e) => updateProjectTitle(e.target.value)}
-            className="border-none bg-transparent shadow-none focus-visible:ring-0 px-2 h-7 font-semibold !text-[16px] tracking-tight text-foreground/90 w-36 focus-visible:border-none selection:bg-blue-400"
-         />
+         <div className="grid min-w-[144px]">
+            <Input
+               value={projectTitle}
+               onChange={(e) => updateProjectTitle(e.target.value)}
+               onBlur={(e) => {
+                  if (e.target.value.trim() === '') {
+                     updateProjectTitle('Untitled Project');
+                  }
+               }}
+               onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                     (e.target as HTMLInputElement).blur();
+                  }
+               }}
+               className="[grid-area:1/1] border-none bg-transparent shadow-none focus-visible:ring-0 px-2 h-7 font-semibold !text-[16px] tracking-tight text-foreground/90 w-full focus-visible:border-none selection:bg-blue-400"
+               placeholder="Untitled Project"
+            />
+            <span className="[grid-area:1/1] invisible whitespace-pre px-2 h-7 font-semibold text-[16px] tracking-tight pointer-events-none">
+               {projectTitle || 'Untitled Project'}
+            </span>
+         </div>
 
          <ProjectSettings
             openState={isProjectSettingsOpen}

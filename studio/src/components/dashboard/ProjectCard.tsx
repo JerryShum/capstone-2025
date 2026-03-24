@@ -1,7 +1,9 @@
-import { Calendar, MoreVertical } from 'lucide-react';
+import { Calendar, Trash2 } from 'lucide-react';
 import { ImageWithFallback } from './ProjectCardImage';
 import { Link } from '@tanstack/react-router';
 import type { Project } from '@shared/types';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { api } from '@/lib/api';
 
 interface ProjectCardProps {
    project: Project;
@@ -11,6 +13,28 @@ interface ProjectCardProps {
 export function ProjectCard({ project, updatedAt }: ProjectCardProps) {
    //! Define the navigation URL
    const URL = `/project/${project.id}`;
+   const queryClient = useQueryClient();
+
+   const deleteMutation = useMutation({
+      mutationFn: async () => {
+         const response = await api.studio[':id'].$delete({ param: { id: project.id.toString() } });
+         if (!response.ok) {
+            throw new Error('Failed to delete project');
+         }
+         return response.json();
+      },
+      onSuccess: () => {
+         queryClient.invalidateQueries({ queryKey: ['dashboard_projects'] });
+      },
+   });
+
+   const handleDeleteClick = (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (window.confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
+         deleteMutation.mutate();
+      }
+   };
 
    const formatDate = (dateString: string) => {
       const date = new Date(dateString);
@@ -39,10 +63,12 @@ export function ProjectCard({ project, updatedAt }: ProjectCardProps) {
             <ImageWithFallback src={project.bannerUrl} />
             <div className="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent" />
             <button
-               onClick={(e) => e.stopPropagation()}
-               className="absolute top-3 right-3 rounded-lg bg-white/90 p-2 opacity-0 shadow-md backdrop-blur-sm transition-all duration-200 group-hover:opacity-100 hover:scale-110 hover:bg-white"
+               onClick={handleDeleteClick}
+               disabled={deleteMutation.isPending}
+               className="absolute top-3 right-3 rounded-lg bg-white/90 p-2 opacity-0 shadow-md backdrop-blur-sm transition-all duration-200 group-hover:opacity-100 hover:scale-110 hover:bg-red-50 disabled:opacity-50"
+               title="Delete Project"
             >
-               <MoreVertical className="h-4 w-4 text-gray-700" />
+               <Trash2 className="h-4 w-4 text-red-600" />
             </button>
 
             {/* Status Badge */}
