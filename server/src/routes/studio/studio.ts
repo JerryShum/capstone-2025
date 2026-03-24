@@ -5,7 +5,7 @@ import { updateProjectSchema } from '@shared/schemas/updateProjectSchema';
 import { db } from '@server/db';
 import { projectsTable } from '@server/db/schemas/schema';
 import { initialNodes, initialEdges } from '@shared';
-import { defaultProject } from '@shared';
+import { defaultProject, getRandomBanner } from '@shared';
 import { desc, eq, and } from 'drizzle-orm';
 import type { Env } from '@server/lib/auth';
 
@@ -50,6 +50,7 @@ export const studioRoute = new Hono<Env>()
             globalNegativePrompt: defaultProject.globalNegativePrompt,
             cinematicPreset: defaultProject.cinematicPreset,
             executiveSummary: defaultProject.executiveSummary,
+            bannerUrl: getRandomBanner(),
             flowData: { nodes: initialNodes, edges: initialEdges },
          })
          .returning();

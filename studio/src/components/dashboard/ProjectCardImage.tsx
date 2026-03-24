@@ -1,39 +1,32 @@
-import React, { useState } from "react";
-import fallbackimage from "/backup.jpg";
+import React, { useState } from 'react';
 
-export function ImageWithFallback(
-  props: React.ImgHTMLAttributes<HTMLImageElement>,
-) {
-  const [didError, setDidError] = useState(false);
+interface ImageWithFallbackProps {
+   src: string;
+   alt?: string;
+   className?: string;
+}
 
-  const handleError = () => {
-    setDidError(true);
-  };
+export function ImageWithFallback({ src, alt = 'Project banner', className }: ImageWithFallbackProps) {
+   const [didError, setDidError] = useState(false);
 
-  const { src, alt, style, className, ...rest } = props;
+   if (didError || !src) {
+      //@ Gradient fallback when image is missing or broken
+      return (
+         <div
+            className={`w-full h-full ${className ?? ''}`}
+            style={{
+               background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4c1d95 100%)',
+            }}
+         />
+      );
+   }
 
-  return didError ? (
-    <div
-      className={`inline-block bg-gray-100 text-center align-middle ${className ?? ""}`}
-      style={style}
-    >
-      <div className="flex h-full w-full items-center justify-center">
-        <img
-          src={fallbackimage}
-          alt="Error loading image"
-          {...rest}
-          data-original-url={src}
-        />
-      </div>
-    </div>
-  ) : (
-    <img
-      src={src}
-      alt={alt}
-      className={className}
-      style={style}
-      {...rest}
-      onError={handleError}
-    />
-  );
+   return (
+      <img
+         src={src}
+         alt={alt}
+         className={`w-full h-full object-cover ${className ?? ''}`}
+         onError={() => setDidError(true)}
+      />
+   );
 }

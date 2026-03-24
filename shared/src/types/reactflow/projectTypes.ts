@@ -34,4 +34,5 @@ export type Project = {
    globalNegativePrompt: string;
    executiveSummary: string;
    cinematicPreset: CinematicPreset;
+   bannerUrl: string;
 };

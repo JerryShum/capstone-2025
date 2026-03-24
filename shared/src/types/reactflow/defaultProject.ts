@@ -9,6 +9,19 @@ import type { Project } from './projectTypes';
 
 import type { Edge } from '@xyflow/react';
 
+//@ Curated list of illustration banner images for new projects
+export const BANNER_IMAGES = [
+   'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop', // Abstract liquid art
+   'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=800&auto=format&fit=crop', // Abstract colorful waves
+   'https://images.unsplash.com/photo-1563089145-599997674d42?w=800&auto=format&fit=crop', // Abstract neon shapes
+   'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=800&auto=format&fit=crop', // Abstract paint stroke
+   'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800&auto=format&fit=crop', // Abstract color gradient
+] as const;
+
+export function getRandomBanner(): string {
+   return BANNER_IMAGES[Math.floor(Math.random() * BANNER_IMAGES.length)] as string;
+}
+
 export const defaultProject: Project = {
    id: Date.now(),
    projectTitle: "Barry's Morning Adventure",
@@ -19,6 +32,7 @@ export const defaultProject: Project = {
    executiveSummary:
       'A heartwarming 3D animated short about a curious chicken named Barry who discovers a magical seed in his farmyard.',
    cinematicPreset: 'Neo-Noir',
+   bannerUrl: getRandomBanner(),
 };
 
 const initScriptNode: ScriptNode = {

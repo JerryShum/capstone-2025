@@ -72,7 +72,7 @@ export default function CharacterNode({ data, id }: NodeProps<CharacterNode>) {
             </div>
 
             {/* reference image */}
-            <div className="flex flex-col gap-1">
+            {/* <div className="flex flex-col gap-1">
                <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
                   <ImageIcon size={10} /> Reference Image URL
                </label>
@@ -91,7 +91,7 @@ export default function CharacterNode({ data, id }: NodeProps<CharacterNode>) {
                      })
                   }
                />
-            </div>
+            </div> */}
          </div>
 
          <Handle
