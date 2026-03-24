@@ -31,10 +31,6 @@ export default function ScriptNode({ data, id }: NodeProps) {
             </div>
          </div>
 
-         <div className="text-[10px] text-slate-400 italic">
-            Supports markdown and variables
-         </div>
-
          <Handle
             type="source"
             position={Position.Right}

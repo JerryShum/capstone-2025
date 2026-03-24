@@ -1,5 +1,13 @@
 import * as React from 'react';
-import { ChevronUp } from 'lucide-react';
+import {
+   ChevronUp,
+   Home,
+   LayoutDashboard,
+   BookOpen,
+   FolderOpen,
+   ImageIcon,
+   Settings,
+} from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import logo from '/story_weaver_logo_2.svg';
 import { authClient } from '@/lib/auth-client';
@@ -27,73 +35,62 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-// This is sample data.
-const data: {
-   navMain: {
-      title: string;
-      url: string;
-      items?: { title: string; url: string; isActive?: boolean }[];
-   }[];
-} = {
-   navMain: [
-      {
-         title: 'Home',
-         url: '/',
-      },
-      {
-         title: 'Dashboard',
-         url: '/dashboard',
-      },
-      {
-         title: 'Getting Started',
-         url: '#',
-      },
-      {
-         title: 'Projects',
-         url: '#',
-      },
-      {
-         title: 'Assets',
-         url: '#',
-      },
-      {
-         title: 'Settings',
-         url: '#',
-      },
-   ],
-};
+const navMain: {
+   title: string;
+   url: string;
+   icon: React.ElementType;
+   items?: { title: string; url: string; isActive?: boolean }[];
+}[] = [
+   { title: 'Home',            url: '/',           icon: Home },
+   { title: 'Dashboard',       url: '/dashboard',  icon: LayoutDashboard },
+   { title: 'Getting Started', url: '#',           icon: BookOpen },
+   { title: 'Projects',        url: '#',           icon: FolderOpen },
+   { title: 'Assets',          url: '#',           icon: ImageIcon },
+   { title: 'Settings',        url: '#',           icon: Settings },
+];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
    const { data: session } = authClient.useSession();
    const user = session?.user;
 
+   // Derive initials from real name, fall back to 'U'
+   const initials = user?.name
+      ? user.name
+           .split(' ')
+           .map((n) => n[0])
+           .join('')
+           .toUpperCase()
+           .slice(0, 2)
+      : 'U';
+
    return (
       <Sidebar variant="floating" {...props} className="">
          <SidebarHeader className="h-20 border-b">
-            <div className="flex items-center gap-2 p-2">
-               <img className="h-10" src={logo} />
+            <div className="flex h-full items-center gap-2.5 px-4">
+               <img className="h-10 w-10" src={logo} alt="StoryWeaver Logo" />
                <span className="text-2xl font-bold">StoryWeaver</span>
             </div>
          </SidebarHeader>
          <SidebarContent>
             <SidebarGroup>
                <SidebarMenu className="gap-2">
-                  {data.navMain.map((item) => (
+                  {navMain.map((item) => (
                      <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton asChild>
-                           <Link to={item.url} className="font-medium">
+                           <Link to={item.url} className="flex items-center gap-2 font-medium">
+                              <item.icon className="h-4 w-4 shrink-0" />
                               {item.title}
                            </Link>
                         </SidebarMenuButton>
                         {item.items?.length ? (
                            <SidebarMenuSub className="ml-0 border-l-0 px-1.5">
-                              {item.items.map((item) => (
-                                 <SidebarMenuSubItem key={item.title}>
+                              {item.items.map((sub) => (
+                                 <SidebarMenuSubItem key={sub.title}>
                                     <SidebarMenuSubButton
                                        asChild
-                                       isActive={item.isActive}
+                                       isActive={sub.isActive}
                                     >
-                                       <a href={item.url}>{item.title}</a>
+                                       <a href={sub.url}>{sub.title}</a>
                                     </SidebarMenuSubButton>
                                  </SidebarMenuSubItem>
                               ))}
@@ -110,23 +107,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <DropdownMenu>
                      <DropdownMenuTrigger asChild className="py-8">
                         <SidebarMenuButton className="">
-                           {/* //! USER AVATAR */}
-                           <div className="flex items-center gap-2">
-                              <Avatar className="h-12 w-12">
+                           {/* USER AVATAR */}
+                           <div className="flex min-w-0 items-center gap-2">
+                              <Avatar className="h-10 w-10 shrink-0">
                                  <AvatarImage
-                                    src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimgcdn.stablediffusionweb.com%2F2024%2F4%2F12%2F59c5bcbb-fde1-497f-bec0-386acbe8d655.jpg&f=1&nofb=1&ipt=67193b28ec4a88b128c1382aa8c6e697328fbd5e0c7cdad29ebadb27fed66295"
-                                    alt="tonystark"
+                                    src={user?.image ?? undefined}
+                                    alt={user?.name ?? 'User'}
                                  />
-                                 <AvatarFallback>CN</AvatarFallback>
-                              </Avatar>{' '}
-                              <div className="flex flex-col">
-                                 <p className="text-[16px] font-bold">
+                                 <AvatarFallback className="text-sm font-semibold">
+                                    {initials}
+                                 </AvatarFallback>
+                              </Avatar>
+                              <div className="flex min-w-0 flex-col">
+                                 <p className="truncate text-sm font-bold">
                                     {user?.name || 'User'}
                                  </p>
-                                 <p>{user?.email || 'No email'}</p>
+                                 <p className="truncate text-xs text-muted-foreground">
+                                    {user?.email || 'No email'}
+                                 </p>
                               </div>
                            </div>
-                           <ChevronUp className="ml-auto" />
+                           <ChevronUp className="ml-auto shrink-0" />
                         </SidebarMenuButton>
                      </DropdownMenuTrigger>
                      <DropdownMenuContent

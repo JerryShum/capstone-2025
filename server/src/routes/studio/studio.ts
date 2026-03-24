@@ -5,6 +5,7 @@ import { updateProjectSchema } from '@shared/schemas/updateProjectSchema';
 import { db } from '@server/db';
 import { projectsTable } from '@server/db/schemas/schema';
 import { initialNodes, initialEdges } from '@shared';
+import { defaultProject } from '@shared';
 import { desc, eq, and } from 'drizzle-orm';
 import type { Env } from '@server/lib/auth';
 
@@ -43,10 +44,13 @@ export const studioRoute = new Hono<Env>()
          .insert(projectsTable)
          .values({
             userID: user.id,
-            projectTitle: 'Untitled Project',
+            projectTitle: defaultProject.projectTitle,
+            aspectRatio: defaultProject.aspectRatio,
+            engine: defaultProject.engine,
+            globalNegativePrompt: defaultProject.globalNegativePrompt,
+            cinematicPreset: defaultProject.cinematicPreset,
+            executiveSummary: defaultProject.executiveSummary,
             flowData: { nodes: initialNodes, edges: initialEdges },
-            executiveSummary:
-               'This is a simple animation following a baby chick going around his daily life around the bard.',
          })
          .returning();
 
@@ -60,10 +64,12 @@ export const studioRoute = new Hono<Env>()
       const [project] = await db
          .select()
          .from(projectsTable)
-         .where(and(
-            eq(projectsTable.id, projectID),
-            eq(projectsTable.userID, user.id)
-         ));
+         .where(
+            and(
+               eq(projectsTable.id, projectID),
+               eq(projectsTable.userID, user.id),
+            ),
+         );
 
       if (!project) {
          return c.json({ error: 'Project not found' }, 404);
@@ -99,10 +105,12 @@ export const studioRoute = new Hono<Env>()
             cinematicPreset,
             updatedAt: new Date(),
          })
-         .where(and(
-            eq(projectsTable.id, projectID),
-            eq(projectsTable.userID, user.id)
-         ));
+         .where(
+            and(
+               eq(projectsTable.id, projectID),
+               eq(projectsTable.userID, user.id),
+            ),
+         );
 
       return c.json({ message: 'success' }, 200);
    });

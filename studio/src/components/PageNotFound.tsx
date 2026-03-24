@@ -24,9 +24,9 @@ export default function PageNotFound() {
          <div className="relative max-h-screen w-full p-2 max-lg:hidden">
             <div className="h-full w-full rounded-2xl bg-black"></div>
             <img
-               src="https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/error/image-1.png"
+               src="https://images.unsplash.com/vector-1743529921186-e8a5ae51d845?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                alt="404 illustration"
-               className="absolute top-1/2 left-1/2 h-[clamp(260px,25vw,406px)] -translate-x-1/2 -translate-y-1/2"
+               className=""
             />
          </div>
       </div>

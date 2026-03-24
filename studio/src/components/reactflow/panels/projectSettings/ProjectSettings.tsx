@@ -49,21 +49,7 @@ export default function ProjectSettings({
                <ProjectSettingsForm />
             </div>
 
-            <div className="p-6 bg-white/5 backdrop-blur-md border-t border-white/10">
-               <SheetFooter className="gap-3 sm:space-x-0">
-                  {/* <SheetClose asChild>
-                     <Button
-                        variant="ghost"
-                        className="flex-1 h-12 rounded-xl text-slate-400 hover:text-foreground hover:bg-white/5 font-semibold"
-                     >
-                        Discard
-                     </Button>
-                  </SheetClose> */}
-                  <Button className="flex-1 h-12 bg-foreground text-background hover:bg-foreground/90 font-bold rounded-xl shadow-lg transition-all active:scale-[0.98]">
-                     Save Changes
-                  </Button>
-               </SheetFooter>
-            </div>
+           
          </SheetContent>
       </Sheet>
    );
