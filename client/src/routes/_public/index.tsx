@@ -105,16 +105,16 @@ function Index() {
               >
                 magical, animated
               </TypingAnimation>
-              <br className="hidden sm:block" /> stories for your child.
+              <br className="hidden sm:block" /> stories for any child.
             </h1>
           </BlurFade>
 
           {/* Description */}
           <BlurFade delay={0.3} offset={20}>
             <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-black/70 sm:mt-6 sm:text-lg md:text-xl dark:text-white/70">
-              Just add a spark of imagination. Our AI helps you generate,
+              Just add a spark of imagination. Our tools help you generate,
               illustrate, and animate a unique tale in minutes, creating
-              memories that last a lifetime.
+              memories & lessons that last a lifetime.
             </p>
           </BlurFade>
 
