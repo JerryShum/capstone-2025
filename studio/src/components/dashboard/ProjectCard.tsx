@@ -64,12 +64,6 @@ export function ProjectCard({ project, updatedAt }: ProjectCardProps) {
                   <Calendar className="h-3 w-3" />
                   <span>{updatedAt ? formatDate(updatedAt) : 'N/A'}</span>
                </div>
-
-               <div className="flex items-center gap-1">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 text-[10px] font-semibold text-indigo-700">
-                     {project.id}
-                  </div>
-               </div>
             </div>
          </div>
       </Link>
