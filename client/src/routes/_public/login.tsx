@@ -2,11 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Sparkles } from "lucide-react";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { Particles } from "@/components/ui/particles";
+import { useForm } from "@tanstack/react-form";
+import { loginSchema } from '@shared/schemas/loginSchema'
 
 export const Route = createFileRoute("/_public/login")({
   component: RouteComponent,
@@ -17,6 +19,16 @@ function RouteComponent() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: ""
+    },
+    validators: {
+      onChange: loginSchema,
+    },
+  })
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -186,34 +198,55 @@ function RouteComponent() {
           {/* Fields */}
           <form onSubmit={handleLogin}>
             <div className="flex flex-col gap-4">
-              <Field className="gap-1.5">
-                <FieldLabel htmlFor="email" className="text-sm font-medium">
-                  Email
-                </FieldLabel>
-                <Input
-                  id="email"
-                  placeholder="you@example.com"
-                  type="email"
-                  name="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-11 rounded-xl border-black/10 bg-black/5 focus:ring-2 focus:ring-purple-500/30 dark:border-white/10 dark:bg-white/5"
-                />
-              </Field>
-              <Field className="gap-1.5">
-                <FieldLabel htmlFor="password" className="text-sm font-medium">
-                  Password
-                </FieldLabel>
-                <Input
-                  id="password"
-                  type="password"
-                  name="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="h-11 rounded-xl border-black/10 bg-black/5 focus:ring-2 focus:ring-purple-500/30 dark:border-white/10 dark:bg-white/5"
-                />
-              </Field>
+              <form.Field
+                name="email"
+                children={(field) => {
+                  return <Field className="gap-1.5">
+                    <FieldLabel htmlFor="email" className="text-sm font-medium">
+                      Email
+                    </FieldLabel>
+                    <Input
+                      id="email"
+                      placeholder="you@example.com"
+                      type="email"
+                      name="email"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      className="h-11 rounded-xl border-black/10 bg-black/5 focus:ring-2 focus:ring-purple-500/30 dark:border-white/10 dark:bg-white/5"
+                    />
+                    <FieldError>
+                      {field.state.meta.errors ? <p className="text-red-500">{field.state.meta.errors.join(",")}</p> : null}
+                    </FieldError>
+                  </Field>
+                }}>
+
+
+              </form.Field>
+              <form.Field
+                name="password"
+                children={(field) => {
+                  return (
+                    <Field className="gap-1.5">
+                      <FieldLabel htmlFor="password" className="text-sm font-medium">
+                        Password
+                      </FieldLabel>
+                      <Input
+                        id="password"
+                        type="password"
+                        name="password"
+                        placeholder="••••••••"
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="h-11 rounded-xl border-black/10 bg-black/5 focus:ring-2 focus:ring-purple-500/30 dark:border-white/10 dark:bg-white/5"
+                      />
+                      <FieldError>
+                        {field.state.meta.errors ? <p className="text-red-500">{field.state.meta.errors.join(",")}</p> : null}
+                      </FieldError>
+                    </Field>
+                  )
+                }}>
+
+              </form.Field>
             </div>
 
             {error && (
