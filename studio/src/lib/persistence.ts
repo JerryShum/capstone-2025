@@ -82,6 +82,10 @@ const debouncedSaveProject = debounce(saveProject, 2000, 10000);
 
 //! Loading Logic (Loading a Project when user clicks on ProjectCard) --> this is called in a loader
 export async function loadProject(id: number) {
+   // Flush any pending saves for the previous project before we rewrite the store
+   // We do this so the old project data and ID are saved securely before we transition logic
+   debouncedSaveProject.flush();
+
    // fetch project details using ID --> send request to server GET (/api/studio/${id})
    console.log(`--- Fetching Project with ID: ${id} ---`);
 

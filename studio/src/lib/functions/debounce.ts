@@ -16,13 +16,19 @@ export default function debounce<
    func: FuncType,
    delay: number,
    maxWaitTime: number = 30000,
-): (...args: Parameters<FuncType>) => void {
+): {
+   (...args: Parameters<FuncType>): void;
+   cancel: () => void;
+   flush: () => void;
+} {
    //the persistent variable / state of the debounce function
    let timeoutID: ReturnType<typeof setTimeout> | undefined;
    let lastSaveTime: number = 0;
+   let lastArgs: Parameters<FuncType> | undefined;
 
    // the function that will actually be called
-   return (...args: Parameters<FuncType>) => {
+   const debouncedFunc = (...args: Parameters<FuncType>) => {
+      lastArgs = args;
       const now = Date.now();
 
       // set the beginning of the save timer (if there isn't one already)
@@ -39,12 +45,39 @@ export default function debounce<
       if (now - lastSaveTime >= maxWaitTime) {
          func(...args);
          lastSaveTime = now;
+         timeoutID = undefined;
+         lastArgs = undefined;
       } else {
          timeoutID = setTimeout(() => {
             func(...args);
 
             lastSaveTime = 0;
+            timeoutID = undefined;
+            lastArgs = undefined;
          }, delay);
       }
    };
+
+   debouncedFunc.cancel = () => {
+      if (timeoutID) {
+         clearTimeout(timeoutID);
+         timeoutID = undefined;
+      }
+      lastSaveTime = 0;
+      lastArgs = undefined;
+   };
+
+   debouncedFunc.flush = () => {
+      if (timeoutID) {
+         clearTimeout(timeoutID);
+         timeoutID = undefined;
+         if (lastArgs) {
+            func(...lastArgs);
+         }
+      }
+      lastSaveTime = 0;
+      lastArgs = undefined;
+   };
+
+   return debouncedFunc;
 }
