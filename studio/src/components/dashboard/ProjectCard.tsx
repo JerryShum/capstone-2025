@@ -58,6 +58,7 @@ export function ProjectCard({ project, updatedAt }: ProjectCardProps) {
       <Link
          className="group cursor-pointer overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-2xl hover:shadow-indigo-100/50"
          to={URL}
+         preload={false}
       >
          <div className="relative h-40 overflow-hidden bg-gray-900">
             <ImageWithFallback src={project.bannerUrl} />
