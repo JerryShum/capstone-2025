@@ -24,7 +24,7 @@
       "test": "turbo test",
       "postinstall": "turbo build --filter=shared --filter=server",
       "build:single": "bun run build && bun run copy:static && bun run build:server",
-      "copy:static": "rm -rf server/static && cp -r client/dist server/static",
+      "copy:static": "rm -rf server/static && cp -r client/dist server/static && cp -r studio/dist server/static/studio",
       "start:single": "cd server && bun run dist/index.js"
    },
    "keywords": [
