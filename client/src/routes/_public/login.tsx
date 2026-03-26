@@ -46,7 +46,7 @@ function RouteComponent() {
               window.location.href = redirectUrl;
             } else {
               // Default to the Studio dashboard
-              window.location.href = import.meta.env.VITE_STUDIO_URL;
+              window.location.href = '/studio';
             }
           },
           onError: (ctx) => {

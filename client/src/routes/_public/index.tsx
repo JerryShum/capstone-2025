@@ -123,7 +123,7 @@ function Index() {
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:mt-10 sm:flex-row">
               {user ? (
                 <a
-                  href={import.meta.env.VITE_STUDIO_URL}
+                  href="/studio"
                   className="group relative w-full sm:w-auto"
                 >
                   <div className="absolute -inset-1 rounded-full bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 opacity-70 blur-md transition-all duration-500 group-hover:opacity-100 group-hover:blur-xl"></div>
@@ -340,7 +340,7 @@ function Index() {
           <div className="mt-6 flex justify-center px-4 sm:mt-8">
             {user ? (
               <a
-                href={import.meta.env.VITE_STUDIO_URL}
+                href="/studio"
                 className="group relative w-full sm:w-auto"
               >
                 <div className="absolute -inset-1 rounded-full bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 opacity-50 blur-lg transition-all duration-500 group-hover:opacity-100 group-hover:blur-2xl"></div>

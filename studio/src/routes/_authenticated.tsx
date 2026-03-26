@@ -7,7 +7,7 @@ export const Route = createFileRoute('/_authenticated')({
       if (!session) {
          // Redirect to the main Client login page
          // In development it's typically localhost:5174
-         window.location.href = `${import.meta.env.VITE_CLIENT_URL}/login?redirect=${encodeURIComponent(location.href)}`;
+         window.location.href = `/login?redirect=${encodeURIComponent(location.href)}`;
       }
    },
    component: RouteComponent,

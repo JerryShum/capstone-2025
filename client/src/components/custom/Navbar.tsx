@@ -59,7 +59,7 @@ export default function Navbar() {
                 Hello,{" "}
                 <span className="text-foreground font-bold">{user.name}</span>
               </span>
-              <a href={import.meta.env.VITE_STUDIO_URL}>
+              <a href="/studio">
                 <Button
                   variant="outline"
                   className="border-primary/20 hover:border-primary/50 gap-2 transition-all"
@@ -149,7 +149,7 @@ export default function Navbar() {
                   Hello, <span className="font-bold">{user.name}</span>
                 </span>
               </div>
-              <a href={import.meta.env.VITE_STUDIO_URL} className="w-full">
+              <a href="/studio" className="w-full">
                 <Button
                   variant="outline"
                   className="w-full justify-center gap-2"
