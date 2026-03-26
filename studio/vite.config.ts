@@ -6,6 +6,7 @@ import { tanstackRouter } from '@tanstack/router-plugin/vite';
 
 // https://vite.dev/config/
 export default defineConfig({
+   base: process.env.NODE_ENV === 'production' ? '/studio/' : '/',
    plugins: [
       tanstackRouter({
          target: 'react',
@@ -13,7 +14,7 @@ export default defineConfig({
       }),
       tailwindcss(),
       react(),
-   ],
+   ] as any,
    resolve: {
       alias: {
          '@': path.resolve(__dirname, './src'),
