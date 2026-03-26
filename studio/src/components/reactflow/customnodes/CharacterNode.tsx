@@ -1,5 +1,5 @@
 import { Handle, Position } from '@xyflow/react';
-import type { CharacterNode, httpsURL } from '@shared';
+import type { CharacterNode } from '@shared';
 import type { NodeProps } from '@xyflow/react';
 import useFlowStore from '@/hooks/useFlowStore';
 import {
@@ -7,13 +7,10 @@ import {
    Tag,
    Palette,
    Sparkles,
-   Image as ImageIcon,
    Lock,
 } from 'lucide-react';
 
 export default function CharacterNode({ data, id }: NodeProps<CharacterNode>) {
-   const isValidURL =
-      !data.referenceImage || data.referenceImage.startsWith('https://');
 
    const updateNode = useFlowStore((state) => state.updateNode);
 
