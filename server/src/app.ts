@@ -33,7 +33,7 @@ app.use(
 app.use('*', logger());
 
 //@ Auth middleware
-app.use('*', authMiddleware);
+app.use('/api/*', authMiddleware);
 
 // Mount the pure API routes
 app.route('/api', apiRoutes);
