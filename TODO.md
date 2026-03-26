@@ -1,6 +1,9 @@
 # StoryWeaver
 
 ### Tasks / Ideas
+- [ ] **STUDIO:** Add a user feedback mechanism for generated scenes
+   - [ ] This allows them to re-generate scenes with similar prompts.
+   - [ ] Allows user to make minute or major changes depending on their satisfaction
 
 - [ ] **STUDIO:** Add a chatbot to help users understand and work with the studio!!!
    - [ ] Add a panel to the right side --> triggers a chat bot view
