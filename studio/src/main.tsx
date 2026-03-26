@@ -9,6 +9,7 @@ import PageNotFound from './components/PageNotFound';
 // Set up a Router instance
 const router = createRouter({
    routeTree,
+   basepath: import.meta.env.PROD ? '/studio' : '/',
    defaultPreload: 'intent',
    scrollRestoration: true,
    defaultNotFoundComponent: PageNotFound,
