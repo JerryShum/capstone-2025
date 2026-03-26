@@ -2,32 +2,38 @@
 
 ### Tasks / Ideas
 
-- [ ] Add a chatbot to help users understand and work with the studio!!!
+- [ ] **STUDIO:** Add a chatbot to help users understand and work with the studio!!!
    - [ ] Add a panel to the right side --> triggers a chat bot view
 
----
+- [ ] **STUDIO:** Make nodes resizable
 
-### Client / Server Tasks
+- [ ] **STUDIO:** Timeline Node
+   - [ ] We can have a specific timeline node for each video
+   - [ ] User can dictate what is supposed to happen in the video
+   - [ ] Range of seconds for each action
+   - [ ] Can have multiple "ranges" / "scenes" for the scene
+   - [ ] User can add upto 8 "timelines" for each second in the scene
 
-- [ ] Login / Signup improvement !!!!!!!!
-   - [ ] Use tanstack form / query for requests
-   - [ ] Use Zod validation to ensure that the email and password fields are sufficient
-   - [ ] Routing from google & github is not consistent --> need to make it better
+- [ ] **STUDIO:** Share video button --> generated video overview + after stitching the video together.
+
+- [ ] **STUDIO:** Allow users to view their generated clips with an overview?!!!!!!!!!!
+   - [ ] "view videos" page in the dashboard
+   - [ ] Custom video view component in the dashboard
+
+- [ ] **STUDIO:** Voice over experimentation
 
 - [ ] Auth testing:
    - [ ] Test username and email form verification + zod + projects
    - [ ] Test google and github routing --> projects and videos
 
-
-### Studio Tasks
-
-- [ ] Allow users to view their generated clips with an overview?!!!!!!!!!!
-   - [ ] "view videos" page in the dashboard
-   - [ ] Custom video view component in the dashboard
-
 ---
 
 ### Completed Tasks ✓
+
+- [x] Login / Signup improvement !!!!!!!!
+   - [x] Use tanstack form / query for requests
+   - [x] Use Zod validation to ensure that the email and password fields are sufficient
+   - [x] Routing from google & github is not consistent --> need to make it better
 - [x] Improve the initial nodes & introduce a simple tutorial!!!!
    - [x] Barry the chicken with proper spelling
    - [x] Shadcn tutorial?
