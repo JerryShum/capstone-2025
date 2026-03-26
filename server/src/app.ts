@@ -13,11 +13,13 @@ app.use(
    '*',
    cors({
       origin: (origin) => {
-         // Allow requests from localhost and 127.0.0.1 for client (5173), studio (5174), and backend (3000)
-         if (origin && (origin.includes('localhost') || origin.includes('127.0.0.1'))) {
-            return origin;
-         }
-         return 'http://localhost:3000';
+         const allowed = [
+            'http://localhost:3000',
+            'http://localhost:5173',
+            'http://localhost:5174',
+            process.env.PRODUCTION_URL ?? '',
+         ].filter(Boolean);
+         return allowed.find((o) => origin?.startsWith(o)) ?? null;
       },
       allowHeaders: ['Content-Type', 'Authorization'],
       allowMethods: ['POST', 'GET', 'OPTIONS'],
@@ -38,6 +40,13 @@ app.route('/api', apiRoutes);
 
 //! Serve static files when the user accesses an "unknown route"
 // if someone types in a URL that doesnt exist, we can serve up the react page meant for hadnling the errors, (instead of a bad looking server 404 page)
+//@ Serve studio SPA under /studio prefix
+app.use('/studio/*', serveStatic({ root: './static/studio', rewriteRequestPath: (path) => path.replace(/^\/studio/, '') }));
+app.get('/studio/*', async (c, next) => {
+   return serveStatic({ root: './static/studio', path: 'index.html' })(c, next);
+});
+
+//@ Serve client SPA for everything else
 app.use('*', serveStatic({ root: './static' }));
 
 app.get('*', async (c, next) => {
