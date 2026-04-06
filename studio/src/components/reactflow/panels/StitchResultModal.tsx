@@ -1,3 +1,5 @@
+import { Button } from '@/components/ui/button';
+
 interface Props {
    stitchResult: string;
    onClose: () => void;
@@ -5,10 +7,10 @@ interface Props {
 
 export function StitchResultModal({ stitchResult, onClose }: Props) {
    return (
-      <div className="absolute inset-0 z-1000 flex items-center justify-center bg-black/80 backdrop-blur-sm pointer-events-auto">
-         <div className="bg-background border border-border rounded-2xl shadow-2xl p-6 w-[600px] flex flex-col gap-3 animate-in fade-in zoom-in duration-200">
+      <div className="absolute inset-0 z-1000 flex items-center justify-center bg-black/50 pointer-events-auto">
+         <div className="bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl p-6 w-[600px] flex flex-col gap-3 animate-in fade-in zoom-in duration-200">
             <h2 className="text-xl font-bold">Stitched Video Ready</h2>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
                Your scenes have been successfully combined into a single video.
             </p>
 
@@ -19,21 +21,26 @@ export function StitchResultModal({ stitchResult, onClose }: Props) {
                className="w-full rounded-lg min-h-[300px] max-h-[400px] object-contain bg-black my-2"
             />
 
-            <div className="flex gap-3 mt-2">
-               <button
+            <div className="flex gap-3 mt-4">
+               <Button
+                  variant="outline"
                   onClick={onClose}
-                  className="py-2.5 px-4 rounded-xl border-2 border-border text-sm flex-1 font-bold tracking-wide hover:bg-slate-100 transition-colors"
+                  className="hover:cursor-pointer flex-1 h-11 rounded-xl font-bold border-slate-200 dark:border-zinc-800 hover:brightness-90 dark:hover:bg-zinc-800 transition-colors"
                >
                   Close
-               </button>
-               <a
-                  href={stitchResult}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex-1 flex items-center justify-center py-2.5 px-4 rounded-xl shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] bg-violet-600 border-2 border-violet-800 hover:bg-violet-500 hover:translate-x-px hover:translate-y-px hover:shadow-none active:translate-x-[2px] active:translate-y-[2px] text-white text-sm font-bold tracking-wide transition-all"
+               </Button>
+               <Button
+                  asChild
+                  className="hover:cursor-pointer flex-1 h-11 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-bold transition-all active:scale-[0.98]"
                >
-                  Open in New Tab
-               </a>
+                  <a
+                     href={stitchResult}
+                     target="_blank"
+                     rel="noreferrer"
+                  >
+                     Open in New Tab
+                  </a>
+               </Button>
             </div>
          </div>
       </div>
