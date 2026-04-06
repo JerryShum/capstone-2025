@@ -4,9 +4,9 @@ import { Hono } from 'hono';
 import { buildGCPVideoPrompt } from '@server/functions/video/buildGCPVideoPrompt';
 import { extractLastFrame } from '@server/functions/video/extractLastFrame';
 import { GenerateVideosOperation, GoogleGenAI } from '@google/genai';
-import { videoOperationsTable } from '@server/db/schemas/schema';
+import { videoOperationsTable, projectsTable } from '@server/db/schemas/schema';
 import { db } from '@server/db';
-import { eq } from 'drizzle-orm';
+import { eq, desc } from 'drizzle-orm';
 import { storeAndShowVideo } from '@server/functions/video/storeAndShowVideo';
 import { Storage } from '@google-cloud/storage';
 import type { Env } from '@server/lib/auth';
@@ -34,6 +34,28 @@ const bucket = storage.bucket(GCS_BUCKET_NAME!);
 //---------------------------------------------------------
 
 export const videoRoute = new Hono<Env>()
+   .get('/list', async (c) => {
+      const user = c.get('user');
+
+      const videos = await db
+         .select({
+            name: videoOperationsTable.name,
+            status: videoOperationsTable.status,
+            videosURL: videoOperationsTable.videosURL,
+            createdAt: videoOperationsTable.createdAt,
+            projectID: videoOperationsTable.projectID,
+            projectTitle: projectsTable.projectTitle,
+         })
+         .from(videoOperationsTable)
+         .innerJoin(
+            projectsTable,
+            eq(videoOperationsTable.projectID, projectsTable.id),
+         )
+         .where(eq(videoOperationsTable.userID, user.id))
+         .orderBy(desc(videoOperationsTable.createdAt));
+
+      return c.json(videos);
+   })
    .post('/generate', zValidator('json', postVideoSchema), async (c) => {
       // get validated data from validator
       const data = c.req.valid('json');
