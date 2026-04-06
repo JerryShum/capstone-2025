@@ -85,13 +85,13 @@ const useFlowStore = create<FlowState>()(
             const { x, y } = position;
 
             // define new node structure
-            const newNode: AppNode = {
+            const newNode = {
                id: (get().nodes.length + 1).toString() + '-' + Date.now(),
                type: type,
                //$ Position should be changed to fit the middle of current viewport
                position: { x, y },
                data: blueprint.defaultData,
-            };
+            } as AppNode;
 
             // set the new state to include newNode
             set({ nodes: [...get().nodes, newNode] });
@@ -441,6 +441,38 @@ const useFlowStore = create<FlowState>()(
             } catch (err) {
                console.error('[stitchVideos] Request failed:', err);
                return undefined;
+            }
+         },
+         assistScript: async (id) => {
+            const { nodes, edges, updateNode } = get();
+
+            const scriptNode = nodes.find((n) => n.id === id);
+            if (!scriptNode || scriptNode.type !== 'script') return;
+
+            updateNode(id, { status: 'GENERATING' });
+
+            const context = gatherSceneContext(id, nodes, edges);
+
+            try {
+               const response = await api.studio.script.assist.$post({
+                  json: {
+                     currentContent: scriptNode.data.content,
+                     context,
+                  },
+               });
+
+               if (!response.ok) {
+                  throw new Error('Failed to generate script assist');
+               }
+
+               const data = await response.json();
+               updateNode(id, {
+                  content: data.content,
+                  status: 'IDLE',
+               } as any);
+            } catch (error) {
+               console.error('[assistScript] Error:', error);
+               updateNode(id, { status: 'ERROR' });
             }
          },
       })),

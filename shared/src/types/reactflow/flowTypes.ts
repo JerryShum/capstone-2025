@@ -17,6 +17,7 @@ export type httpsURL = `https://${string}`;
 export type ScriptNodeData = {
    type: 'script';
    content: string;
+   status?: 'IDLE' | 'GENERATING' | 'ERROR';
    locked?: boolean;
 };
 export type ScriptNode = Node<ScriptNodeData, 'script'>;
@@ -68,12 +69,17 @@ export type EnvironmentNodeData = {
 export type EnvironmentNode = Node<EnvironmentNodeData, 'environment'>;
 
 //@ General App Node (encapsulates all nodes)
-type AppNodeData =
+export type AppNodeData =
    | ScriptNodeData
    | CharacterNodeData
    | SceneNodeData
    | EnvironmentNodeData;
-export type AppNode = Node<AppNodeData>; // this appnode tells reactflow that the "official" nodes should only be the ones stated above
+
+export type AppNode =
+   | ScriptNode
+   | CharacterNode
+   | SceneNode
+   | EnvironmentNode;
 
 //---------------------------------------------------------
 
@@ -103,6 +109,7 @@ export type FlowState = {
    pollVideoStatus: (nodeID: string, operationName: string) => Promise<void>;
    resumeVideoPoll: () => void;
    stitchVideos: () => Promise<string | undefined>;
+   assistScript: (nodeID: string) => Promise<void>;
 
    // Undo/Redo
    past: HistoryItem[];
