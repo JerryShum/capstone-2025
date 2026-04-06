@@ -7,6 +7,7 @@ import {
    FolderOpen,
    ImageIcon,
    Settings,
+   Video,
 } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import logo from '/story_weaver_logo_2.svg';
@@ -41,13 +42,14 @@ const navMain: {
    icon: React.ElementType;
    items?: { title: string; url: string; isActive?: boolean }[];
 }[] = [
-   { title: 'Home',            url: '/',           icon: Home },
-   { title: 'Dashboard',       url: '/dashboard',  icon: LayoutDashboard },
-   { title: 'Getting Started', url: '#',           icon: BookOpen },
-   { title: 'Projects',        url: '#',           icon: FolderOpen },
-   { title: 'Assets',          url: '#',           icon: ImageIcon },
-   { title: 'Settings',        url: '#',           icon: Settings },
-];
+      { title: 'Home', url: '/', icon: Home },
+      { title: 'Videos', url: '/videos', icon: Video },
+      // { title: 'Dashboard',       url: '/dashboard',  icon: LayoutDashboard },
+      // { title: 'Getting Started', url: '#',           icon: BookOpen },
+      // { title: 'Projects',        url: '#',           icon: FolderOpen },
+      // { title: 'Assets',          url: '#',           icon: ImageIcon },
+      // { title: 'Settings',        url: '#',           icon: Settings },
+   ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
    const { data: session } = authClient.useSession();
@@ -56,11 +58,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
    // Derive initials from real name, fall back to 'U'
    const initials = user?.name
       ? user.name
-           .split(' ')
-           .map((n) => n[0])
-           .join('')
-           .toUpperCase()
-           .slice(0, 2)
+         .split(' ')
+         .map((n) => n[0])
+         .join('')
+         .toUpperCase()
+         .slice(0, 2)
       : 'U';
 
    return (
@@ -134,12 +136,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         side="top"
                         className="w-[--radix-popper-anchor-width]"
                      >
-                        <DropdownMenuItem>
+                        {/* <DropdownMenuItem>
                            <span>Account</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                            <span>Billing</span>
-                        </DropdownMenuItem>
+                        </DropdownMenuItem> */}
                         <DropdownMenuItem
                            onClick={() =>
                               authClient.signOut({
