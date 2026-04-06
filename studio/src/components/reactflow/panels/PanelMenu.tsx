@@ -54,7 +54,7 @@ export default function IconMenu() {
                   >
                      Edit Project Settings
                   </DropdownMenuItem>
-                  <DropdownMenuItem>Subscription</DropdownMenuItem>
+                  {/* <DropdownMenuItem>Subscription</DropdownMenuItem> */}
                </DropdownMenuGroup>
             </DropdownMenuContent>
          </DropdownMenu>
