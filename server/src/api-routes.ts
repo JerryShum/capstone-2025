@@ -6,6 +6,7 @@ import { createVideoRoute } from './routes/create/createVideoRoute';
 import { studioRoute } from './routes/studio/studio';
 import { videoRoute } from './routes/studio/videoRoute';
 import { stitchVideoRoute } from './routes/studio/stitchVideoRoute';
+import { scriptRoute } from './routes/studio/scriptRoute';
 import { auth } from './lib/auth';
 
 import type { Env } from './lib/auth';
@@ -24,7 +25,8 @@ export const apiRoutes = new Hono<Env>()
    .route('/create', createVideoRoute)
    .route('/studio', studioRoute)
    .route('/studio/video', videoRoute)
-   .route('/studio', stitchVideoRoute);
+   .route('/studio', stitchVideoRoute)
+   .route('/studio/script', scriptRoute);
 
 // unused auth routes
 // .route('/login', loginRoute)
