@@ -1,7 +1,7 @@
 import useFlowStore from '@/hooks/useFlowStore';
 import { canExtendScene } from '@/lib/functions/graphUtils';
 import type { SceneNode } from '@shared';
-import { Handle, Position, type NodeProps } from '@xyflow/react';
+import { Handle, Position, type NodeProps, NodeResizer } from '@xyflow/react';
 import {
    AlertCircle,
    Camera,
@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { useEffect } from 'react';
 
-export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
+export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) {
    const updateNode = useFlowStore((state) => state.updateNode);
    const generateVideo = useFlowStore((state) => state.generateVideo);
    const nodes = useFlowStore((state) => state.nodes);
@@ -63,7 +63,14 @@ export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
    };
 
    return (
-      <div className="relative bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[400px] flex flex-col gap-3 font-sans">
+      <div className="relative bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[400px] min-h-[300px] flex flex-col gap-3 font-sans h-full">
+         <NodeResizer 
+            minWidth={400} 
+            minHeight={300} 
+            isVisible={selected} 
+            lineClassName="border-slate-400"
+            handleClassName="bg-white border-2 border-slate-900 w-3 h-3 rounded-sm"
+         />
          {!!data.locked && (
             <div className="absolute -top-3 -right-3 bg-amber-500 text-white p-1.5 rounded-full shadow-md z-10">
                <Lock size={14} />
@@ -205,11 +212,11 @@ export default function SceneNode({ data, id }: NodeProps<SceneNode>) {
             )}
 
             {/* Media Display */}
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 flex-grow">
                <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
                   <ImageIcon size={10} /> Media Preview
                </label>
-               <div className="relative w-full aspect-video max-h-[300px] bg-slate-50 border-2 border-slate-100 rounded-lg overflow-hidden flex items-center justify-center group">
+               <div className="relative w-full aspect-video flex-grow bg-slate-50 border-2 border-slate-100 rounded-lg overflow-hidden flex items-center justify-center group">
                   {data.videoURL && data.videoURL !== 'https://...' ? (
                      <video
                         src={data.videoURL}

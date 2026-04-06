@@ -1,9 +1,16 @@
-import { Handle, Position, type NodeProps } from '@xyflow/react';
+import { Handle, Position, type NodeProps, NodeResizer } from '@xyflow/react';
 import { Sparkles, AlignLeft } from 'lucide-react';
 
-export default function PromptNode({ data }: NodeProps) {
+export default function PromptNode({ data, selected }: NodeProps) {
    return (
-      <div className="bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[240px] flex flex-col gap-3 font-sans">
+      <div className="bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[240px] min-h-[150px] flex flex-col gap-3 font-sans h-full">
+         <NodeResizer 
+            minWidth={240} 
+            minHeight={150} 
+            isVisible={selected} 
+            lineClassName="border-slate-400"
+            handleClassName="bg-white border-2 border-slate-900 w-3 h-3 rounded-sm"
+         />
          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-amber-500">
             <Sparkles size={14} />
             <span>AI Prompt</span>

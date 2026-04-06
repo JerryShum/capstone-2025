@@ -1,6 +1,5 @@
-import { Handle, Position } from '@xyflow/react';
+import { Handle, Position, type NodeProps, NodeResizer } from '@xyflow/react';
 import type { CharacterNode } from '@shared';
-import type { NodeProps } from '@xyflow/react';
 import useFlowStore from '@/hooks/useFlowStore';
 import {
    UserStar,
@@ -10,12 +9,19 @@ import {
    Lock,
 } from 'lucide-react';
 
-export default function CharacterNode({ data, id }: NodeProps<CharacterNode>) {
+export default function CharacterNode({ data, id, selected }: NodeProps<CharacterNode>) {
 
    const updateNode = useFlowStore((state) => state.updateNode);
 
    return (
-      <div className="relative bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[240px] flex flex-col gap-3 font-sans">
+      <div className="relative bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[280px] min-h-[200px] flex flex-col gap-3 font-sans h-full">
+         <NodeResizer 
+            minWidth={280} 
+            minHeight={200} 
+            isVisible={selected} 
+            lineClassName="border-slate-400"
+            handleClassName="bg-white border-2 border-slate-900 w-3 h-3 rounded-sm"
+         />
          {data.locked && (
             <div className="absolute -top-3 -right-3 bg-amber-500 text-white p-1.5 rounded-full shadow-md z-10">
                <Lock size={14} />
@@ -26,7 +32,7 @@ export default function CharacterNode({ data, id }: NodeProps<CharacterNode>) {
             <span>Character / Identity</span>
          </div>
 
-         <div className="flex flex-col gap-2">
+         <div className="flex flex-col gap-2 flex-grow">
             {/* name */}
             <div className="flex flex-col gap-1">
                <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
@@ -54,12 +60,12 @@ export default function CharacterNode({ data, id }: NodeProps<CharacterNode>) {
             </div>
 
             {/* appearance */}
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 flex-grow">
                <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
                   <Sparkles size={10} /> Appearance
                </label>
                <textarea
-                  className="w-full text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-blue-500 outline-none transition-colors font-medium min-h-[50px] resize-none"
+                  className="w-full h-full text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-blue-500 outline-none transition-colors font-medium resize-none"
                   placeholder="Describe physical traits..."
                   value={data.appearance}
                   onChange={(e) =>
