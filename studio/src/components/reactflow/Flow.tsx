@@ -18,6 +18,7 @@ import CharacterNode from './customnodes/CharacterNode';
 import EnvironmentNode from './customnodes/EnvironmentNode';
 import SceneNode from './customnodes/SceneNode';
 import ScriptNode from './customnodes/ScriptNode';
+import { StitchResultModal } from './panels/StitchResultModal';
 import useUndoRedo from '@/hooks/useUndoRedo';
 import IconMenu from './panels/PanelMenu';
 import NodeButton from './panels/NodeButton';
@@ -234,34 +235,12 @@ export default function Flow() {
                </button>
             </Panel>
 
-            {/* Stitch Result Dialog */}
+            {/* Stitch Result Dialog Overlay */}
             {stitchResult && (
-               <Panel position="top-left" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 1000 }}>
-                  <div className="bg-background border border-border rounded-2xl shadow-2xl p-6 w-[480px]">
-                     <h2 className="text-lg font-bold mb-3">🎬 Stitched Video Ready</h2>
-                     <video
-                        src={stitchResult}
-                        controls
-                        className="w-full rounded-lg mb-4 max-h-64 object-contain bg-black"
-                     />
-                     <div className="flex gap-2">
-                        <a
-                           href={stitchResult}
-                           target="_blank"
-                           rel="noreferrer"
-                           className="flex-1 text-center py-2 px-4 rounded-lg bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium"
-                        >
-                           Open in New Tab
-                        </a>
-                        <button
-                           onClick={() => setStitchResult(null)}
-                           className="py-2 px-4 rounded-lg border border-border text-sm font-medium hover:bg-accent"
-                        >
-                           Close
-                        </button>
-                     </div>
-                  </div>
-               </Panel>
+               <StitchResultModal 
+                  stitchResult={stitchResult} 
+                  onClose={() => setStitchResult(null)} 
+               />
             )}
             <Panel position="center-left">
                <div></div>
