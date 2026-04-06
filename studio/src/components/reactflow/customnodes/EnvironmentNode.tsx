@@ -12,10 +12,10 @@ export default function EnvironmentNode({ data, id, selected }: NodeProps) {
    };
 
    return (
-      <div className="relative bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[280px] min-h-[250px] flex flex-col gap-3 font-sans h-full">
+      <div className="relative bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[300px] min-h-[350px] flex flex-col gap-3 font-sans w-full h-full">
          <NodeResizer 
-            minWidth={280} 
-            minHeight={250} 
+            minWidth={300} 
+            minHeight={350} 
             isVisible={selected} 
             lineClassName="border-slate-400"
             handleClassName="bg-white border-2 border-slate-900 w-3 h-3 rounded-sm"
@@ -30,7 +30,7 @@ export default function EnvironmentNode({ data, id, selected }: NodeProps) {
             <span>Environment / Setting</span>
          </div>
 
-         <div className="flex flex-col gap-2 flex-grow">
+         <div className="flex flex-col gap-2 grow">
             {/* location */}
             <div className="flex flex-col gap-1">
                <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
@@ -98,7 +98,7 @@ export default function EnvironmentNode({ data, id, selected }: NodeProps) {
             </div>
 
             {/* description */}
-            <div className="flex flex-col gap-1 flex-grow">
+            <div className="flex flex-col gap-1 grow">
                <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
                   <AlignLeft size={10} /> Detailed Description
                </label>

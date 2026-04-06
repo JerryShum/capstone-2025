@@ -10,10 +10,10 @@ export default function ScriptNode({ data, id, selected }: NodeProps<ScriptNode>
    const isGenerating = data.status === 'GENERATING';
 
    return (
-      <div className="relative bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[300px] min-h-[150px] flex flex-col gap-3 font-sans h-full">
+      <div className="relative bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[300px] min-h-[200px] flex flex-col gap-3 font-sans w-full h-full">
          <NodeResizer 
             minWidth={300} 
-            minHeight={150} 
+            minHeight={200} 
             isVisible={selected} 
             lineClassName="border-slate-400"
             handleClassName="bg-white border-2 border-slate-900 w-3 h-3 rounded-sm"
@@ -53,13 +53,13 @@ export default function ScriptNode({ data, id, selected }: NodeProps<ScriptNode>
             </button>
          </div>
 
-         <div className="flex flex-col gap-2 flex-grow">
+         <div className="flex flex-col gap-2 grow">
             <div className="flex flex-col gap-1 h-full">
                <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
                   <AlignLeft size={10} /> Content
                </label>
                <textarea
-                  className="w-full flex-grow text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-indigo-500 outline-none transition-colors resize-none font-mono"
+                  className="w-full grow text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-indigo-500 outline-none transition-colors resize-none font-mono"
                   placeholder="Enter your script or detailed prompt here..."
                   value={data?.content as string}
                   onChange={(e) => updateNode(id, { content: e.target.value })}
