@@ -80,7 +80,7 @@ export const videoRoute = new Hono<Env>()
             // Note: native Veo video extension (video.uri) is Vertex AI only, not supported by the Gemini API.
             console.log(`[generate] Frame continuation (image-to-video).`);
             operation = await genAI.models.generateVideos({
-               model: 'veo-3.1-generate-preview',
+               model: 'veo-3.1-lite-generate-preview',
                prompt: masterPrompt,
                image: {
                   imageBytes: lastFrameBase64,
@@ -143,7 +143,9 @@ export const videoRoute = new Hono<Env>()
          const { videoURL } = c.req.valid('query');
 
          try {
-            console.log(`[extract-frame] Extracting last frame from: ${videoURL}`);
+            console.log(
+               `[extract-frame] Extracting last frame from: ${videoURL}`,
+            );
             const frameBase64 = await extractLastFrame(videoURL);
             return c.json({ frameBase64 });
          } catch (error: unknown) {
@@ -237,5 +239,9 @@ export const videoRoute = new Hono<Env>()
          .where(eq(videoOperationsTable.name, operationName));
 
       // return both URLs back to the studio
-      return c.json({ status: 'READY_TO_DOWNLOAD', videosURL: videoURL, geminiVideoUri });
+      return c.json({
+         status: 'READY_TO_DOWNLOAD',
+         videosURL: videoURL,
+         geminiVideoUri,
+      });
    });
