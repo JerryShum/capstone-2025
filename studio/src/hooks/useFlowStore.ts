@@ -254,26 +254,8 @@ const useFlowStore = create<FlowState>()(
                   },
                });
 
-               // Handle non-OK responses (e.g. 400 from content filter)
-               if (!response.ok) {
-                  let errorMessage = 'Server rejected the request.';
-                  try {
-                     const errorBody = await response.json();
-                     if (errorBody && typeof errorBody === 'object' && 'message' in errorBody) {
-                        errorMessage = (errorBody as { message: string }).message;
-                     }
-                  } catch {
-                     // response body wasn't JSON — use default message
-                  }
-
-                  const { toast } = await import('sonner');
-                  toast.error(errorMessage);
-
-                  updateNode(id, {
-                     status: 'ERROR',
-                     errorMessage,
-                  });
-                  return;
+               if (!response) {
+                  console.error('ERROR: Unable to generate video.');
                }
 
                const responseData = await response.json();
@@ -304,16 +286,12 @@ const useFlowStore = create<FlowState>()(
                get().pollVideoStatus(id, operationName);
             } catch (error) {
                console.error('ERROR during video generation:', error);
-
-               const { toast } = await import('sonner');
-               const errorMessage = error instanceof Error
-                  ? error.message
-                  : 'An unexpected error occurred.';
-               toast.error(errorMessage);
-
                updateNode(id, {
                   status: 'ERROR',
-                  errorMessage,
+                  errorMessage:
+                     error instanceof Error
+                        ? error.message
+                        : 'An unexpected error occurred.',
                });
             }
          },
