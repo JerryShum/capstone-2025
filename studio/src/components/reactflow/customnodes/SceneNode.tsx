@@ -63,10 +63,11 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
    };
 
    return (
-      <div className="relative bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[400px] min-h-[450px] flex flex-col gap-3 font-sans w-full h-full">
+      <div className="relative bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[400px] min-h-[520px] flex flex-col gap-3 font-sans w-full h-full">
          <NodeResizer 
             minWidth={400} 
-            minHeight={450} 
+            minHeight={520} 
+            keepAspectRatio={true}
             isVisible={selected} 
             lineClassName="border-slate-400"
             handleClassName="bg-white border-2 border-slate-900 w-3 h-3 rounded-sm"
@@ -89,7 +90,7 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
             </div>
          </div>
 
-         <div className="flex flex-col gap-2">
+         <div className="flex flex-col gap-2 grow overflow-hidden">
             {/* scene prompt */}
             <div className="flex flex-col gap-1">
                <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
@@ -107,22 +108,19 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
 
             <div className="grid grid-cols-2 gap-3">
                {/* duration */}
-               <div className="flex flex-col gap-1">
+               <div className="flex flex-col gap-1 opacity-60">
                   <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
                      <Clock size={10} /> Duration (s)
                   </label>
-                  <input
-                     type="number"
-                     className="w-full text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-purple-500 outline-none transition-colors font-medium"
-                     min={1}
-                     max={30}
-                     value={data.duration}
-                     onChange={(e) =>
-                        updateNode(id, {
-                           duration: parseInt(e.target.value) || 0,
-                        })
-                     }
-                  />
+                  <div className="relative">
+                     <input
+                        type="number"
+                        className="w-full text-sm p-2 border-2 border-slate-100 rounded-lg bg-slate-50 outline-none font-medium cursor-not-allowed"
+                        value={8}
+                        disabled
+                     />
+                     
+                  </div>
                </div>
 
                {/* shot type */}
@@ -166,7 +164,7 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
             </div>
 
             {/* Extend Previous Scene Toggle */}
-            <div className="flex items-center justify-between p-2 bg-slate-50 rounded-lg border-2 border-slate-100 mt-1">
+            <div className="flex items-center justify-between p-2 bg-slate-50 rounded-lg border-2 border-slate-100">
                <div className="flex items-center gap-2">
                   <Layers
                      size={14}
@@ -212,37 +210,39 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
             )}
 
             {/* Media Display */}
-            <div className="flex flex-col gap-1 grow">
+            <div className="flex flex-col gap-1 grow min-h-[140px]">
                <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
                   <ImageIcon size={10} /> Media Preview
                </label>
-               <div className="relative w-full aspect-video grow bg-slate-50 border-2 border-slate-100 rounded-lg overflow-hidden flex items-center justify-center group">
-                  {data.videoURL && data.videoURL !== 'https://...' ? (
-                     <video
-                        src={data.videoURL}
-                        controls
-                        className="w-full h-full object-contain bg-black"
-                        poster={
-                           data.thumbnailURL !== 'https://...'
-                              ? data.thumbnailURL
-                              : undefined
-                        }
-                     />
-                  ) : data.thumbnailURL &&
-                    data.thumbnailURL !== 'https://...' ? (
-                     <img
-                        src={data.thumbnailURL}
-                        alt="Scene Thumbnail"
-                        className="w-full h-full object-cover"
-                     />
-                  ) : (
-                     <div className="flex flex-col items-center justify-center gap-2 text-slate-300">
-                        <ImageIcon size={24} />
-                        <span className="text-[10px] uppercase font-bold tracking-wider">
-                           No Media
-                        </span>
-                     </div>
-                  )}
+               <div className="relative w-full grow bg-slate-50 border-2 border-slate-100 rounded-lg overflow-hidden group">
+                  <div className="absolute inset-0 flex items-center justify-center bg-slate-900/5">
+                     {data.videoURL && data.videoURL !== 'https://...' ? (
+                        <video
+                           src={data.videoURL}
+                           controls
+                           className="w-full h-full object-contain bg-black"
+                           poster={
+                              data.thumbnailURL !== 'https://...'
+                                 ? data.thumbnailURL
+                                 : undefined
+                           }
+                        />
+                     ) : data.thumbnailURL &&
+                        data.thumbnailURL !== 'https://...' ? (
+                        <img
+                           src={data.thumbnailURL}
+                           alt="Scene Thumbnail"
+                           className="w-full h-full object-cover"
+                        />
+                     ) : (
+                        <div className="flex flex-col items-center justify-center gap-2 text-slate-300">
+                           <ImageIcon size={24} />
+                           <span className="text-[10px] uppercase font-bold tracking-wider">
+                              No Media
+                           </span>
+                        </div>
+                     )}
+                  </div>
                </div>
             </div>
 
@@ -251,7 +251,7 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
             {data.status === 'IDLE' && (
                <button
                   onClick={() => generateVideo(id)}
-                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-purple-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-200 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
+                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-purple-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] transition-all hover:bg-purple-700 hover:cursor-pointer disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-200 disabled:shadow-none disabled:cursor-not-allowed"
                >
                   <>
                      <Play size={16} fill="white" />
@@ -275,7 +275,7 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
             {data.status === 'ERROR' && (
                <button
                   onClick={() => generateVideo(id)}
-                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-red-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all"
+                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-red-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] transition-all hover:bg-red-700 hover:cursor-pointer"
                >
                   <>
                      <AlertCircle size={16} />
@@ -287,7 +287,7 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
             {data.status === 'READY' && (
                <button
                   onClick={() => generateVideo(id)}
-                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all"
+                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] transition-all hover:bg-emerald-700 hover:cursor-pointer"
                >
                   <>
                      <Play size={16} fill="white" />

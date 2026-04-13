@@ -81,7 +81,7 @@ const initSceneNode: SceneNode = {
       type: 'scene',
       scenePrompt:
          'Barry the chicken stands in the center of the sunshine farmyard, looking down at a small, glowing blue seed on the ground. He tilts his head curiously.',
-      duration: 5,
+      duration: 8,
       shotType: 'Medium',
       cameraMovement: 'Static',
       status: 'IDLE',
@@ -99,7 +99,7 @@ const initSceneNode2: SceneNode = {
       type: 'scene',
       scenePrompt:
          "Close up on Barry's face as his eyes widen in amazement. The blue glow of the seed reflects in his eyes. He looks extremely excited.",
-      duration: 4,
+      duration: 8,
       shotType: 'Close-up',
       cameraMovement: 'Zoom',
       status: 'IDLE',
