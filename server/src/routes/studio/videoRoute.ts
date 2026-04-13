@@ -80,7 +80,7 @@ export const videoRoute = new Hono<Env>()
             // Note: native Veo video extension (video.uri) is Vertex AI only, not supported by the Gemini API.
             console.log(`[generate] Frame continuation (image-to-video).`);
             operation = await genAI.models.generateVideos({
-               model: 'veo-3.1-lite-generate-preview',
+               model: 'veo-3.1-fast-generate-preview',
                prompt: masterPrompt,
                image: {
                   imageBytes: lastFrameBase64,
