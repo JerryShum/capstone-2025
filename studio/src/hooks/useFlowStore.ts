@@ -255,14 +255,25 @@ const useFlowStore = create<FlowState>()(
                   },
                });
 
-               if (!response) {
-                  console.error('ERROR: Unable to generate video.');
+               if (!response.ok) {
+                  const errData = (await response.json()) as { message?: string };
+                  updateNode(id, {
+                     status: 'ERROR',
+                     errorMessage:
+                        errData.message ??
+                        'Unable to start video generation on the server.',
+                  });
+                  return;
                }
 
                const responseData = await response.json();
 
                if (!('operationName' in responseData)) {
-                  console.error('ERROR: Invalid response format.');
+                  updateNode(id, {
+                     status: 'ERROR',
+                     errorMessage:
+                        'Server returned an invalid response. Missing operation ID.',
+                  });
                   return;
                }
 

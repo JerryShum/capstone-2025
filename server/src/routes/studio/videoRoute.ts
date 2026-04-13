@@ -27,10 +27,13 @@ const genAI = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 //! GCS bucket name and credentials
 const GCS_BUCKET_NAME = process.env.GCS_BUCKET_NAME;
+if (!GCS_BUCKET_NAME) {
+   throw new Error('GCS_BUCKET_NAME is not set in the environment variables.');
+}
 
 // Connecting to GCS
 const storage = new Storage();
-const bucket = storage.bucket(GCS_BUCKET_NAME!);
+const bucket = storage.bucket(GCS_BUCKET_NAME);
 
 //---------------------------------------------------------
 
@@ -188,12 +191,18 @@ export const videoRoute = new Hono<Env>()
    .get('/status/:name{.+}', async (c) => {
       // get the operationName from the URL
       const operationName = c.req.param('name');
+      const user = c.get('user');
 
       //@ Check the DB to see if their video has already been saved (we don't have to save & download from google)
       const [dbRecord] = await db
          .select()
          .from(videoOperationsTable)
-         .where(eq(videoOperationsTable.name, operationName));
+         .where(
+            and(
+               eq(videoOperationsTable.name, operationName),
+               eq(videoOperationsTable.userID, user.id),
+            ),
+         );
 
       if (dbRecord && dbRecord.status == 'DONE') {
          // we already have the video --> inside GCP bucket --> WE DO NOT WANT TO DOWNLOAD IT AGAIN
@@ -259,7 +268,12 @@ export const videoRoute = new Hono<Env>()
       await db
          .update(videoOperationsTable)
          .set({ status: 'DONE', videosURL: videoURL, geminiVideoUri })
-         .where(eq(videoOperationsTable.name, operationName));
+         .where(
+            and(
+               eq(videoOperationsTable.name, operationName),
+               eq(videoOperationsTable.userID, user.id),
+            ),
+         );
 
       // return both URLs back to the studio
       return c.json({

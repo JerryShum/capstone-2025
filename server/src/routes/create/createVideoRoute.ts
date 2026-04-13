@@ -14,10 +14,13 @@ import { storeAndShowVideo } from '@server/functions/video/storeAndShowVideo';
 
 //! GCS bucket name and credentials
 const GCS_BUCKET_NAME = process.env.GCS_BUCKET_NAME; // Add this to your .env!
+if (!GCS_BUCKET_NAME) {
+   throw new Error('GCS_BUCKET_NAME is not set in the environment variables.');
+}
 
 //! Connecting to GCS
 const storage = new Storage();
-const bucket = storage.bucket(GCS_BUCKET_NAME!);
+const bucket = storage.bucket(GCS_BUCKET_NAME);
 
 //----------------------------------------------------------------------
 
