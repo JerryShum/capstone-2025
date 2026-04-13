@@ -1,7 +1,7 @@
 import useFlowStore from '@/hooks/useFlowStore';
 import { canExtendScene } from '@/lib/functions/graphUtils';
 import type { SceneNode } from '@shared';
-import { Handle, Position, type NodeProps, NodeResizer } from '@xyflow/react';
+import { Handle, Position, type NodeProps } from '@xyflow/react';
 import {
    AlertCircle,
    Camera,
@@ -13,22 +13,25 @@ import {
    Move,
    Play,
    Type,
-   Lock,
    Layers,
 } from 'lucide-react';
 import { useEffect } from 'react';
+import NodeWrapper from './components/NodeWrapper';
+import NodeHeader from './components/NodeHeader';
+import NodeField from './components/NodeField';
+import NodeTextarea from './components/NodeTextarea';
+import NodeSelect from './components/NodeSelect';
 
 export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) {
    const updateNode = useFlowStore((state) => state.updateNode);
    const generateVideo = useFlowStore((state) => state.generateVideo);
    const nodes = useFlowStore((state) => state.nodes);
    const edges = useFlowStore((state) => state.edges);
-   //---------------------------------------------------------'
 
    // canExtend --> derived state by calling the canExtendScene() function from graphUtils.ts
    const canExtend = canExtendScene(id, nodes, edges);
 
-   // useEffect --> checks on mount / re-render if the data.canExtend state is actually differnt from the derived canExtend function state
+   // useEffect --> checks on mount / re-render if the data.canExtend state is actually different from the derived canExtend function state
    // this might happen if the user disconnects the parentSceneNode and can't toggle the button
    useEffect(() => {
       if (!canExtend && data.canExtend) {
@@ -62,115 +65,84 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
       }
    };
 
+   const statusSlot = (
+      <div className={`flex items-center gap-1 text-[10px] font-bold uppercase ${getStatusColor()}`}>
+         {getStatusIcon()}
+         <span>{data.status}</span>
+      </div>
+   );
+
    return (
-      <div className="relative bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[400px] min-h-[520px] flex flex-col gap-3 font-sans w-full h-full">
-         <NodeResizer 
-            minWidth={400} 
-            minHeight={520} 
-            keepAspectRatio={true}
-            isVisible={selected} 
-            lineClassName="border-slate-400"
-            handleClassName="bg-white border-2 border-slate-900 w-3 h-3 rounded-sm"
-         />
-         {!!data.locked && (
-            <div className="absolute -top-3 -right-3 bg-amber-500 text-white p-1.5 rounded-full shadow-md z-10">
-               <Lock size={14} />
-            </div>
-         )}
-         <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-purple-500">
-               <Clapperboard size={14} />
-               <span>Scene / Shot</span>
-            </div>
-            <div
-               className={`flex items-center gap-1 text-[10px] font-bold uppercase ${getStatusColor()}`}
-            >
-               {getStatusIcon()}
-               <span>{data.status}</span>
-            </div>
-         </div>
+      <NodeWrapper
+         selected={selected}
+         minWidth={400}
+         minHeight={520}
+         keepAspectRatio
+         locked={!!data.locked}
+      >
+         <NodeHeader icon={Clapperboard} label="Scene / Shot" color="purple" rightSlot={statusSlot} />
 
          <div className="flex flex-col gap-2 grow overflow-hidden">
             {/* scene prompt */}
-            <div className="flex flex-col gap-1">
-               <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
-                  <Type size={10} /> Scene Prompt
-               </label>
-               <textarea
-                  className="w-full text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-purple-500 outline-none transition-colors font-medium min-h-[60px] resize-none"
+            <NodeField icon={Type} label="Scene Prompt">
+               <NodeTextarea
+                  accentColor="purple"
+                  className="min-h-[60px]"
                   placeholder="Describe the action and visuals..."
                   value={data.scenePrompt}
-                  onChange={(e) =>
-                     updateNode(id, { scenePrompt: e.target.value })
-                  }
+                  onChange={(e) => updateNode(id, { scenePrompt: e.target.value })}
                />
-            </div>
+            </NodeField>
 
             <div className="grid grid-cols-2 gap-3">
-               {/* duration */}
-               <div className="flex flex-col gap-1 opacity-60">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
-                     <Clock size={10} /> Duration (s)
-                  </label>
+               {/* duration – disabled/locked */}
+               <NodeField icon={Clock} label="Duration (s)" className="opacity-60">
                   <div className="relative">
                      <input
                         type="number"
-                        className="w-full text-sm p-2 border-2 border-slate-100 rounded-lg bg-slate-50 outline-none font-medium cursor-not-allowed"
+                        className="w-full text-sm text-slate-700 p-2 bg-slate-50/60 border-2 border-slate-50 rounded-lg outline-none font-medium cursor-not-allowed"
                         value={8}
                         disabled
                      />
-                     
                   </div>
-               </div>
+               </NodeField>
 
                {/* shot type */}
-               <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
-                     <Camera size={10} /> Shot Type
-                  </label>
-                  <select
-                     className="w-full text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-purple-500 outline-none transition-colors bg-white font-medium"
+               <NodeField icon={Camera} label="Shot Type">
+                  <NodeSelect
+                     accentColor="purple"
                      value={data.shotType}
-                     onChange={(e) =>
-                        updateNode(id, { shotType: e.target.value as any })
-                     }
+                     onChange={(e) => updateNode(id, { shotType: e.target.value as any })}
                   >
                      <option value="Wide">Wide</option>
                      <option value="Medium">Medium</option>
                      <option value="Close-up">Close-up</option>
                      <option value="Over-the-shoulder">OTS</option>
-                  </select>
-               </div>
+                  </NodeSelect>
+               </NodeField>
             </div>
 
             {/* camera movement */}
-            <div className="flex flex-col gap-1">
-               <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
-                  <Move size={10} /> Camera Movement
-               </label>
-               <select
-                  className="w-full text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-purple-500 outline-none transition-colors bg-white font-medium"
+            <NodeField icon={Move} label="Camera Movement">
+               <NodeSelect
+                  accentColor="purple"
                   value={data.cameraMovement}
-                  onChange={(e) =>
-                     updateNode(id, { cameraMovement: e.target.value as any })
-                  }
+                  onChange={(e) => updateNode(id, { cameraMovement: e.target.value as any })}
                >
                   <option value="Static">Static</option>
                   <option value="Pan">Pan</option>
                   <option value="Tilt">Tilt</option>
                   <option value="Zoom">Zoom</option>
                   <option value="Dolly">Dolly</option>
-               </select>
-            </div>
+               </NodeSelect>
+            </NodeField>
 
             {/* Extend Previous Scene Toggle */}
-            <div className="flex items-center justify-between p-2 bg-slate-50 rounded-lg border-2 border-slate-100">
+            <div className="flex items-center justify-between p-2 bg-slate-50 rounded-lg border-2 border-slate-50">
                <div className="flex items-center gap-2">
                   <Layers
                      size={14}
-                     className={
-                        canExtend ? 'text-purple-500' : 'text-slate-300'
-                     }
+                     className={canExtend ? 'text-purple-500' : 'text-slate-300'}
                   />
                   <span
                      className={`text-[10px] font-bold uppercase ${canExtend ? 'text-slate-700' : 'text-slate-300'}`}
@@ -199,10 +171,7 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
 
             {data.status === 'ERROR' && data.errorMessage && (
                <div className="flex items-start gap-2 p-2 bg-red-50 border border-red-100 rounded-lg">
-                  <AlertCircle
-                     size={14}
-                     className="text-red-500 shrink-0 mt-0.5"
-                  />
+                  <AlertCircle size={14} className="text-red-500 shrink-0 mt-0.5" />
                   <p className="text-[10px] text-red-600 font-medium leading-relaxed">
                      {data.errorMessage}
                   </p>
@@ -211,10 +180,10 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
 
             {/* Media Display */}
             <div className="flex flex-col gap-1 grow min-h-[140px]">
-               <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
+               <label className="text-[10px] font-bold text-slate-300 uppercase flex items-center gap-1">
                   <ImageIcon size={10} /> Media Preview
                </label>
-               <div className="relative w-full grow bg-slate-50 border-2 border-slate-100 rounded-lg overflow-hidden group">
+               <div className="relative w-full grow bg-slate-50 border-2 border-slate-50 rounded-lg overflow-hidden group">
                   <div className="absolute inset-0 flex items-center justify-center bg-slate-900/5">
                      {data.videoURL && data.videoURL !== 'https://...' ? (
                         <video
@@ -227,8 +196,7 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
                                  : undefined
                            }
                         />
-                     ) : data.thumbnailURL &&
-                        data.thumbnailURL !== 'https://...' ? (
+                     ) : data.thumbnailURL && data.thumbnailURL !== 'https://...' ? (
                         <img
                            src={data.thumbnailURL}
                            alt="Scene Thumbnail"
@@ -246,8 +214,7 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
                </div>
             </div>
 
-            {/* Generate Button */}
-            {/* STATUS IS IDLE (user has not generated a video) */}
+            {/* Generate Button — STATUS IS IDLE */}
             {data.status === 'IDLE' && (
                <button
                   onClick={() => generateVideo(id)}
@@ -259,7 +226,7 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
                   </>
                </button>
             )}
-            {/* status is PROCESSING --> show disabled + loader */}
+            {/* STATUS IS PROCESSING */}
             {data.status === 'PROCESSING' && (
                <button
                   disabled
@@ -271,7 +238,7 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
                   </>
                </button>
             )}
-            {/* status is ERROR --> show try again button */}
+            {/* STATUS IS ERROR */}
             {data.status === 'ERROR' && (
                <button
                   onClick={() => generateVideo(id)}
@@ -283,7 +250,7 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
                   </>
                </button>
             )}
-            {/* status is READY --> show regenerate button */}
+            {/* STATUS IS READY */}
             {data.status === 'READY' && (
                <button
                   onClick={() => generateVideo(id)}
@@ -306,9 +273,9 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
          <Handle
             type="source"
             position={Position.Right}
-            className="bg-slate-900 border-2 border-white "
+            className="bg-slate-900 border-2 border-white"
             style={{ width: '12px', height: '12px' }}
          />
-      </div>
+      </NodeWrapper>
    );
 }
