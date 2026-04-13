@@ -63,8 +63,8 @@ export default function IconMenu({
                      onSelect={onOpenTutorial}
                      className="gap-2"
                   >
-                     <HelpCircle className="size-4" />
                      How To Use
+                     <HelpCircle className="size-4 text-black" />
                   </DropdownMenuItem>
                </DropdownMenuGroup>
             </DropdownMenuContent>
