@@ -10,5 +10,7 @@ leoProfanity.loadDictionary('en');
  */
 export function containsProfanity(text: string): boolean {
    if (!text) return false;
-   return leoProfanity.check(text);
+   // Normalize whitespace (replace newlines/tabs with spaces) to ensure leo-profanity detects words separated by newlines
+   const normalizedText = text.replace(/\s+/g, ' ');
+   return leoProfanity.check(normalizedText);
 }
