@@ -1,6 +1,7 @@
 import useFlowStore from '@/hooks/useFlowStore';
 import { canExtendScene } from '@/lib/functions/graphUtils';
 import type { SceneNode } from '@shared';
+import { checkContentSafety } from '@shared/utils/contentFilter';
 import { Handle, Position, type NodeProps, NodeResizer } from '@xyflow/react';
 import {
    AlertCircle,
@@ -12,11 +13,12 @@ import {
    Loader2,
    Move,
    Play,
+   ShieldAlert,
    Type,
    Lock,
    Layers,
 } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) {
    const updateNode = useFlowStore((state) => state.updateNode);
@@ -35,6 +37,15 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
          updateNode(id, { canExtend: false });
       }
    }, [canExtend, data.canExtend, id, updateNode]);
+
+   // ─── Proactive content safety check ──────────────────────────────
+   // useMemo ensures we only re-run the check when the prompt changes.
+   // leo-profanity's .check() is synchronous + sub-millisecond, so no debounce needed.
+   const promptSafetyResult = useMemo(
+      () => checkContentSafety(data.scenePrompt),
+      [data.scenePrompt],
+   );
+   const isPromptUnsafe = !promptSafetyResult.safe;
 
    const getStatusIcon = () => {
       switch (data.status) {
@@ -96,13 +107,26 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
                   <Type size={10} /> Scene Prompt
                </label>
                <textarea
-                  className="w-full text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-purple-500 outline-none transition-colors font-medium min-h-[60px] resize-none"
+                  className={`w-full text-sm p-2 border-2 rounded-lg outline-none transition-colors font-medium min-h-[60px] resize-none ${
+                     isPromptUnsafe
+                        ? 'border-red-400 bg-red-50/50 focus:border-red-500'
+                        : 'border-slate-100 focus:border-purple-500'
+                  }`}
                   placeholder="Describe the action and visuals..."
                   value={data.scenePrompt}
                   onChange={(e) =>
                      updateNode(id, { scenePrompt: e.target.value })
                   }
                />
+               {/* Proactive warning banner */}
+               {isPromptUnsafe && (
+                  <div className="flex items-center gap-1.5 px-2 py-1 bg-red-100 border-2 border-red-300 rounded-lg">
+                     <ShieldAlert size={12} className="text-red-500 shrink-0" />
+                     <span className="text-[10px] font-bold text-red-600 uppercase tracking-wide">
+                        Inappropriate content detected — generation disabled
+                     </span>
+                  </div>
+               )}
             </div>
 
             <div className="grid grid-cols-2 gap-3">
@@ -251,6 +275,7 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
             {data.status === 'IDLE' && (
                <button
                   onClick={() => generateVideo(id)}
+                  disabled={isPromptUnsafe}
                   className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-purple-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-200 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
                >
                   <>
@@ -275,7 +300,8 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
             {data.status === 'ERROR' && (
                <button
                   onClick={() => generateVideo(id)}
-                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-red-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all"
+                  disabled={isPromptUnsafe}
+                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-red-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-200 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
                >
                   <>
                      <AlertCircle size={16} />
@@ -287,7 +313,8 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
             {data.status === 'READY' && (
                <button
                   onClick={() => generateVideo(id)}
-                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all"
+                  disabled={isPromptUnsafe}
+                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-200 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
                >
                   <>
                      <Play size={16} fill="white" />
