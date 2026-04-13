@@ -1,11 +1,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { exec } from 'child_process';
+import { execFile } from 'child_process';
 import { promisify } from 'util';
 import { waitForFile } from '../deprecated/waitForFile';
+import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
 
-const execAsync = promisify(exec);
+const execFileAsync = promisify(execFile);
 
 /**
  * Downloads a video from a GCS public URL and extracts the very last frame as a
@@ -42,13 +43,29 @@ export async function extractLastFrame(gcsPublicUrl: string): Promise<string> {
 
       console.log(`[extractLastFrame] Extracting last frame via ffmpeg...`);
 
+      const ffmpegPath = ffmpegInstaller?.path;
+      if (!ffmpegPath) {
+         throw new Error(
+            'FFmpeg binary is unavailable. Ensure @ffmpeg-installer/ffmpeg is installed for this platform.',
+         );
+      }
+
       // Use ffmpeg to grab the very last frame
       // -sseof -0.1  → seek to 0.1s before end
       // -frames:v 1  → extract exactly 1 frame
       // -q:v 2       → high quality PNG
-      await execAsync(
-         `ffmpeg -y -sseof -0.1 -i "${videoPath}" -frames:v 1 -q:v 2 "${framePath}"`,
-      );
+      await execFileAsync(ffmpegPath, [
+         '-y',
+         '-sseof',
+         '-0.1',
+         '-i',
+         videoPath,
+         '-frames:v',
+         '1',
+         '-q:v',
+         '2',
+         framePath,
+      ]);
 
       // Wait for the output frame to be written
       await waitForFile(framePath);

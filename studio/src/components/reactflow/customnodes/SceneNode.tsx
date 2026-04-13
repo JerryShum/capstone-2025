@@ -24,7 +24,11 @@ import NodeField from './components/NodeField';
 import NodeTextarea from './components/NodeTextarea';
 import NodeSelect from './components/NodeSelect';
 
-export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) {
+export default function SceneNode({
+   data,
+   id,
+   selected,
+}: NodeProps<SceneNode>) {
    const updateNode = useFlowStore((state) => state.updateNode);
    const { hasProfanity } = useProfanityCheck();
    const generateVideo = useFlowStore((state) => state.generateVideo);
@@ -39,8 +43,10 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
    // useEffect --> checks on mount / re-render if the data.canExtend state is actually different from the derived canExtend function state
    // this might happen if the user disconnects the parentSceneNode and can't toggle the button
    useEffect(() => {
+      console.log('testing can extend');
       if (!canExtend && data.canExtend) {
          updateNode(id, { canExtend: false });
+         ('testing can extend 2');
       }
    }, [canExtend, data.canExtend, id, updateNode]);
 
@@ -71,7 +77,9 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
    };
 
    const statusSlot = (
-      <div className={`flex items-center gap-1 text-[10px] font-bold uppercase ${getStatusColor()}`}>
+      <div
+         className={`flex items-center gap-1 text-[10px] font-bold uppercase ${getStatusColor()}`}
+      >
          {getStatusIcon()}
          <span>{data.status}</span>
       </div>
@@ -85,27 +93,40 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
          keepAspectRatio
          locked={!!data.locked}
       >
-         <NodeHeader icon={Clapperboard} label="Scene / Shot" color="purple" rightSlot={statusSlot} />
+         <NodeHeader
+            icon={Clapperboard}
+            label="Scene / Shot"
+            color="purple"
+            rightSlot={statusSlot}
+         />
 
          <div className="flex flex-col gap-2 grow overflow-hidden">
             {/* scene prompt */}
             <NodeField
                icon={Type}
                label="Scene Prompt"
-               error={isProfane ? 'Profanity detected and is not allowed' : null}
+               error={
+                  isProfane ? 'Profanity detected and is not allowed' : null
+               }
             >
                <NodeTextarea
                   accentColor="purple"
                   className="min-h-[60px]"
                   placeholder="Describe the action and visuals..."
                   value={data.scenePrompt}
-                  onChange={(e) => updateNode(id, { scenePrompt: e.target.value })}
+                  onChange={(e) =>
+                     updateNode(id, { scenePrompt: e.target.value })
+                  }
                />
             </NodeField>
 
             <div className="grid grid-cols-2 gap-3">
                {/* duration – disabled/locked */}
-               <NodeField icon={Clock} label="Duration (s)" className="opacity-60">
+               <NodeField
+                  icon={Clock}
+                  label="Duration (s)"
+                  className="opacity-60"
+               >
                   <div className="relative">
                      <input
                         type="number"
@@ -121,7 +142,9 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
                   <NodeSelect
                      accentColor="purple"
                      value={data.shotType}
-                     onChange={(e) => updateNode(id, { shotType: e.target.value as any })}
+                     onChange={(e) =>
+                        updateNode(id, { shotType: e.target.value as any })
+                     }
                   >
                      <option value="Wide">Wide</option>
                      <option value="Medium">Medium</option>
@@ -136,7 +159,9 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
                <NodeSelect
                   accentColor="purple"
                   value={data.cameraMovement}
-                  onChange={(e) => updateNode(id, { cameraMovement: e.target.value as any })}
+                  onChange={(e) =>
+                     updateNode(id, { cameraMovement: e.target.value as any })
+                  }
                >
                   <option value="Static">Static</option>
                   <option value="Pan">Pan</option>
@@ -151,7 +176,9 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
                <div className="flex items-center gap-2">
                   <Layers
                      size={14}
-                     className={canExtend ? 'text-purple-500' : 'text-slate-300'}
+                     className={
+                        canExtend ? 'text-purple-500' : 'text-slate-300'
+                     }
                   />
                   <span
                      className={`text-[10px] font-bold uppercase ${canExtend ? 'text-slate-700' : 'text-slate-300'}`}
@@ -180,7 +207,10 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
 
             {data.status === 'ERROR' && data.errorMessage && (
                <div className="flex items-start gap-2 p-2 bg-red-50 border border-red-100 rounded-lg">
-                  <AlertCircle size={14} className="text-red-500 shrink-0 mt-0.5" />
+                  <AlertCircle
+                     size={14}
+                     className="text-red-500 shrink-0 mt-0.5"
+                  />
                   <p className="text-[10px] text-red-600 font-medium leading-relaxed">
                      {data.errorMessage}
                   </p>
@@ -205,7 +235,8 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
                                  : undefined
                            }
                         />
-                     ) : data.thumbnailURL && data.thumbnailURL !== 'https://...' ? (
+                     ) : data.thumbnailURL &&
+                       data.thumbnailURL !== 'https://...' ? (
                         <img
                            src={data.thumbnailURL}
                            alt="Scene Thumbnail"
@@ -224,10 +255,14 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
             </div>
 
             {/* Refinement Feedback — Visible in all states, disabled in IDLE */}
-            <NodeField 
-               icon={MessageSquareQuote} 
+            <NodeField
+               icon={MessageSquareQuote}
                label="Refinement Feedback"
-               className={data.status === 'IDLE' || data.status === 'PROCESSING' ? 'opacity-50 grayscale-[50%]' : ''}
+               className={
+                  data.status === 'IDLE' || data.status === 'PROCESSING'
+                     ? 'opacity-50 grayscale-[50%]'
+                     : ''
+               }
             >
                <NodeTextarea
                   accentColor="emerald"
@@ -239,7 +274,9 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
                   }
                   value={data.feedback ?? ''}
                   onChange={(e) => updateNode(id, { feedback: e.target.value })}
-                  disabled={data.status === 'IDLE' || data.status === 'PROCESSING'}
+                  disabled={
+                     data.status === 'IDLE' || data.status === 'PROCESSING'
+                  }
                />
             </NodeField>
 
