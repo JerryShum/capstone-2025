@@ -248,6 +248,7 @@ const useFlowStore = create<FlowState>()(
                      engine: projectState.engine,
                      cinematicPreset: projectState.cinematicPreset,
                      negativePrompt: projectState.globalNegativePrompt,
+                     duration: '8',
                      imageBase64: '',
                      lastFrameBase64,
                   },
