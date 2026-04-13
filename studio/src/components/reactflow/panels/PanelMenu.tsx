@@ -11,9 +11,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { useProjectStore } from '@/hooks/useProjectStore';
 import { Link } from '@tanstack/react-router';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, HelpCircle } from 'lucide-react';
 import { useState } from 'react';
 import ProjectSettings from './projectSettings/ProjectSettings';
+import HowToGuide from './HowToGuide';
 
 export default function IconMenu() {
    const projectTitle = useProjectStore((state) => state.projectTitle);
@@ -21,6 +22,7 @@ export default function IconMenu() {
       (state) => state.updateProjectTitle,
    );
    const [isProjectSettingsOpen, setIsProjectSettingsOpen] = useState(false);
+   const [isHowToOpen, setIsHowToOpen] = useState(false);
 
    return (
       <div className="h-10 px-1 bg-background/80 backdrop-blur-md border border-border shadow-md hover:shadow-lg transition-all rounded-xl flex items-center gap-1">
@@ -54,6 +56,12 @@ export default function IconMenu() {
                   >
                      Edit Project Settings
                   </DropdownMenuItem>
+                  <DropdownMenuItem
+                     onSelect={() => setIsHowToOpen(true)}
+                  >
+                     <HelpCircle className="size-4 mr-1.5" />
+                     How to Use
+                  </DropdownMenuItem>
                   {/* <DropdownMenuItem>Subscription</DropdownMenuItem> */}
                </DropdownMenuGroup>
             </DropdownMenuContent>
@@ -86,6 +94,11 @@ export default function IconMenu() {
          <ProjectSettings
             openState={isProjectSettingsOpen}
             setProjectOpen={setIsProjectSettingsOpen}
+         />
+
+         <HowToGuide
+            openState={isHowToOpen}
+            setOpen={setIsHowToOpen}
          />
       </div>
    );
