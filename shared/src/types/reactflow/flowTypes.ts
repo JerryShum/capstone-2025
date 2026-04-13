@@ -94,6 +94,7 @@ type NodeTypes = 'script' | 'character' | 'scene' | 'environment';
 export type FlowState = {
    nodes: AppNode[];
    edges: Edge[];
+   activePolls: Set<string>;
    onNodesChange: OnNodesChange<AppNode>;
    onEdgesChange: OnEdgesChange;
    onConnect: OnConnect;

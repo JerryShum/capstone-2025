@@ -45,17 +45,30 @@ export async function storeAndShowVideo(
          destination: gcsFileName,
          metadata: {
             contentType: 'video/mp4',
+            cacheControl: 'public, max-age=31536000',
          },
       });
 
-      //! 3. create a public URL (unlisted url similar to youtube) --> allows any user with the URL to access video
-      console.log('Generating public URL...');
+      // Make the file publicly readable so the URL works without signed tokens
+      const file = bucket.file(gcsFileName);
+      try {
+         await file.makePublic();
+         console.log(`[storeAndShowVideo] File made public: ${gcsFileName}`);
+      } catch (publicErr) {
+         // If uniform bucket-level access is enabled, makePublic() will fail.
+         // That's fine — the bucket policy already grants public access.
+         console.warn(
+            `[storeAndShowVideo] makePublic() skipped (uniform bucket access likely enabled):`,
+            publicErr instanceof Error ? publicErr.message : publicErr,
+         );
+      }
 
       const publicURL = `https://storage.googleapis.com/${bucket.name}/${gcsFileName}`;
 
-      console.log('Upload complete! Signed URL:', publicURL);
+      console.log(`[storeAndShowVideo] Upload complete!`);
+      console.log(`[storeAndShowVideo]   URL: ${publicURL}`);
+      console.log(`[storeAndShowVideo]   Content-Type: video/mp4`);
 
-      // Return the secure, temporary URL
       return publicURL;
    } catch (err) {
       console.error('Error processing video:', err);

@@ -92,9 +92,9 @@ export default function Flow() {
    //@ when this component mounts (loads) --> call the resumeVideoPoll() function.
    // this checks our sceneNodes to see if any of them were in the middle of a generation --> if they were, we continue it.
    useEffect(() => {
-      console.log('call poll video using useEffect');
+      console.log('Mount: Checking for active video polls...');
       resumeVideoPoll();
-   });
+   }, []);
 
    //---------------------------------------------------------
    //! Context Menu

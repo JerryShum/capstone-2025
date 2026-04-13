@@ -2,11 +2,6 @@ import * as React from 'react';
 import {
    ChevronUp,
    Home,
-   LayoutDashboard,
-   BookOpen,
-   FolderOpen,
-   ImageIcon,
-   Settings,
    Video,
 } from 'lucide-react';
 import { Link } from '@tanstack/react-router';

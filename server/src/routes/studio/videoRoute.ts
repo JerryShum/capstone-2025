@@ -11,7 +11,7 @@ import { storeAndShowVideo } from '@server/functions/video/storeAndShowVideo';
 import { Storage } from '@google-cloud/storage';
 import type { Env } from '@server/lib/auth';
 import { z } from 'zod';
-
+import { checkContentSafety } from '@shared';
 //---------------------------------------------------------
 
 //! Google Gemini API Setup
@@ -60,6 +60,15 @@ export const videoRoute = new Hono<Env>()
       // get validated data from validator
       const data = c.req.valid('json');
       const user = c.get('user');
+
+      // Proactive content check
+      const safetyResult = checkContentSafety(data.prompt);
+      if (!safetyResult.isSafe) {
+         return c.json(
+            { error: 'Inappropriate content detected in prompt.', flagged: safetyResult.flaggedWords },
+            400
+         );
+      }
 
       //---------------------------------------------------------
       // create master prompt using prompt builder function:

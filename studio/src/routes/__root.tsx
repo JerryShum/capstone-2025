@@ -3,6 +3,8 @@ import { Outlet, createRootRoute } from '@tanstack/react-router';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+import { Toaster } from 'sonner';
+
 export const Route = createRootRoute({
    component: RootComponent,
 });
@@ -15,6 +17,7 @@ function RootComponent() {
          <QueryClientProvider client={queryClient}>
             <TooltipProvider>
                <Outlet />
+               <Toaster position="top-center" richColors />
             </TooltipProvider>
          </QueryClientProvider>
       </React.Fragment>

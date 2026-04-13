@@ -1,6 +1,7 @@
 import useFlowStore from '@/hooks/useFlowStore';
 import { canExtendScene } from '@/lib/functions/graphUtils';
 import type { SceneNode } from '@shared';
+import { checkContentSafety } from '@shared';
 import { Handle, Position, type NodeProps, NodeResizer } from '@xyflow/react';
 import {
    AlertCircle,
@@ -27,6 +28,7 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
 
    // canExtend --> derived state by calling the canExtendScene() function from graphUtils.ts
    const canExtend = canExtendScene(id, nodes, edges);
+   const safetyResult = checkContentSafety(data.scenePrompt);
 
    // useEffect --> checks on mount / re-render if the data.canExtend state is actually differnt from the derived canExtend function state
    // this might happen if the user disconnects the parentSceneNode and can't toggle the button
@@ -92,11 +94,11 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
          <div className="flex flex-col gap-2">
             {/* scene prompt */}
             <div className="flex flex-col gap-1">
-               <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
-                  <Type size={10} /> Scene Prompt
+               <label className={`text-[10px] font-bold uppercase flex items-center gap-1 ${safetyResult.isSafe ? 'text-slate-400' : 'text-red-500'}`}>
+                  <Type size={10} /> Scene Prompt {(!safetyResult.isSafe) && "(Inappropriate content detected)"}
                </label>
                <textarea
-                  className="w-full text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-purple-500 outline-none transition-colors font-medium min-h-[60px] resize-none"
+                  className={`w-full text-sm p-2 border-2 rounded-lg outline-none transition-colors font-medium min-h-[60px] resize-none ${safetyResult.isSafe ? 'border-slate-100 focus:border-purple-500' : 'border-red-500 bg-red-50 text-red-900 focus:border-red-600'}`}
                   placeholder="Describe the action and visuals..."
                   value={data.scenePrompt}
                   onChange={(e) =>
@@ -212,16 +214,16 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
             )}
 
             {/* Media Display */}
-            <div className="flex flex-col gap-1 grow">
+            <div className="flex flex-col gap-1 grow min-h-0">
                <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
                   <ImageIcon size={10} /> Media Preview
                </label>
-               <div className="relative w-full aspect-video grow bg-slate-50 border-2 border-slate-100 rounded-lg overflow-hidden flex items-center justify-center group">
+               <div className="relative w-full aspect-video bg-slate-100 border-2 border-slate-900/10 rounded-xl overflow-hidden shadow-inner group flex-shrink-0">
                   {data.videoURL && data.videoURL !== 'https://...' ? (
                      <video
                         src={data.videoURL}
                         controls
-                        className="w-full h-full object-contain bg-black"
+                        className="w-full h-full object-cover bg-black"
                         poster={
                            data.thumbnailURL !== 'https://...'
                               ? data.thumbnailURL
@@ -236,10 +238,17 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
                         className="w-full h-full object-cover"
                      />
                   ) : (
-                     <div className="flex flex-col items-center justify-center gap-2 text-slate-300">
-                        <ImageIcon size={24} />
-                        <span className="text-[10px] uppercase font-bold tracking-wider">
-                           No Media
+                     <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-slate-300 bg-slate-50/50">
+                        <div className="relative">
+                           <ImageIcon size={24} className="opacity-50" />
+                           {data.status === 'PROCESSING' && (
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                 <Loader2 size={16} className="animate-spin text-purple-500" />
+                              </div>
+                           )}
+                        </div>
+                        <span className="text-[10px] uppercase font-bold tracking-widest opacity-50">
+                           {data.status === 'PROCESSING' ? 'Generating Content...' : 'No Media'}
                         </span>
                      </div>
                   )}
@@ -251,6 +260,7 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
             {data.status === 'IDLE' && (
                <button
                   onClick={() => generateVideo(id)}
+                  disabled={!safetyResult.isSafe}
                   className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-purple-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-200 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
                >
                   <>
@@ -275,7 +285,8 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
             {data.status === 'ERROR' && (
                <button
                   onClick={() => generateVideo(id)}
-                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-red-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all"
+                  disabled={!safetyResult.isSafe}
+                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-red-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-200 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
                >
                   <>
                      <AlertCircle size={16} />
@@ -287,7 +298,8 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
             {data.status === 'READY' && (
                <button
                   onClick={() => generateVideo(id)}
-                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all"
+                  disabled={!safetyResult.isSafe}
+                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-200 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
                >
                   <>
                      <Play size={16} fill="white" />

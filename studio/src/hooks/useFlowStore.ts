@@ -7,13 +7,14 @@ import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 import { useProjectStore } from './useProjectStore';
 import { api } from '@/lib/api';
-
+import { toast } from 'sonner';
 // this is our useStore hook that we can use in our components to get parts of the store and call actions
 const useFlowStore = create<FlowState>()(
    subscribeWithSelector(
       devtools((set, get) => ({
          nodes: initialNodes,
          edges: initialEdges,
+         activePolls: new Set<string>(),
          past: [],
          future: [],
          onNodesChange: (changes) => {
@@ -253,13 +254,28 @@ const useFlowStore = create<FlowState>()(
                   },
                });
 
-               if (!response) {
-                  console.error('ERROR: Unable to generate video.');
+               if (!response.ok) {
+                  const errorData = await (response.json() as Promise<any>).catch(() => null);
+                  const errorMessage = errorData?.error || response.statusText || 'Unable to generate video.';
+                  
+                  if (errorData?.flagged) {
+                     toast.error('Inappropriate content detected', {
+                        description: `The following words are not allowed: ${errorData.flagged.join(', ')}`,
+                     });
+                  } else {
+                     toast.error('Generation Failed', { description: errorMessage });
+                  }
+
+                  updateNode(id, {
+                     status: 'ERROR',
+                     errorMessage,
+                  });
+                  return;
                }
 
                const responseData = await response.json();
 
-               if (!('operationName' in responseData)) {
+               if (!responseData || !('operationName' in responseData)) {
                   console.error('ERROR: Invalid response format.');
                   return;
                }
@@ -295,13 +311,36 @@ const useFlowStore = create<FlowState>()(
             }
          },
          pollVideoStatus: async (nodeID, operationName) => {
+            // Safety check: Don't start another loop if one is already active for this node
+            const { activePolls } = get();
+            if (activePolls.has(nodeID)) {
+               console.warn(`[pollVideoStatus] Polling already active for node: ${nodeID}`);
+               return;
+            }
+
+            // Mark this node as actively polling
+            activePolls.add(nodeID);
+
             const updateNode = get().updateNode;
             let isDone = false;
+            const POLL_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
+            const startTime = Date.now();
 
-            while (!isDone) {
-               // wait 3 seconds
-               await new Promise((resolve) => setTimeout(resolve, 3000));
-               // TODO: Use operationName to poll for video generation status
+            try {
+               while (!isDone) {
+                  // wait 3 seconds
+                  await new Promise((resolve) => setTimeout(resolve, 3000));
+
+               // Check for timeout
+               if (Date.now() - startTime > POLL_TIMEOUT_MS) {
+                  console.error(`[pollVideoStatus] Timeout exceeded for operation: ${operationName}`);
+                  updateNode(nodeID, {
+                     status: 'ERROR',
+                     errorMessage: 'Video generation timed out after 5 minutes. Please try again.',
+                  });
+                  isDone = true;
+                  break;
+               }
 
                 try {
                    //ask API for the status of the video
@@ -330,6 +369,11 @@ const useFlowStore = create<FlowState>()(
                          message?: string;
                          geminiVideoUri?: string;
                       };
+
+                      console.log(`[pollVideoStatus] Video ready!`);
+                      console.log(`[pollVideoStatus]   URL: ${videosURL}`);
+                      console.log(`[pollVideoStatus]   Gemini URI: ${fullData.geminiVideoUri}`);
+
                       // video is in the DB and has been downloaded --> the URL is good!
                       updateNode(nodeID, {
                          status: 'READY',
@@ -364,6 +408,10 @@ const useFlowStore = create<FlowState>()(
                 }
 
                // status == processing --> loop restarts
+            }
+            } finally {
+               // ALWAYS remove from activePolls when the loop finishes (success, failure, or timeout)
+               get().activePolls.delete(nodeID);
             }
          },
          resumeVideoPoll: () => {
