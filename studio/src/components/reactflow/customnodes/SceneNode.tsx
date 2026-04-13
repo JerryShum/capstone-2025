@@ -63,10 +63,11 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
    };
 
    return (
-      <div className="relative bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[400px] min-h-[450px] flex flex-col gap-3 font-sans w-full h-full">
+      <div className="relative bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[400px] min-h-[520px] flex flex-col gap-3 font-sans w-full h-full">
          <NodeResizer 
             minWidth={400} 
-            minHeight={450} 
+            minHeight={520} 
+            keepAspectRatio={true}
             isVisible={selected} 
             lineClassName="border-slate-400"
             handleClassName="bg-white border-2 border-slate-900 w-3 h-3 rounded-sm"
@@ -89,7 +90,7 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
             </div>
          </div>
 
-         <div className="flex flex-col gap-2">
+         <div className="flex flex-col gap-2 grow overflow-hidden">
             {/* scene prompt */}
             <div className="flex flex-col gap-1">
                <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
@@ -166,7 +167,7 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
             </div>
 
             {/* Extend Previous Scene Toggle */}
-            <div className="flex items-center justify-between p-2 bg-slate-50 rounded-lg border-2 border-slate-100 mt-1">
+            <div className="flex items-center justify-between p-2 bg-slate-50 rounded-lg border-2 border-slate-100">
                <div className="flex items-center gap-2">
                   <Layers
                      size={14}
@@ -212,37 +213,39 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
             )}
 
             {/* Media Display */}
-            <div className="flex flex-col gap-1 grow">
+            <div className="flex flex-col gap-1 grow min-h-[140px]">
                <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
                   <ImageIcon size={10} /> Media Preview
                </label>
-               <div className="relative w-full aspect-video grow bg-slate-50 border-2 border-slate-100 rounded-lg overflow-hidden flex items-center justify-center group">
-                  {data.videoURL && data.videoURL !== 'https://...' ? (
-                     <video
-                        src={data.videoURL}
-                        controls
-                        className="w-full h-full object-contain bg-black"
-                        poster={
-                           data.thumbnailURL !== 'https://...'
-                              ? data.thumbnailURL
-                              : undefined
-                        }
-                     />
-                  ) : data.thumbnailURL &&
-                    data.thumbnailURL !== 'https://...' ? (
-                     <img
-                        src={data.thumbnailURL}
-                        alt="Scene Thumbnail"
-                        className="w-full h-full object-cover"
-                     />
-                  ) : (
-                     <div className="flex flex-col items-center justify-center gap-2 text-slate-300">
-                        <ImageIcon size={24} />
-                        <span className="text-[10px] uppercase font-bold tracking-wider">
-                           No Media
-                        </span>
-                     </div>
-                  )}
+               <div className="relative w-full grow bg-slate-50 border-2 border-slate-100 rounded-lg overflow-hidden group">
+                  <div className="absolute inset-0 flex items-center justify-center bg-slate-900/5">
+                     {data.videoURL && data.videoURL !== 'https://...' ? (
+                        <video
+                           src={data.videoURL}
+                           controls
+                           className="w-full h-full object-contain bg-black"
+                           poster={
+                              data.thumbnailURL !== 'https://...'
+                                 ? data.thumbnailURL
+                                 : undefined
+                           }
+                        />
+                     ) : data.thumbnailURL &&
+                        data.thumbnailURL !== 'https://...' ? (
+                        <img
+                           src={data.thumbnailURL}
+                           alt="Scene Thumbnail"
+                           className="w-full h-full object-cover"
+                        />
+                     ) : (
+                        <div className="flex flex-col items-center justify-center gap-2 text-slate-300">
+                           <ImageIcon size={24} />
+                           <span className="text-[10px] uppercase font-bold tracking-wider">
+                              No Media
+                           </span>
+                        </div>
+                     )}
+                  </div>
                </div>
             </div>
 
