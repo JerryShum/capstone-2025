@@ -46,7 +46,10 @@ function RouteComponent() {
               window.location.href = redirectUrl;
             } else {
               // Default to the Studio dashboard
-              window.location.href = '/studio';
+              const studioUrl = import.meta.env.DEV 
+                ? 'http://localhost:5173' 
+                : '/studio';
+              window.location.href = studioUrl;
             }
           },
           onError: (ctx) => {

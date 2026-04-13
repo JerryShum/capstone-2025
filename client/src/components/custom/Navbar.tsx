@@ -10,6 +10,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { data: session } = authClient.useSession();
   const user = session?.user;
+  const studioUrl = import.meta.env.DEV ? 'http://localhost:5173' : '/studio';
 
   return (
     <header className="bg-background/50 border-border/50 sticky top-0 z-50 border-b backdrop-blur-xl">
@@ -59,7 +60,7 @@ export default function Navbar() {
                 Hello,{" "}
                 <span className="text-foreground font-bold">{user.name}</span>
               </span>
-              <a href="/studio">
+              <a href={studioUrl}>
                 <Button
                   variant="outline"
                   className="border-primary/20 hover:border-primary/50 gap-2 transition-all"
@@ -149,7 +150,7 @@ export default function Navbar() {
                   Hello, <span className="font-bold">{user.name}</span>
                 </span>
               </div>
-              <a href="/studio" className="w-full">
+              <a href={studioUrl} className="w-full">
                 <Button
                   variant="outline"
                   className="w-full justify-center gap-2"
