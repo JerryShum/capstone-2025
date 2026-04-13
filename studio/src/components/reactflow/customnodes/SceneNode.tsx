@@ -223,6 +223,26 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
                </div>
             </div>
 
+            {/* Refinement Feedback — Visible in all states, disabled in IDLE */}
+            <NodeField 
+               icon={MessageSquareQuote} 
+               label="Refinement Feedback"
+               className={data.status === 'IDLE' || data.status === 'PROCESSING' ? 'opacity-50 grayscale-[50%]' : ''}
+            >
+               <NodeTextarea
+                  accentColor="emerald"
+                  className="min-h-[52px]"
+                  placeholder={
+                     data.status === 'IDLE'
+                        ? 'Generate a video first to provide feedback...'
+                        : "What should change? (e.g. 'More dramatic lighting', 'Slower camera pan')"
+                  }
+                  value={data.feedback ?? ''}
+                  onChange={(e) => updateNode(id, { feedback: e.target.value })}
+                  disabled={data.status === 'IDLE' || data.status === 'PROCESSING'}
+               />
+            </NodeField>
+
             {/* Generate Button — STATUS IS IDLE */}
             {data.status === 'IDLE' && (
                <button
@@ -259,31 +279,17 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
                   </>
                </button>
             )}
-            {/* STATUS IS READY — Feedback + Regenerate */}
+            {/* STATUS IS READY — Regenerate */}
             {data.status === 'READY' && (
-               <>
-                  <NodeField
-                     icon={MessageSquareQuote}
-                     label="Refinement Feedback"
-                  >
-                     <NodeTextarea
-                        accentColor="emerald"
-                        className="min-h-[52px]"
-                        placeholder="What should change? (e.g. 'More dramatic lighting', 'Slower camera pan')"
-                        value={data.feedback ?? ''}
-                        onChange={(e) => updateNode(id, { feedback: e.target.value })}
-                     />
-                  </NodeField>
-                  <button
-                     onClick={() => generateVideo(id)}
-                     className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] transition-all hover:bg-emerald-700 hover:cursor-pointer"
-                  >
-                     <>
-                        <Play size={16} fill="white" />
-                        Regenerate Video
-                     </>
-                  </button>
-               </>
+               <button
+                  onClick={() => generateVideo(id)}
+                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] transition-all hover:bg-emerald-700 hover:cursor-pointer"
+               >
+                  <>
+                     <Play size={16} fill="white" />
+                     Regenerate Video
+                  </>
+               </button>
             )}
          </div>
 

@@ -13,7 +13,7 @@ export default function NodeTextarea({
 }: NodeTextareaProps) {
    return (
       <textarea
-         className={`w-full text-sm text-slate-700 p-2 bg-slate-50 border-2 border-slate-200 rounded-lg focus:border-${accentColor}-500 outline-none transition-colors resize-none placeholder:text-slate-400 ${mono ? 'font-mono' : 'font-medium'} ${className}`}
+         className={`w-full text-sm text-slate-700 p-2 bg-slate-50 border-2 border-slate-200 rounded-lg focus:border-${accentColor}-500 outline-none transition-colors resize-none placeholder:text-slate-400 disabled:bg-slate-100/60 disabled:text-slate-400 disabled:cursor-not-allowed ${mono ? 'font-mono' : 'font-medium'} ${className}`}
          {...props}
       />
    );
