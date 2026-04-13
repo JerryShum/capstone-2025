@@ -1,100 +1,51 @@
-import { Handle, Position, type NodeProps, NodeResizer } from '@xyflow/react';
+import { Handle, Position, type NodeProps } from '@xyflow/react';
 import type { CharacterNode } from '@shared';
 import useFlowStore from '@/hooks/useFlowStore';
-import {
-   UserStar,
-   Tag,
-   Palette,
-   Sparkles,
-   Lock,
-} from 'lucide-react';
+import { UserStar, Tag, Palette, Sparkles } from 'lucide-react';
+import NodeWrapper from './components/NodeWrapper';
+import NodeHeader from './components/NodeHeader';
+import NodeField from './components/NodeField';
+import NodeInput from './components/NodeInput';
+import NodeTextarea from './components/NodeTextarea';
 
 export default function CharacterNode({ data, id, selected }: NodeProps<CharacterNode>) {
-
    const updateNode = useFlowStore((state) => state.updateNode);
 
    return (
-      <div className="relative bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[300px] min-h-[300px] flex flex-col gap-3 font-sans w-full h-full">
-         <NodeResizer 
-            minWidth={300} 
-            minHeight={300} 
-            isVisible={selected} 
-            lineClassName="border-slate-400"
-            handleClassName="bg-white border-2 border-slate-900 w-3 h-3 rounded-sm"
-         />
-         {data.locked && (
-            <div className="absolute -top-3 -right-3 bg-amber-500 text-white p-1.5 rounded-full shadow-md z-10">
-               <Lock size={14} />
-            </div>
-         )}
-         <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-blue-500">
-            <UserStar size={14} />
-            <span>Character / Identity</span>
-         </div>
+      <NodeWrapper selected={selected} minWidth={300} minHeight={300} locked={data.locked}>
+         <NodeHeader icon={UserStar} label="Character / Identity" color="blue" />
 
          <div className="flex flex-col gap-2 grow">
             {/* name */}
-            <div className="flex flex-col gap-1">
-               <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
-                  <Tag size={10} /> Name
-               </label>
-               <input
-                  className="w-full text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-blue-500 outline-none transition-colors font-medium"
+            <NodeField icon={Tag} label="Name">
+               <NodeInput
+                  accentColor="blue"
                   placeholder="Character name..."
                   value={data.name}
                   onChange={(e) => updateNode(id, { name: e.target.value })}
                />
-            </div>
+            </NodeField>
 
             {/* style */}
-            <div className="flex flex-col gap-1">
-               <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
-                  <Palette size={10} /> Style
-               </label>
-               <input
-                  className="w-full text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-blue-500 outline-none transition-colors font-medium"
+            <NodeField icon={Palette} label="Style">
+               <NodeInput
+                  accentColor="blue"
                   placeholder="e.g. Cinematic, Anime..."
                   value={data.style}
                   onChange={(e) => updateNode(id, { style: e.target.value })}
                />
-            </div>
+            </NodeField>
 
             {/* appearance */}
-            <div className="flex flex-col gap-1 grow">
-               <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
-                  <Sparkles size={10} /> Appearance
-               </label>
-               <textarea
-                  className="w-full h-full text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-blue-500 outline-none transition-colors font-medium resize-none"
+            <NodeField icon={Sparkles} label="Appearance" className="grow">
+               <NodeTextarea
+                  accentColor="blue"
+                  className="h-full"
                   placeholder="Describe physical traits..."
                   value={data.appearance}
-                  onChange={(e) =>
-                     updateNode(id, { appearance: e.target.value })
-                  }
+                  onChange={(e) => updateNode(id, { appearance: e.target.value })}
                />
-            </div>
-
-            {/* reference image */}
-            {/* <div className="flex flex-col gap-1">
-               <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
-                  <ImageIcon size={10} /> Reference Image URL
-               </label>
-               <input
-                  className={`w-full text-sm p-2 border-2 rounded-lg focus:border-blue-500 outline-none transition-colors font-medium ${
-                     !isValidURL
-                        ? 'border-red-500 text-red-500'
-                        : 'border-slate-100'
-                  }`}
-                  placeholder="https://..."
-                  type="url"
-                  value={data.referenceImage}
-                  onChange={(e) =>
-                     updateNode(id, {
-                        referenceImage: e.target.value as httpsURL,
-                     })
-                  }
-               />
-            </div> */}
+            </NodeField>
          </div>
 
          <Handle
@@ -103,6 +54,6 @@ export default function CharacterNode({ data, id, selected }: NodeProps<Characte
             className="bg-slate-900 border-2 border-white"
             style={{ width: '12px', height: '12px' }}
          />
-      </div>
+      </NodeWrapper>
    );
 }
