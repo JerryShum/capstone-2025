@@ -10,7 +10,6 @@ import { eq, desc } from 'drizzle-orm';
 import { storeAndShowVideo } from '@server/functions/video/storeAndShowVideo';
 import { Storage } from '@google-cloud/storage';
 import type { Env } from '@server/lib/auth';
-import { checkContentSafety } from '@shared/utils/contentFilter';
 import { z } from 'zod';
 
 //---------------------------------------------------------
@@ -61,22 +60,6 @@ export const videoRoute = new Hono<Env>()
       // get validated data from validator
       const data = c.req.valid('json');
       const user = c.get('user');
-
-      //---------------------------------------------------------
-      // Content safety check — runs before any expensive operations
-      const safetyResult = checkContentSafety(data.prompt);
-      if (!safetyResult.safe) {
-         console.warn(
-            `[content-filter] Blocked prompt from user ${user.id}. Matched: "${safetyResult.matchedTerm}"`
-         );
-         return c.json(
-            {
-               message:
-                  'Inappropriate language detected. Please refine your prompt.',
-            },
-            400,
-         );
-      }
 
       //---------------------------------------------------------
       // create master prompt using prompt builder function:
