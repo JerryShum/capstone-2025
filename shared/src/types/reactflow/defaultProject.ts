@@ -24,63 +24,65 @@ export function getRandomBanner(): string {
 
 export const defaultProject: Project = {
    id: Date.now(),
-   projectTitle: "Barry's Morning Adventure",
+   projectTitle: 'My First Story',
    aspectRatio: '16:9',
    engine: 'veo',
    globalNegativePrompt:
       'Low quality, blurry, distorted, static, watermark, text, signature',
    executiveSummary:
-      'A heartwarming 3D animated short about a curious chicken named Barry who discovers a magical seed in his farmyard.',
+      'Welcome to StoryWeaver! This tutorial project shows you how to build AI-generated videos. Each node below explains its purpose \u2014 follow the connections to see how they combine into scenes.',
    cinematicPreset: 'Neo-Noir',
    bannerUrl: getRandomBanner(),
 };
 
-const initScriptNode: ScriptNode = {
+// ─── Tutorial Nodes ─────────────────────────────────────────────────
+
+const tutorialScriptNode: ScriptNode = {
    id: 'node-script-1',
    type: 'script',
    data: {
       type: 'script',
       content:
-         "Barry the Chicken's Morning Adventure\n\nBarry wakes up, stretches his wings, and finds a mysterious sparkling seed in the middle of the farmyard. He's never seen anything like it before!",
+         'Welcome to StoryWeaver!\n\nThis is a SCRIPT NODE. Use it to write the narrative arc of your story. When connected to a Scene, the AI uses this text as context for what should happen.\n\nTry editing this text, then generate the scene to see how it changes the output!',
    },
    position: { x: 0, y: 0 },
 };
 
-const initCharacterNode: CharacterNode = {
-   id: 'node-char-barry',
+const tutorialCharacterNode: CharacterNode = {
+   id: 'node-char-example',
    type: 'character',
    data: {
       type: 'character',
-      name: 'Barry the Chicken',
+      name: 'Example Character',
       style: '3D Animation, Pixar Style',
       appearance:
-         'A plump, friendly yellow chicken with a small red comb and oversized, expressive blue eyes. He wears a tiny blue bowtie.',
+         'A friendly young woman with short auburn hair and warm brown eyes, wearing a casual blue jacket. This is a CHARACTER NODE \u2014 define appearance details here so the AI keeps your character consistent across scenes.',
    },
-   position: { x: 0, y: 200 },
+   position: { x: 0, y: 250 },
 };
 
-const initEnvironmentNode: EnvironmentNode = {
-   id: 'node-env-farm',
+const tutorialEnvironmentNode: EnvironmentNode = {
+   id: 'node-env-park',
    type: 'environment',
    data: {
       type: 'environment',
-      location: 'Sunshine Farmyard',
+      location: 'A sunny park',
       timeOfDay: 'Morning',
       weather: 'Clear',
       lightingStyle: 'Golden hour, soft morning glow',
       description:
-         'A rustic, well-kept farmyard with a classic red barn, a wooden fence, and patches of green grass. A small vegetable garden is visible in the background.',
+         'A vibrant city park with green trees, a walking path, and a bench. This is an ENVIRONMENT NODE \u2014 it sets the location, time, and atmosphere for your scenes.',
    },
-   position: { x: 0, y: 400 },
+   position: { x: 0, y: 500 },
 };
 
-const initSceneNode: SceneNode = {
+const tutorialSceneNode1: SceneNode = {
    id: 'node-scene-1',
    type: 'scene',
    data: {
       type: 'scene',
       scenePrompt:
-         'Barry the chicken stands in the center of the sunshine farmyard, looking down at a small, glowing blue seed on the ground. He tilts his head curiously.',
+         'A sunny park with green trees. A young woman walks along the path and sits on a bench, smiling at the camera.',
       duration: 5,
       shotType: 'Medium',
       cameraMovement: 'Static',
@@ -89,16 +91,16 @@ const initSceneNode: SceneNode = {
       thumbnailURL: 'https://...',
       canExtend: false,
    },
-   position: { x: 450, y: 150 },
+   position: { x: 500, y: 200 },
 };
 
-const initSceneNode2: SceneNode = {
+const tutorialSceneNode2: SceneNode = {
    id: 'node-scene-2',
    type: 'scene',
    data: {
       type: 'scene',
       scenePrompt:
-         "Close up on Barry's face as his eyes widen in amazement. The blue glow of the seed reflects in his eyes. He looks extremely excited.",
+         'Close-up of the woman looking into the distance with a hopeful expression. Connect scenes together to build a continuous story! Click "Generate Video" to start.',
       duration: 4,
       shotType: 'Close-up',
       cameraMovement: 'Zoom',
@@ -107,15 +109,17 @@ const initSceneNode2: SceneNode = {
       thumbnailURL: 'https://...',
       canExtend: true,
    },
-   position: { x: 900, y: 150 },
+   position: { x: 1000, y: 200 },
 };
 
+// ─── Exported Collections ───────────────────────────────────────────
+
 export const initialNodes = [
-   initScriptNode,
-   initCharacterNode,
-   initEnvironmentNode,
-   initSceneNode,
-   initSceneNode2,
+   tutorialScriptNode,
+   tutorialCharacterNode,
+   tutorialEnvironmentNode,
+   tutorialSceneNode1,
+   tutorialSceneNode2,
 ] as AppNode[];
 
 export const initialEdges: Edge[] = [
@@ -126,12 +130,12 @@ export const initialEdges: Edge[] = [
    },
    {
       id: 'e-char-scene1',
-      source: 'node-char-barry',
+      source: 'node-char-example',
       target: 'node-scene-1',
    },
    {
       id: 'e-env-scene1',
-      source: 'node-env-farm',
+      source: 'node-env-park',
       target: 'node-scene-1',
    },
    {
