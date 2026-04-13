@@ -11,6 +11,7 @@ import { storeAndShowVideo } from '@server/functions/video/storeAndShowVideo';
 import { Storage } from '@google-cloud/storage';
 import type { Env } from '@server/lib/auth';
 import { z } from 'zod';
+import { containsProfanity } from '@server/lib/profanity';
 
 //---------------------------------------------------------
 
@@ -65,6 +66,23 @@ export const videoRoute = new Hono<Env>()
       // get validated data from validator
       const data = c.req.valid('json');
       const user = c.get('user');
+
+      //---------------------------------------------------------
+      //@ Profanity Check — screen all user-provided text before calling the AI
+      const textsToCheck = [
+         data.prompt ?? '',
+         data.negativePrompt ?? '',
+         ...data.characters.map((ch: any) => `${ch.name} ${ch.appearance} ${ch.style}`),
+         ...data.environments.map((e: any) => `${e.location} ${e.description}`),
+         ...data.scripts.map((s: any) => s.content ?? ''),
+      ];
+
+      if (containsProfanity(textsToCheck)) {
+         return c.json(
+            { message: 'Profane language detected. Please keep content child-friendly.' },
+            400,
+         );
+      }
 
       //---------------------------------------------------------
       // create master prompt using prompt builder function:

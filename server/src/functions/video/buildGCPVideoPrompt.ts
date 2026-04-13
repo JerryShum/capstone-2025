@@ -138,7 +138,15 @@ export function buildGCPVideoPrompt(data: postVideoSchemaType): string {
    const composition = aspectRatioMap[aspectRatio] || aspectRatio;
 
    // 7. Final Construction
+   //! CHILD-SAFETY DIRECTIVE — always prepended so it acts as a hard constraint
+   const safetyDirective =
+      'CONTENT POLICY: This video MUST be entirely child-friendly and appropriate for young audiences. ' +
+      'Use a whimsical, colorful, animated art style only (e.g., cartoon, Studio Ghibli, hand-drawn). ' +
+      'Absolutely NO realistic human depictions, violence, adult themes, suggestive content, horror, or dark imagery. ' +
+      'The tone must be fun, safe, and imaginative — like a children\'s animated film.';
+
    const sections: string[] = [
+      safetyDirective,
       `SCENE CONTEXT: ${envContext}`,
       `CHARACTERS: ${charContext}`,
    ];
@@ -152,7 +160,7 @@ export function buildGCPVideoPrompt(data: postVideoSchemaType): string {
       `ACTION: ${prompt}`,
       `VISUAL STYLE: ${style}`,
       `COMPOSITION: ${composition}`,
-      `NEGATIVE CONCERNS: Avoid ${negativePrompt}`,
+      `NEGATIVE CONCERNS: Avoid ${negativePrompt}. Also avoid: realistic human faces, adult content, violence, horror, dark themes.`,
    );
 
    return sections.join('\n');

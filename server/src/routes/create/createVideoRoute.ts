@@ -4,6 +4,7 @@ import { GoogleGenAI, GenerateVideosOperation } from '@google/genai';
 
 //! Shared
 import { postVideoSchema } from '@shared/schemas/sendVideoSchema';
+import { containsProfanity } from '@server/lib/profanity';
 
 //----------------------------------------------------------------------
 
@@ -36,17 +37,13 @@ export const createVideoRoute = new Hono()
       //! get validated data from zValidator
       const postOBJ = await c.req.valid('json');
 
-      // declare interface Image_2 {
-      //     /** The Cloud Storage URI of the image. ``Image`` can contain a value
-      //      for this field or the ``image_bytes`` field but not both. */
-      //     gcsUri?: string;
-      //     /** The image bytes data. ``Image`` can contain a value for this field
-      //      or the ``gcs_uri`` field but not both.
-      //      * @remarks Encoded as base64 string. */
-      //     imageBytes?: string;
-      //     /** The MIME type of the image. */
-      //     mimeType?: string;
-      // }
+      //@ Profanity Check
+      if (containsProfanity(postOBJ.prompt ?? '')) {
+         return c.json(
+            { error: 'Profane language detected. Please keep content child-friendly.' },
+            400,
+         );
+      }
 
       let operation = await genAI.models.generateVideos({
          model: 'veo-3.1-fast-generate-preview',

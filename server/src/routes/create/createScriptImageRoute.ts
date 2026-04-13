@@ -10,6 +10,7 @@ import { postScriptSchema } from '@shared/schemas/sendScriptSchema';
 //! Importing prompt builder functions
 import { buildScriptPrompt } from '@server/functions/deprecated/buildScriptPrompt';
 import { buildImagePrompt } from '@server/functions/deprecated/buildImagePrompt';
+import { containsProfanity } from '@server/lib/profanity';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
@@ -90,6 +91,14 @@ export const createScriptImageRoute = new Hono().post(
       //@ if it passed, then we get the json obj using .valid
       const promptOBJ = await c.req.valid('json');
 
+      //@ Profanity Check
+      if (containsProfanity([promptOBJ.title ?? '', promptOBJ.overview ?? ''])) {
+         return c.json(
+            { error: 'Profane language detected. Please keep content child-friendly.' },
+            400,
+         );
+      }
+
       //! Replace with DB later --> storing the user input into the DB
       testVideoPrompts.push({ ...promptOBJ, id: testVideoPrompts.length + 1 });
 
@@ -104,8 +113,13 @@ export const createScriptImageRoute = new Hono().post(
          contents: scriptPromptToSend,
          config: {
             systemInstruction:
-               'You are a creative assistant for your storybook generation app. Your task is to generate a script and a corresponding list of visual prompts. ' +
-               'You MUST follow these rules: ' +
+               'You are a creative assistant for a children\'s animated storybook generation app. Your task is to generate a script and a corresponding list of visual prompts for young audiences. ' +
+               'CRITICAL CONTENT RULES — STRICTLY ENFORCED: ' +
+               '1. ALL content must be 100% appropriate for children aged 3–12. ' +
+               '2. Use a warm, cheerful, and whimsical tone — like a Pixar or Studio Ghibli film. ' +
+               '3. ABSOLUTELY NO: adult themes, violence, horror, dark imagery, suggestive content, realistic human depictions, or profanity. ' +
+               '4. Characters must be friendly, colorful, and exaggerated in an animated style. ' +
+               'FORMATTING RULES: ' +
                '1. For the `script` field: Generate a SINGLE string. ' +
                '- Each page MUST start with a Markdown heading (e.g., `## Page 1`). ' +
                '- After the page text, you MUST insert two newline characters (`\\n\\n`) to create a blank line before the next page heading. ' +
@@ -114,8 +128,8 @@ export const createScriptImageRoute = new Hono().post(
                '- Each prompt MUST specify: ' +
                'a. **Style:** (e.g., "Children\'s book illustration", "whimsical cartoon style", "soft watercolor", "toddler-friendly", "pixel"). This must match the user selected artstyle. ' +
                'b. **Composition:** (e.g., "wide establishing shot", "close-up", "low-angle shot", "eye-level", "medium shot"). ' +
-               'c. **Subject & Action:** (e.g., "Farmer Jon smiling at the camera", "a sad chick sitting alone", "hands cradling a chick"). ' +
-               'd. **Setting:** (e.g., "in front of a red barn", "on the grass", "inside a cozy farmhouse"). ' +
+               'c. **Subject & Action:** (e.g., "Farmer Jon smiling at the camera", "a happy chick bouncing around", "hands cradling a chick"). ' +
+               'd. **Setting:** (e.g., "in front of a colorful barn", "on the bright green grass", "inside a cozy illustrated farmhouse"). ' +
                'e. **Lighting & Color:** (e.g., "bright sunny day", "warm golden hour light", "vibrant and cheerful color palette", "soft shadows"). ' +
                '3. The number of prompts in the `video_prompt` array MUST exactly match the number of pages in the `script` string.',
             responseMimeType: 'application/json',
