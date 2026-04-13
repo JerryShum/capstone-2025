@@ -1,7 +1,13 @@
 import useFlowStore from '@/hooks/useFlowStore';
-import { Handle, Position, type NodeProps, NodeResizer } from '@xyflow/react';
-import { Mountain, Clock, Cloud, Zap, AlignLeft, Trees, Lock } from 'lucide-react';
+import { Handle, Position, type NodeProps } from '@xyflow/react';
+import { Mountain, Clock, Cloud, Zap, AlignLeft, Trees } from 'lucide-react';
 import type { EnvironmentNodeData } from '@shared';
+import NodeWrapper from './components/NodeWrapper';
+import NodeHeader from './components/NodeHeader';
+import NodeField from './components/NodeField';
+import NodeInput from './components/NodeInput';
+import NodeTextarea from './components/NodeTextarea';
+import NodeSelect from './components/NodeSelect';
 
 export default function EnvironmentNode({ data, id, selected }: NodeProps) {
    const updateNode = useFlowStore((state) => state.updateNode);
@@ -12,47 +18,25 @@ export default function EnvironmentNode({ data, id, selected }: NodeProps) {
    };
 
    return (
-      <div className="relative bg-white border-2 border-slate-900 rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] min-w-[300px] min-h-[350px] flex flex-col gap-3 font-sans w-full h-full">
-         <NodeResizer 
-            minWidth={300} 
-            minHeight={350} 
-            isVisible={selected} 
-            lineClassName="border-slate-400"
-            handleClassName="bg-white border-2 border-slate-900 w-3 h-3 rounded-sm"
-         />
-         {!!data.locked && (
-            <div className="absolute -top-3 -right-3 bg-amber-500 text-white p-1.5 rounded-full shadow-md z-10">
-               <Lock size={14} />
-            </div>
-         )}
-         <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-emerald-500">
-            <Trees size={14} />
-            <span>Environment / Setting</span>
-         </div>
+      <NodeWrapper selected={selected} minWidth={300} minHeight={350} locked={!!data.locked}>
+         <NodeHeader icon={Trees} label="Environment / Setting" color="emerald" />
 
          <div className="flex flex-col gap-2 grow">
             {/* location */}
-            <div className="flex flex-col gap-1">
-               <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
-                  <Mountain size={10} /> Location
-               </label>
-               <input
-                  type="text"
-                  className="w-full text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-emerald-500 outline-none transition-colors font-medium"
+            <NodeField icon={Mountain} label="Location">
+               <NodeInput
+                  accentColor="emerald"
                   placeholder="e.g. Neo-Tokyo, Deep Space..."
                   defaultValue={envData.location}
                   onChange={(e) => handleChange('location', e.target.value)}
                />
-            </div>
+            </NodeField>
 
             <div className="grid grid-cols-2 gap-3">
                {/* time of day */}
-               <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
-                     <Clock size={10} /> Time of Day
-                  </label>
-                  <select
-                     className="w-full text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-emerald-500 outline-none transition-colors bg-white"
+               <NodeField icon={Clock} label="Time of Day">
+                  <NodeSelect
+                     accentColor="emerald"
                      defaultValue={envData.timeOfDay}
                      onChange={(e) => handleChange('timeOfDay', e.target.value)}
                   >
@@ -60,16 +44,13 @@ export default function EnvironmentNode({ data, id, selected }: NodeProps) {
                      <option value="Afternoon">Afternoon</option>
                      <option value="Sunset">Sunset</option>
                      <option value="Night">Night</option>
-                  </select>
-               </div>
+                  </NodeSelect>
+               </NodeField>
 
                {/* weather */}
-               <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
-                     <Cloud size={10} /> Weather
-                  </label>
-                  <select
-                     className="w-full text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-emerald-500 outline-none transition-colors bg-white"
+               <NodeField icon={Cloud} label="Weather">
+                  <NodeSelect
+                     accentColor="emerald"
                      defaultValue={envData.weather}
                      onChange={(e) => handleChange('weather', e.target.value)}
                   >
@@ -77,38 +58,31 @@ export default function EnvironmentNode({ data, id, selected }: NodeProps) {
                      <option value="Rainy">Rainy</option>
                      <option value="Foggy">Foggy</option>
                      <option value="Snowy">Snowy</option>
-                  </select>
-               </div>
+                  </NodeSelect>
+               </NodeField>
             </div>
 
             {/* lighting style */}
-            <div className="flex flex-col gap-1">
-               <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
-                  <Zap size={10} /> Lighting Style
-               </label>
-               <input
-                  type="text"
-                  className="w-full text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-emerald-500 outline-none transition-colors font-medium"
+            <NodeField icon={Zap} label="Lighting Style">
+               <NodeInput
+                  accentColor="emerald"
                   placeholder="e.g. Neon, Cinematic, Golden Hour..."
                   defaultValue={envData.lightingStyle}
-                  onChange={(e) =>
-                     handleChange('lightingStyle', e.target.value)
-                  }
+                  onChange={(e) => handleChange('lightingStyle', e.target.value)}
                />
-            </div>
+            </NodeField>
 
             {/* description */}
-            <div className="flex flex-col gap-1 grow">
-               <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
-                  <AlignLeft size={10} /> Detailed Description
-               </label>
-               <textarea
-                  className="w-full h-full text-sm p-2 border-2 border-slate-100 rounded-lg focus:border-emerald-500 outline-none transition-colors resize-none font-mono"
+            <NodeField icon={AlignLeft} label="Detailed Description" className="grow">
+               <NodeTextarea
+                  accentColor="emerald"
+                  mono
+                  className="h-full"
                   placeholder="Describe the environment in detail..."
                   defaultValue={envData.description}
                   onChange={(e) => handleChange('description', e.target.value)}
                />
-            </div>
+            </NodeField>
          </div>
 
          <Handle
@@ -117,6 +91,6 @@ export default function EnvironmentNode({ data, id, selected }: NodeProps) {
             className="bg-slate-900 border-2 border-white"
             style={{ width: '12px', height: '12px' }}
          />
-      </div>
+      </NodeWrapper>
    );
 }
