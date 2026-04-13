@@ -1,11 +1,27 @@
+import { useCallback, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Link2, Check } from 'lucide-react';
+import { toast } from 'sonner';
 
-interface Props {
+interface StitchResultModalProps {
    stitchResult: string;
    onClose: () => void;
 }
 
-export function StitchResultModal({ stitchResult, onClose }: Props) {
+export function StitchResultModal({ stitchResult, onClose }: StitchResultModalProps) {
+   const [copied, setCopied] = useState(false);
+
+   const handleCopyLink = useCallback(async () => {
+      try {
+         await navigator.clipboard.writeText(stitchResult);
+         setCopied(true);
+         toast.success('Link copied to clipboard!');
+         setTimeout(() => setCopied(false), 2000);
+      } catch {
+         toast.error('Failed to copy link. Please try manually.');
+      }
+   }, [stitchResult]);
+
    return (
       <div className="absolute inset-0 z-1000 flex items-center justify-center bg-black/50 pointer-events-auto">
          <div className="bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl p-6 w-[600px] flex flex-col gap-3 animate-in fade-in zoom-in duration-200">
@@ -29,6 +45,28 @@ export function StitchResultModal({ stitchResult, onClose }: Props) {
                >
                   Close
                </Button>
+               {stitchResult && (
+                  <Button
+                     onClick={handleCopyLink}
+                     className={`hover:cursor-pointer flex-1 h-11 rounded-xl font-bold border-2 transition-all active:scale-[0.98] ${
+                        copied
+                           ? 'bg-emerald-600 hover:bg-emerald-700 border-emerald-800 text-white'
+                           : 'bg-slate-900 hover:bg-slate-800 border-slate-950 text-white dark:bg-white dark:text-slate-900 dark:border-slate-200 dark:hover:bg-slate-100'
+                     }`}
+                  >
+                     {copied ? (
+                        <>
+                           <Check className="size-4" />
+                           Copied!
+                        </>
+                     ) : (
+                        <>
+                           <Link2 className="size-4" />
+                           Share Link
+                        </>
+                     )}
+                  </Button>
+               )}
                <Button
                   asChild
                   className="hover:cursor-pointer flex-1 h-11 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-bold transition-all active:scale-[0.98]"
