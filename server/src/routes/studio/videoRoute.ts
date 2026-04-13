@@ -6,7 +6,7 @@ import { extractLastFrame } from '@server/functions/video/extractLastFrame';
 import { GenerateVideosOperation, GoogleGenAI } from '@google/genai';
 import { videoOperationsTable, projectsTable } from '@server/db/schemas/schema';
 import { db } from '@server/db';
-import { eq, desc } from 'drizzle-orm';
+import { eq, desc, and } from 'drizzle-orm';
 import { storeAndShowVideo } from '@server/functions/video/storeAndShowVideo';
 import { Storage } from '@google-cloud/storage';
 import type { Env } from '@server/lib/auth';
@@ -51,7 +51,12 @@ export const videoRoute = new Hono<Env>()
             projectsTable,
             eq(videoOperationsTable.projectID, projectsTable.id),
          )
-         .where(eq(videoOperationsTable.userID, user.id))
+         .where(
+            and(
+               eq(videoOperationsTable.userID, user.id),
+               eq(videoOperationsTable.status, 'DONE'),
+            ),
+         )
          .orderBy(desc(videoOperationsTable.createdAt));
 
       return c.json(videos);
@@ -80,7 +85,7 @@ export const videoRoute = new Hono<Env>()
             // Note: native Veo video extension (video.uri) is Vertex AI only, not supported by the Gemini API.
             console.log(`[generate] Frame continuation (image-to-video).`);
             operation = await genAI.models.generateVideos({
-               model: 'veo-3.1-lite-generate-preview',
+               model: 'veo-3.1-fast-generate-preview',
                prompt: masterPrompt,
                image: {
                   imageBytes: lastFrameBase64,
