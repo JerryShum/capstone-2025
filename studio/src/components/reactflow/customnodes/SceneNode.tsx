@@ -11,6 +11,7 @@ import {
    Clock,
    Image as ImageIcon,
    Loader2,
+   MessageSquareQuote,
    Move,
    Play,
    Type,
@@ -188,7 +189,7 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
 
             {/* Media Display */}
             <div className="flex flex-col gap-1 grow min-h-[140px]">
-               <label className="text-[10px] font-bold text-slate-300 uppercase flex items-center gap-1">
+               <label className="text-[10px] font-bold text-slate-500 uppercase flex items-center gap-1">
                   <ImageIcon size={10} /> Media Preview
                </label>
                <div className="relative w-full grow bg-slate-50 border-2 border-slate-50 rounded-lg overflow-hidden group">
@@ -258,17 +259,31 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
                   </>
                </button>
             )}
-            {/* STATUS IS READY */}
+            {/* STATUS IS READY — Feedback + Regenerate */}
             {data.status === 'READY' && (
-               <button
-                  onClick={() => generateVideo(id)}
-                  className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] transition-all hover:bg-emerald-700 hover:cursor-pointer"
-               >
-                  <>
-                     <Play size={16} fill="white" />
-                     Regenerate Video
-                  </>
-               </button>
+               <>
+                  <NodeField
+                     icon={MessageSquareQuote}
+                     label="Refinement Feedback"
+                  >
+                     <NodeTextarea
+                        accentColor="emerald"
+                        className="min-h-[52px]"
+                        placeholder="What should change? (e.g. 'More dramatic lighting', 'Slower camera pan')"
+                        value={data.feedback ?? ''}
+                        onChange={(e) => updateNode(id, { feedback: e.target.value })}
+                     />
+                  </NodeField>
+                  <button
+                     onClick={() => generateVideo(id)}
+                     className="group relative w-full flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 border-2 border-slate-900 rounded-xl text-white font-bold uppercase tracking-widest text-[10px] transition-all hover:bg-emerald-700 hover:cursor-pointer"
+                  >
+                     <>
+                        <Play size={16} fill="white" />
+                        Regenerate Video
+                     </>
+                  </button>
+               </>
             )}
          </div>
 
