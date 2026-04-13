@@ -251,6 +251,7 @@ const useFlowStore = create<FlowState>()(
                      duration: '8',
                      imageBase64: '',
                      lastFrameBase64,
+                     feedback: sceneNode.data.feedback,
                   },
                });
 

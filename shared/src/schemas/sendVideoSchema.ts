@@ -15,6 +15,7 @@ export const sendVideoSchema = z.object({
    // Video continuation fields
    lastFrameBase64: z.string().optional(),  // base64 PNG → image-to-video fallback (>48h)
    geminiVideoUri: z.string().optional(),   // Gemini Files API URI → native Veo extension (<48h)
+   feedback: z.string().optional(),         // User regeneration feedback to refine the next generation
 });
 
 //@ the wanted structure of data that someone POSTS:

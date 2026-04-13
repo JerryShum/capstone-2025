@@ -31,6 +31,7 @@ export const nodeBlueprint = {
          videoURL: 'https://...',
          thumbnailURL: 'https://...',
          canExtend: false,
+         feedback: '',
       } as SceneNodeData,
    },
    script: {

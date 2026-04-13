@@ -7,7 +7,7 @@ interface NodeInputProps extends InputHTMLAttributes<HTMLInputElement> {
 export default function NodeInput({ accentColor = 'blue', className = '', ...props }: NodeInputProps) {
    return (
       <input
-         className={`w-full text-sm text-slate-700 p-2 bg-slate-50 border-2 border-slate-200 rounded-lg focus:border-${accentColor}-500 outline-none transition-colors font-medium placeholder:text-slate-300 ${className}`}
+         className={`w-full text-sm text-slate-700 p-2 bg-slate-50 border-2 border-slate-200 rounded-lg focus:border-${accentColor}-500 outline-none transition-colors font-medium placeholder:text-slate-400 ${className}`}
          {...props}
       />
    );

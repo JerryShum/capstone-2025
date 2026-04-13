@@ -95,6 +95,7 @@ export function buildGCPVideoPrompt(data: postVideoSchemaType): string {
       cinematicPreset,
       negativePrompt,
       aspectRatio,
+      feedback,
    } = data;
 
    // 1. Scene Setting (EnvironmentNode)
@@ -162,6 +163,12 @@ export function buildGCPVideoPrompt(data: postVideoSchemaType): string {
       `COMPOSITION: ${composition}`,
       `NEGATIVE CONCERNS: Avoid ${negativePrompt}. Also avoid: realistic human faces, adult content, violence, horror, dark themes.`,
    );
+
+   if (feedback && feedback.trim()) {
+      sections.push(
+         `REGENERATION FEEDBACK: The user has provided the following notes for this regeneration — take these into account and try to address them directly: "${feedback.trim()}"`,
+      );
+   }
 
    return sections.join('\n');
 }
