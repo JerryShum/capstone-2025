@@ -1,4 +1,5 @@
 import useFlowStore from '@/hooks/useFlowStore';
+import { useProfanityCheck } from '@/hooks/useProfanityCheck';
 import { canExtendScene } from '@/lib/functions/graphUtils';
 import type { SceneNode } from '@shared';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
@@ -24,7 +25,10 @@ import NodeSelect from './components/NodeSelect';
 
 export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) {
    const updateNode = useFlowStore((state) => state.updateNode);
+   const { hasProfanity } = useProfanityCheck();
    const generateVideo = useFlowStore((state) => state.generateVideo);
+
+   const isProfane = hasProfanity(data.scenePrompt);
    const nodes = useFlowStore((state) => state.nodes);
    const edges = useFlowStore((state) => state.edges);
 
@@ -84,7 +88,11 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
 
          <div className="flex flex-col gap-2 grow overflow-hidden">
             {/* scene prompt */}
-            <NodeField icon={Type} label="Scene Prompt">
+            <NodeField
+               icon={Type}
+               label="Scene Prompt"
+               error={isProfane ? 'Profanity detected and is not allowed' : null}
+            >
                <NodeTextarea
                   accentColor="purple"
                   className="min-h-[60px]"

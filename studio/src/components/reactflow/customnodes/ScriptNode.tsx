@@ -1,4 +1,5 @@
 import useFlowStore from '@/hooks/useFlowStore';
+import { useProfanityCheck } from '@/hooks/useProfanityCheck';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import { ScrollText, AlignLeft, Sparkles, Loader2, AlertCircle } from 'lucide-react';
 import type { ScriptNode } from '@shared';
@@ -10,6 +11,9 @@ import NodeTextarea from './components/NodeTextarea';
 export default function ScriptNode({ data, id, selected }: NodeProps<ScriptNode>) {
    const updateNode = useFlowStore((state) => state.updateNode);
    const assistScript = useFlowStore((state) => state.assistScript);
+   const { hasProfanity } = useProfanityCheck();
+
+   const isProfane = hasProfanity(data.content as string);
 
    const isGenerating = data.status === 'GENERATING';
 
@@ -46,7 +50,12 @@ export default function ScriptNode({ data, id, selected }: NodeProps<ScriptNode>
          />
 
          <div className="flex flex-col gap-2 grow">
-            <NodeField icon={AlignLeft} label="Content" className="h-full">
+            <NodeField
+               icon={AlignLeft}
+               label="Content"
+               className="h-full"
+               error={isProfane ? 'Profanity detected and is not allowed' : null}
+            >
                <NodeTextarea
                   accentColor="indigo"
                   mono

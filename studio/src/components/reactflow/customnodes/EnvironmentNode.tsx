@@ -1,4 +1,5 @@
 import useFlowStore from '@/hooks/useFlowStore';
+import { useProfanityCheck } from '@/hooks/useProfanityCheck';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import { Mountain, Clock, Cloud, Zap, AlignLeft, Trees } from 'lucide-react';
 import type { EnvironmentNodeData } from '@shared';
@@ -11,7 +12,12 @@ import NodeSelect from './components/NodeSelect';
 
 export default function EnvironmentNode({ data, id, selected }: NodeProps) {
    const updateNode = useFlowStore((state) => state.updateNode);
+   const { hasProfanity } = useProfanityCheck();
    const envData = data as EnvironmentNodeData;
+
+   const locationProfane = hasProfanity(envData.location);
+   const lightingProfane = hasProfanity(envData.lightingStyle);
+   const descriptionProfane = hasProfanity(envData.description);
 
    const handleChange = (field: keyof EnvironmentNodeData, value: string) => {
       updateNode(id, { [field]: value });
@@ -22,8 +28,11 @@ export default function EnvironmentNode({ data, id, selected }: NodeProps) {
          <NodeHeader icon={Trees} label="Environment / Setting" color="emerald" />
 
          <div className="flex flex-col gap-2 grow">
-            {/* location */}
-            <NodeField icon={Mountain} label="Location">
+            <NodeField
+               icon={Mountain}
+               label="Location"
+               error={locationProfane ? 'Profanity detected and is not allowed' : null}
+            >
                <NodeInput
                   accentColor="emerald"
                   placeholder="e.g. Neo-Tokyo, Deep Space..."
@@ -62,8 +71,11 @@ export default function EnvironmentNode({ data, id, selected }: NodeProps) {
                </NodeField>
             </div>
 
-            {/* lighting style */}
-            <NodeField icon={Zap} label="Lighting Style">
+            <NodeField
+               icon={Zap}
+               label="Lighting Style"
+               error={lightingProfane ? 'Profanity detected and is not allowed' : null}
+            >
                <NodeInput
                   accentColor="emerald"
                   placeholder="e.g. Neon, Cinematic, Golden Hour..."
@@ -72,8 +84,12 @@ export default function EnvironmentNode({ data, id, selected }: NodeProps) {
                />
             </NodeField>
 
-            {/* description */}
-            <NodeField icon={AlignLeft} label="Detailed Description" className="grow">
+            <NodeField
+               icon={AlignLeft}
+               label="Detailed Description"
+               className="grow"
+               error={descriptionProfane ? 'Profanity detected and is not allowed' : null}
+            >
                <NodeTextarea
                   accentColor="emerald"
                   mono
