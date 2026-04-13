@@ -11,11 +11,15 @@ import {
 import { Input } from '@/components/ui/input';
 import { useProjectStore } from '@/hooks/useProjectStore';
 import { Link } from '@tanstack/react-router';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, HelpCircle } from 'lucide-react';
 import { useState } from 'react';
 import ProjectSettings from './projectSettings/ProjectSettings';
 
-export default function IconMenu() {
+export default function IconMenu({
+   onOpenTutorial,
+}: {
+   onOpenTutorial: () => void;
+}) {
    const projectTitle = useProjectStore((state) => state.projectTitle);
    const updateProjectTitle = useProjectStore(
       (state) => state.updateProjectTitle,
@@ -54,7 +58,14 @@ export default function IconMenu() {
                   >
                      Edit Project Settings
                   </DropdownMenuItem>
-                  {/* <DropdownMenuItem>Subscription</DropdownMenuItem> */}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                     onSelect={onOpenTutorial}
+                     className="gap-2"
+                  >
+                     <HelpCircle className="size-4" />
+                     How To Use
+                  </DropdownMenuItem>
                </DropdownMenuGroup>
             </DropdownMenuContent>
          </DropdownMenu>

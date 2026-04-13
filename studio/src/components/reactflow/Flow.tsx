@@ -19,6 +19,7 @@ import EnvironmentNode from './customnodes/EnvironmentNode';
 import SceneNode from './customnodes/SceneNode';
 import ScriptNode from './customnodes/ScriptNode';
 import { StitchResultModal } from './panels/StitchResultModal';
+import { TutorialModal } from './panels/TutorialModal';
 import useUndoRedo from '@/hooks/useUndoRedo';
 import IconMenu from './panels/PanelMenu';
 import NodeButton from './panels/NodeButton';
@@ -58,6 +59,7 @@ export default function Flow() {
    // Stitch state
    const [isStitching, setIsStitching] = useState(false);
    const [stitchResult, setStitchResult] = useState<string | null>(null);
+   const [isTutorialOpen, setIsTutorialOpen] = useState(false);
 
    async function handleStitchVideos() {
       setIsStitching(true);
@@ -188,7 +190,7 @@ export default function Flow() {
                <UndoRedoPanel />
             </Panel>
             <Panel position="top-left">
-               <IconMenu />
+               <IconMenu onOpenTutorial={() => setIsTutorialOpen(true)} />
             </Panel>
             <Panel
                position="bottom-center"
@@ -235,12 +237,15 @@ export default function Flow() {
                </button>
             </Panel>
 
-            {/* Stitch Result Dialog Overlay */}
             {stitchResult && (
                <StitchResultModal 
                   stitchResult={stitchResult} 
                   onClose={() => setStitchResult(null)} 
                />
+            )}
+
+            {isTutorialOpen && (
+               <TutorialModal onClose={() => setIsTutorialOpen(false)} />
             )}
             <Panel position="center-left">
                <div></div>
