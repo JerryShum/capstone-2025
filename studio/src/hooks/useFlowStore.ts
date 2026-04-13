@@ -250,6 +250,7 @@ const useFlowStore = create<FlowState>()(
                      negativePrompt: projectState.globalNegativePrompt,
                      imageBase64: '',
                      lastFrameBase64,
+                     feedback: sceneNode.data.feedback,
                   },
                });
 

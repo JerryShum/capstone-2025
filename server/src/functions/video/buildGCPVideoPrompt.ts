@@ -155,5 +155,12 @@ export function buildGCPVideoPrompt(data: postVideoSchemaType): string {
       `NEGATIVE CONCERNS: Avoid ${negativePrompt}`,
    );
 
+   // 8. User Revision Instructions (only present on regeneration with feedback)
+   if (data.feedback && data.feedback.trim().length > 0) {
+      sections.push(
+         `REVISION INSTRUCTIONS: The user wants these changes from the previous generation: ${data.feedback.trim()}`
+      );
+   }
+
    return sections.join('\n');
 }

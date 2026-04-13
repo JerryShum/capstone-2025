@@ -15,6 +15,7 @@ import {
    Type,
    Lock,
    Layers,
+   MessageSquare,
 } from 'lucide-react';
 import { useEffect } from 'react';
 
@@ -208,6 +209,24 @@ export default function SceneNode({ data, id, selected }: NodeProps<SceneNode>) 
                   <p className="text-[10px] text-red-600 font-medium leading-relaxed">
                      {data.errorMessage}
                   </p>
+               </div>
+            )}
+
+            {/* Feedback for Regeneration — only visible when video is READY */}
+            {data.status === 'READY' && (
+               <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-purple-400 uppercase flex items-center gap-1">
+                     <MessageSquare size={10} />
+                     What should change?
+                  </label>
+                  <textarea
+                     className="w-full text-[11px] p-2 border-2 border-purple-200 rounded-lg focus:border-purple-500 outline-none transition-colors font-medium min-h-[44px] resize-none bg-purple-50/40 placeholder:text-slate-300"
+                     placeholder="e.g. Make the character smile more, zoom in closer..."
+                     value={data.feedback || ''}
+                     onChange={(e) =>
+                        updateNode(id, { feedback: e.target.value })
+                     }
+                  />
                </div>
             )}
 
